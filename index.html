@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nexo Tiers</title>
-<link rel="icon" type="image/png" href="https://github.com/Toggelt/nexo-tiers/blob/main/trophy.png?raw=true">
+<link rel="icon" type="image/png" href="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true">
 <style>
 @font-face { font-family: 'Minecraft'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
 
@@ -22,8 +22,9 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tab-button:hover { background: #22222a; color: #c9c9d1; }
 .tab-button.active { background: #131318; color: #fff; }
 .tab-button.active span.tab-label { color: #fff; }
+.tab-button img { width: 40px !important; height: 40px !important; }
 .tab-button img, .mini-tier-circle img, .tier-icon-circle img { image-rendering: pixelated; }
-.tab-label { font-size: 15px; font-weight: 700; letter-spacing: 0.4px; white-space: nowrap; }
+.tab-label { font-size: 17.6px; font-weight: 700; letter-spacing: 0.4px; white-space: nowrap; }
 
 .top-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 14px 20px; }
 
@@ -85,7 +86,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .mini-tier-circle img { width: 24px; height: 24px; }
 .mini-tier-label { font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #1a1a22; border: 1px solid #454b54; color: #8b8b96; letter-spacing: 0.3px; text-align: center; width: 40px; }
 .global-mini-tip { position: fixed; background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 8px 16px; font-size: 18px; font-weight: 700; display: none; z-index: 1000; pointer-events: none; transform: translate(-50%, -100%); text-align: center; line-height: 1.4; white-space: normal; }
-.global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
+.global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; }
 .global-mini-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
 .global-mini-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 
@@ -144,7 +145,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-icon-circle img { width: 32px; height: 32px; }
 .tier-icon-label { font-size: 12px; font-weight: 800; letter-spacing: 0.4px; }
 .tier-elo-tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 5px 12px; font-size: 18px; font-weight: 700; white-space: nowrap; display: none; z-index: 10; box-shadow: 0 6px 14px rgba(0,0,0,0.5); pointer-events: none; text-align: center; line-height: 1.4; }
-.tier-elo-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
+.tier-elo-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; }
 .tier-elo-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
 .tier-elo-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 .tier-icon-wrap:hover .tier-elo-tip { display: block; }
@@ -153,7 +154,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 <body>
 <div class="top-fixed-bar">
   <div class="top-bar-left">
-    <img class="top-bar-image" src="https://github.com/Toggelt/nexo-tiers/blob/main/trophy.png?raw=true" alt="Nexo">
+    <img class="top-bar-image" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt="Nexo">
     <div class="top-bar-title">Nexo Tiers</div>
   </div>
 </div>
@@ -217,7 +218,7 @@ let currentProfileName = null;
 
 const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
 const LOWBLOCK_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
-const OVERALL_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/trophy.png?raw=true";
+const OVERALL_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true";
 const imgStyle = b => b.key === "Overall" ? "image-rendering:auto;border-radius:6px;" : "";
 
 const LEADERBOARDS = {
@@ -251,7 +252,7 @@ function generateTierTooltipHTML(mode, cT, cP, pT, pP) {
   if (pT != null && isPeakBetter(cT, cP, pT, pP)) {
     html += `<div class="tip-peak">${peakTierLabel(pT, pP)}</div>`;
   }
-  html += `<div class="tip-tier">${fullTierLabel(cT, cP)}</div>`;
+  html += `<div class="tip-tier" style="color:${TIER_COLORS[ck] || '#fff'}">${fullTierLabel(cT, cP)}</div>`;
   return html + `<div class="tip-points">(${TIER_POINTS[ck] || 0} points)</div>`;
 }
 
@@ -400,6 +401,12 @@ list.addEventListener("mouseout", (e) => {
 });
 document.addEventListener("scroll", () => { globalMiniTip.style.display = "none"; }, true);
 
+// Players with equal points share a position (1, 1, 3, ...)
+function assignRanks(sorted) {
+  sorted.forEach((p, i) => { p.__rank = (i > 0 && p.__points === sorted[i - 1].__points) ? sorted[i - 1].__rank : i + 1; });
+  return sorted;
+}
+
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
 
 function render() {
@@ -413,6 +420,7 @@ function render() {
       .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
       .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
       .sort((a, b) => b.__points - a.__points);
+    assignRanks(sorted);
 
     if (sorted.length === 0) {
       list.innerHTML = `<div style="text-align:center;padding:30px;color:#8b8b96;">No players on this leaderboard yet</div>`;
@@ -420,7 +428,7 @@ function render() {
       return;
     }
     (expanded ? sorted : sorted.slice(0, COLLAPSED_COUNT)).forEach((p, i) => {
-      const rank = i + 1;
+      const rank = p.__rank;
       const div = document.createElement("div");
       div.className = `player ${rankClass(rank)}`;
       div.innerHTML = `
@@ -567,7 +575,8 @@ function openProfile(player) {
     .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
     .map(p => ({ ...p, __points: computePlayerPoints(p) }))
     .sort((a, b) => b.__points - a.__points);
-  const rank = overallSorted.findIndex(p => p.id === player.id) + 1;
+  assignRanks(overallSorted);
+  const rank = (overallSorted.find(p => p.id === player.id) || {}).__rank || 0;
   const posCard = document.getElementById("modalPositionCard");
   posCard.className = `position-card ${rankClass(rank)}`;
   posCard.innerHTML = `
