@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nexo Tiers</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'Minecraft'; src: url('data:font/otf;base64,T1RUTwAJAIAAAwAQQ0ZGIKIfR0sAAACkAAAZKU9TLzJXfWAJAAAbrAAAAGBjbWFwAAwAsQAAHYwAAAAsaGVhZDCFWvoAABnQAAAANmhoZWEIAgUcAAAbiAAAACRobXR4AoAAAAAAGggAAAGAbWF4cABgUAAAAACcAAAABm5hbWUeWDizAAAcDAAAAYBwb3N0/7gAMgAAHbgAAAAgAABQAABgAAABAAQCAAEBARFNaW5lY3JhZnRSZWd1bGFyAAEBASoel2ViXBD/i4sel2ViXBD/i4sMB4v7lBwEgBwFAAX6OQ+LHBkpEvo9EQBfAgABAAgADwAWAB0AJAArADIAOQBAAEcATgBVAFwAYwBqAHEAeAB/AIYAjQCUAJsAogCpALAAtwC+AMUAzADTANoA4QDoAO8A9gD9AQQBCwESARkBIAEnAS4BNQE8AUMBSgFRAVgBXwFmAW0BdAF7AYIBiQGQAZcBngGlAawBswG6AcEByAHPAdYB3QHkAesB8gH5AgACBwIOAhUCHAIjAioCMQI4Aj8CRgJNAlQCWwJiAmkCcAJ3An4ChQKMApMCmnVuaTAwMjB1bmkwMDIxdW5pMDAyMnVuaTAwMjN1bmkwMDI0dW5pMDAyNXVuaTAwMjZ1bmkwMDI3dW5pMDAyOHVuaTAwMjl1bmkwMDJBdW5pMDAyQnVuaTAwMkN1bmkwMDJEdW5pMDAyRXVuaTAwMkZ1bmkwMDMwdW5pMDAzMXVuaTAwMzJ1bmkwMDMzdW5pMDAzNHVuaTAwMzV1bmkwMDM2dW5pMDAzN3VuaTAwMzh1bmkwMDM5dW5pMDAzQXVuaTAwM0J1bmkwMDNDdW5pMDAzRHVuaTAwM0V1bmkwMDNGdW5pMDA0MHVuaTAwNDF1bmkwMDQydW5pMDA0M3VuaTAwNDR1bmkwMDQ1dW5pMDA0NnVuaTAwNDd1bmkwMDQ4dW5pMDA0OXVuaTAwNEF1bmkwMDRCdW5pMDA0Q3VuaTAwNER1bmkwMDRFdW5pMDA0RnVuaTAwNTB1bmkwMDUxdW5pMDA1MnVuaTAwNTN1bmkwMDU0dW5pMDA1NXVuaTAwNTZ1bmkwMDU3dW5pMDA1OHVuaTAwNTl1bmkwMDVBdW5pMDA1QnVuaTAwNUN1bmkwMDVEdW5pMDA1RXVuaTAwNUZ1bmkwMDYwdW5pMDA2MXVuaTAwNjJ1bmkwMDYzdW5pMDA2NHVuaTAwNjV1bmkwMDY2dW5pMDA2N3VuaTAwNjh1bmkwMDY5dW5pMDA2QXVuaTAwNkJ1bmkwMDZDdW5pMDA2RHVuaTAwNkV1bmkwMDZGdW5pMDA3MHVuaTAwNzF1bmkwMDcydW5pMDA3M3VuaTAwNzR1bmkwMDc1dW5pMDA3NnVuaTAwNzd1bmkwMDc4dW5pMDA3OXVuaTAwN0F1bmkwMDdCdW5pMDA3Q3VuaTAwN0R1bmkwMDdFAAABAYdeAGACAAEABQAIAB8AOACDANsBMwG2AcMCCAJOApECsAK9AsoC1gMaA3kDmAPyBFAEjwTQBR4FUQWoBfwGEwYqBowGowcFB1cHnAfPCA8IWQiDCJ8ItwjyCQ4JKwlVCaQJtAn0CjMKaAqTCuMLHQtvC4QLrgv0DDIMrAzzDUQNWA2fDbQN/A4JDigOZQ6fDukPJg9hD4wPyA/8EBMQSRCdELkQ9REXEUwRixHLEgESRBJyEo8S1RL9E3oTrBPrFDEUPRSDFLwcBIAO+JQO95T3lAT3FPkU+xQG/hQE9xT3FPsUBg74lPkUBPcU95T7FAb3lPuUFfcU95T7FAYO+ZT3FPkUFfsU+xT3FPsU+xT7FPcU+5T3FPeU9xT7lPcU95T3FPcU+xT3FPcU9xT7FPeU+xT7lPsU95T7FAb3FPwUFfcU+xT7FAYO+ZT3lAT7FPeU+xT3FPcU9xQHivcUBY2MFfcTiov3FPsTigX8FYwV+BMGjPcUBfwTBvsV9xQV+xQH9xOMBfcSB/cV9xUV+xQGjPsUBfiT9xT7lPcU+xQGDvmU+RQE9xT3lPsUBv2UBPsU9xQHivcTBYz3lRX7kwf3FIoF95MH9xUEjPsT9xOKivcTBYz3lRX7kwf3FIoF95MHjI0V9xOKBfcU+xQH/hQE9xT3lPsUBg75lPkU+BQV9xT7FAeM+xMFivwVFfcU9xQG+xOKBfuW+RYV+xOKi/sU9xOKjPsT+xSLivsT+xOKi/uU9xOKjPsT95SLjPcT9xONi/eS+xSMi/eT9xSMi/cU+xOMivcTBfsUBoz7FRX3EvsS+xIG+xX7lhX3FIwF+xT3FAeK+xT7kowFDveU+RQE9xT3lPsUBg74lPeUFvcU9xQG+xOKBfsVjBX3E4yM9xP7E4oF+xX4FRX8FAf3FIwF+BIH9xUEjPsT9xOKivcTBY2NFfcTigX3FPsUBw74lPcUBPsU9xQHivcTBYz3FRWM+xP3E4qK9xMFjI0V9xSKi/gU+xSKBfsUjBX3E4yM9xP7E4oF+xWMFfcTjIz3EwX7FAYO+JT4FPmUFfcU+xQHjPsTBYr7lRX3FPcUBvsTigX7lYwV+xT3FAeK9xMFjY0V9xL3EvsSBvsVjBX3E4yM9xMF+xQGDvmU95T4lBX7lPsU95T7lPcU95T3lPcU+5T3lPsUBg73lPsUBPcU95T7FAYO+ZT4FAT5FPcU/RQGDveUixb3FPcU+xQGDvmU9xQE+xT3FAeK9xMFjPeVFfuTB/cUigX3kwf3FQSM+xP3E4qK9xMFjPeVFfuTB/cUigX3kweMjRX3E4oF9xT7FAcO+ZT3E/mVFfsTiov9FPcTioz7E/gUi4z3E/cTjIv5FPsTjIr3EwX8FAaM+xUV+BKMjPsU+xSLivsT+xOKivsT+xOKBfeV9xMV9xOMivwT/BKKivcU9xSLjPcT9xOMBQ75lPeU+ZQV+xT7FPcU/JT7lPsU+RT3FPuU+ZT7FAYO+ZT3lAT7lPkU95T7FPsU/BQHivcTBYz3FRWM+xP3E4qK9xMFjPcVFYz7FPeTi4r3FAWMjBX3FIqL95T7FIoF/JSMFfsU9xQHivcTBY2MFfgSBoz3FAX8FAYO+ZT3FPeUFfsU+xQG9xOMBY2KFYr7FPgUi4r3FAWMjBX3FIqL95T7FIoF+5T3FRX7FPeT9xQHjIwV9xSKi/eU+xSKBfyUjBX7FPcUB4r3EwWNjBX4EgaM9xQF/BQGDvmU+BP5lRX7E4qK+xP7E4qK+xP7E4oF+5T4lPuU9xT6FPuUB4z7FRX3E4wF/BT8FAeM9xP3E4yM9xP3E4wFDvmU9xT3lBX7FPsUBvcTjAWNihWK+xT4FIuK9xQFjIwV9xSKi/gU+xSKBfyUjBX4kwaM9xQF/BT3FPiU9xT9FAYO+ZT5FAT8lAf3E4qM+xP4FIuM9xP3E4yL95T7E4yK9xP8FIuK9xMFjPcVFYz7E/cTior3EwWNjBX3k/cU+5QG+xT8lBX4E4oF+5L8EgcO+ZT3lPgUFfwU9xT4Ewf3FQSM+xP3E4qK9xMF/JP3FRX3FPcU+BT7kwb3FIoF+BT9FAcO+ZT3E/mVFfsTiov7lPcTiov7EvsTiov7lPcTioz7E/gUi4z3E/cTjIv3lPsTjIv3EvcTjIv3lPsTjIr3EwX8FAaM+xUV+BL7kvwSBvsWBPgS+5L8EgYO+ZT3FPcUFfsU95QHivcUBYz3FBWM+xP3E4qK9xMF/BT4lhX7E4qL+5T3E4qM+xP4FIuM+xP3E4qL+JT7E4yK9xMF/BQGjPsVFfgSBoz7k/wTjAUO95T4lAT3FPcU+xQG/RQE9xT3FPsUBg73lPiUBPcU9xT7FAb9lAT3FPeU+xQGDvkU+BQW9xT3FAb7E4oF+xWMFfcTjIz3E/sTigX7FYwV9xOMjPcT+xOKBfsV9xUV+xQH9xOMBfcSB4z3FRWM+xP3E4qK9xMFjPcVFYz7E/cTior3EwWNjRX3E4oF9xT7FAcO+ZT4lAT5FPcU/RQG/JQE+RT3FP0UBg75FPcUBPsU9xQHivcTBYz3FRWM+xP3E4qK9xMFjPcVFYz7E/cTior3EwWNjRX3E4qL9xT7E4oF+xWMFfcTjIz3E/sTigX7FYwV9xOMjPcT+xOKBfsVjBX3E4yM9xMF+xQGDvmU95T4FBX7FPcUB4r3EwWM9xUVjPsT9xOKivcTBYyNFfcUiov3lPsUigX8lIwV+xT3FAeK9xMFjYwV+BIGjPcUBfwUBvcU/hQV9xT3FPsUBg76FPkU95QV+5T3FPcU9xT7lPwU+JT4lAb7FIoF/JT9kxX4lPcU/JMG+xX5FBX9FAf3FIwF+RIHjIwV+JIGjPcUBfyUBg75lPcT+ZUV+xOKBf2U9xT4lPgU/JT3FPmUB/sTjIr3EwX8FAaM+xQV+BIGjPsUBfwUBg75lIsW+JQGjPcT9xOMi/gU+xOMi/cS9xOMi/cU+xOMivcTBfyUBvcU+xQV+BP7FPwTBvsUBPgTiov8EvwTigUO+ZT4lPkUFfcU9xQG+xOKBfcT/RMV9xT7FAeM+xMF/BX7FRX4FAaK9xQF/BIG+xX5FBX9FAf3FIwF+RIHjIwV+BIGjPcUBfwUBg75lIsW+JQGjPcT9xOMi/kU+xOMivcTBfyUBvcU+xQV+BOKi/0S/BOKBQ75lIsW+RT3FPyU+BT3lPcU+5T3FPiU9xT9FAYO+ZSLFvcU+JT3lPcU+5T3FPiU9xT9FAYO+ZT5FPcUFfiU+5T7FPcU/BMH/BT7FRX4FAaK9xQF/BIG+xX5FBX9FAf3FIwF+RIHjIwV+JP3FPyUBg75lIsW9xT4lPgU/JT3FPoU+xT7lPwU95T7FAYO+JT5lAT3FP0U+xT7FPgU9xT7FPkU9xT3FPwUBg75lPcU95QV+xT7FAb3E4wFjYoVivsU+BSLivcUBYyMFfcUigX5lPsUBw75lPkU+ZQV9xT7FAeM+xMFivsVFYr3E/sTjIz7EwX3E/0VFfcU+BQG+xSKBfsUjBX3E4yM9xP7E4oF/BX8kxX3FPiU95P3FPuT95T7FAYO+ZSLFvkU9xT8lPmU+xQGDvmU+JT5FBX9FPcU+hT7FPsU+xQHjPsTBfsV+xUV9xQGivcTBfsSBvuV/RMV9xT5FAb3E4yM9xMF+xT3FPsUBg75lPgU+BQV9xT8FPcU+hT7FPwUBvsTigX7FYwV9xOMjPcT+xOKBfuV/RMV9xT5FAb3E4yM9xMF+xT3FPsUBg75lPcT+ZUV+xOKi/0U9xOKjPsT+BSLjPcT9xOMi/kU+xOMivcTBfwUBoz7FRX4Ev0S/BIGDvmUixb3FPiU+BQGjPcT9xOMi/cU+xOMivcTBfyUBvcU+xQV+BP7FPwTBg75lPiUFvcU9xQG+xOKBfwW+RYV+xOKi/0U9xOKjPsT95SLjPcT9xKNjfcS9xOMi/iU+xOMivcTBfwUBoz7FRX4EgaM/JL7FIqK+xT7k4wFDvmU+JQW9xT4lAb7FIoF/JT8kxX3FPiU+BMGjfcT9xOMi/cU+xOMivcTBfyUBvcU+xQV+BP7FPwTBg75lPcU95QV+xT7FAb3E4wFjYoVivsU+BSLivcUBYyMFfcUiov4FPsUigX8FIwV+BMGjPcUBfwTBvsV9xQV+xQH9xOMBfcSB42MFfiT9xT8lAYO+ZT5lAT3lP2U9xT5lPeU9xT9FAYO+ZT5FPcUFfmU+xT9kwf8FPsVFfgUBor3FAX8Egb7FRb3FIwF+ZP7FAcO+ZT5FPgUFfiU+xT8kwf7lQT3kwf7FIwF+5MH+xT7FRX3FAaK9xMF+xIG+xWMFfcUjIv3k/sUigX7FIwV9xSMBfiT+xQHDvmU+BT3FBX3FPsU9xT6FPsU/RQG+xOKBYmNFYz3E/sUi4z7EwX7lfuVFfcU9xT3FAaK9xP7E4wF+RT7FAcO+ZT5FPmUFfcU+xQHjPsTBYr7FRWK9xP7E4yM+xMF9xP9FRX3FPgUBvsUigX7FIwV9xOMjPcT+xOKBfwV+xMV/BT3FPgTB/cVBIz7E/cTior3EwWNjRX3EvcS+xIG+xWMFfcTjIz3E/sTigX7FYwV9xOMjPcTBfsUBg75lPkU+ZQV9xT7FAeM+xMFivsVFYr3E/sTjIz7EwX7Ff0VFfcU+RP7FAb7FIwV9xOMjPcT+xOKBfsVjBX3E4yM9xMF+xQGDvmU95QE+5T5FPcU/JQHivcTBYz3FRWM+xP3E4qK9xMFjPcVFYz7E/cTior3EwWM9xUVjPsT9xOKivcTBfyT9xUV+JQGjPsT9xOKBfeU/RQHDviUixb4FPcU+5T5FPeU9xT8FAYO+ZT4lBb3FPcUBvsTigX7FYwV9xSMi/eT+xSKBfsUjBX3E4yM9xP7E4oF+xWMFfcUjIv3k/sUigX7FIwV9xOMjPcTBfsUBg74lPmUBPeU/RT7lPsU+BT6FPwUBg75lPiU+JQV9xT3FAb7E4oF+xWMFfcTjIz3E/sTigX8FfsTFfsU9xQHivcTBYz3FRWM+xP3E4qK9xMFjY0V9xIGjPcTBfsUBg75lPsUBPkU9xT9FAYO+BT3FPkUFfcU9xQG+xOKBfsVjBX3E4yM9xMF+xQGDvmU+JT4FBX8FAaK+xP7E4qL+xT3E4qM+xMF+JT4lAb7E4oF/BWMFfgTBoz3FAX8FAaM/BQV+BP7FPwTBg75lIsW+JQGjPcT9xOMi/gU+xOMivcT+5SLivsT+xOKBfgU+xQH95X8FBX3koqL/BL8E4oF95T3FAcO+ZT4lPgUFfcU9xQG+xOKBfcT/BMV9xT7FAeM+xMF/BX7FRX4FAaK9xQF/BIG+xX4FBX8FAf3FIwF+BIHjIwV+BIGjPcUBfwUBg75lPiU+JQV+xOMivcT+5SLivsT+xOKi/wU9xOKjPsTBfiU+hT7FAb8E/wVFfeSjIz7FAX3FPuUBvwTjAUO+ZT3FBb4lPcU/JMGifgVFfsTiov8FPcTjIz3EwX4lPeUBvsTjIr3EwX8FAaM+xQV+BIGjPsUBfwUBg75FPcU+ZQV+xT7FPsU9xT8lPcU+JT3lPcU+5QHivcTBY2MFfeT9xT7lAYO+ZSLFvsU+JQHivcUBfwU+JUV+xOKi/uU9xOKjPsT+BSLjPsT9xOKBfkU/JQHjPsVFfgTjIv7lPwTjAUO+ZT4lBb3FPiUBvsUigWKjBWM9xT7lIuM+xQF+5X8lBX3FPgU9xQGivcT+xOMBfgU+xQHDveU+ZQE9xT3FPsUBv4UBPcU+RT7FAYO+ZT4lPmUFfcU9xT7FAb8FP0UFfsU+5QG9xSMBYyKFYr7FPgUi4r3FAWMjBX3FIoF+RT7FAcO+RT4lPiUFfcU+xQHjPsTBYr7FRWK9xP7E4yM+xMF9xP8FRX3FPcUBvsTigX7FYwV9xOMjPcT+xOKBfuV+5MV9xT3lAb3E4yL9xL7E4wF+JT7FAcO+BT3FBb3FPcUBvsTigX7FYwV9xSMBfmT+xQHDvmU+JQW9xT4lAb7FIoFio0VjPcT+xSLjPsTBfsV+5UV9xT3k/sUBvuU/JMV9xT4lAb3E4yM9xMF+5QGDvmU+JQW9xT4lAb7FIoF/JT8kxX3FPiU+BMGjPcUBfyUBg75lPcT+JUV+xOKi/wU9xOKjPsT+BSLjPcT9xOMi/gU+xOMivcTBfwUBoz7FRX4EvwS/BIGDvmU+xQE9xT3lPgUBoz3E/cTjIv3lPsTjIr3E/uUi4r7E/sTigX3FPsUB/eV+xQV95KKi/uS/BOKBfcU9xQHDvmU9xP4lRX7E4qL+5T3E4qM+xMF+BT7lPcU+ZT7FPsUBvsTjIr3EwX7lAaM+xUV95KMjPsUBfcU+xQG/BOMBQ75lPiU+BQV9xT3FAb7E4oFiYwVjPcU+5SLjPsUBfuV/JQV9xT4FPcUBor3E/sTjAX3FPsUBw75lPcUBPsU+JQHivcUBY2MFfcTiov3FPsTigX8FYwV+BMGjPcUBfwTBvsV9xQV+xQH9xOMBfcSB42MFfiT9xT8lAYO+JT3lBb3FPcUBvsTigX7FfiVFfsU+xT3FPwUBvcUjAX4E/cU9xT7FPeU+xQHDvmU9xQW+JT5FPsU/JT8Ewb7FRb3FIwF+JP7FAcO+ZT5FPeUFfgU+xT8Ewf7FQSK9xP7E4yM+xMF+xX7FRX3FAaK9xMF+xIG+xWMFfcTjIz3E/sTigX7FYwV9xSMBfgT+xQHDvmU9xQW+JT5FPsU/JT7FPeU+xT7lAb7E4oF+xWMFfcUjAX4k/sUBw75lPkU+JQV9xT7FAeM+xMFivsVFYr3E/sTjIz7EwX3E/wVFfcU9xQG+xOKBfsVjBX3E4yM9xP7E4oF/BX7ExX7FPcUB4r3EwWM9xUVjPsT9xOKivcTBY2NFfcS9xL7Egb7FYwV9xOMjPcT+xOKBfsVjBX3E4yM9xMF+xQGDvmUixb7FPiUB4r3FAX8E/cUFfgUBoz7E/cTigX5FPsU/BT8Ewf7FRb3FIwF+BP7FAcO+ZT3FPeUFfsU+xT7FPkU9xT8FAeK9xMFjPcVFYz7E/cTior3EwX8E/cVFfgUBoz7E/cTigX3FPcU9xT9FAcO+JT3lBb3FPcUBvsTigX7FYwV9xSMi/eT+xSKBfsU9xUV+xQH9xOMBfcSB4z3lRX7kwf3FIoF95MHjI0V9xOKBfcU+xQHDveUixb3FPoU+xQGDviU9xQE+xT3FAeK9xMFjPeVFfuTB/cUigX3kweMjRX3E4qL9xT7E4oF+xWMFfcUjIv3k/sUigX7FIwV9xOMjPcTBfsUBg76FPmU+ZQV9xT7FAeM+xMF+5X7FRX3lAaK9xQF+5IG/BUW+xT3FAeK9xMFjYwV95IGjPcUBfuUBg4AAAAAAQAAAAEAAECZ7MJfDzz1AAsEAAAAAADmcuDIAAAAAOZzNTUAAP8ABIAFAAAAAAgAAgAAAAAAAASAAAACAAAAAQAAAAIAAAADAAAAAwAAAAMAAAADAAAAAQAAAAIAAAACAAAAAgAAAAMAAAABAAAAAwAAAAEAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAEAAAABAAAAAoAAAAMAAAACgAAAAwAAAAOAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAIAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAIAAAADAAAAAgAAAAMAAAADAAAAAYAAAAMAAAADAAAAAwAAAAMAAAADAAAAAoAAAAMAAAADAAAAAQAAAAMAAAACgAAAAYAAAAMAAAADAAAAAwAAAAMAAAADAAAAAwAAAAMAAAACAAAAAwAAAAMAAAADAAAAAwAAAAMAAAADAAAAAgAAAAEAAAACAAAAA4AAAAABAAADgP+AAAAFAAAAADsEgAABAAAAAAAAAAAAAAAAAAAAYAAEAokBkAAFAAACigJYAAAASwKKAlgAAAFeADIA+gAAAAAAAAAAAAAAAP////////////////////9QWUZUAEAAIAB+A4D/gAAABQABAAAAAAEAAAAAAoADgAAgACAAAgAAAAcAWgADAAEECQAAACoAAAADAAEECQABABwAKgADAAEECQACAA4ARgADAAEECQADAGwAVAADAAEECQAEACwAwAADAAEECQAFABoA7AADAAEECQAGACABBgBDAG8AcAB5AHIAaQBnAGgAdAAgAKkAIABNAG8AagBhAG4AZwAgAEEAQgBNAGkAbgBlAGMAcgBhAGYAdAAgAEYAbwBuAHQAUgBlAGcAdQBsAGEAcgBWAGUAcgBzAGkAbwBuACAAMQAuADEALgAwADsATQBpAG4AZQBjAHIAYQBmAHQAIABMAGkAYgByAGEAcgB5ADsATQBpAG4AZQBjAHIAYQBmAHQAIABGAG8AbgB0ACAAUgBlAGcAdQBsAGEAcgBNAGkAbgBlAGMAcgBhAGYAdAAgAEYAbwBuAHQAIABSAGUAZwB1AGwAYQByAFYAZQByAHMAaQBvAG4AIAAxAC4AMQAuADAATQBpAG4AZQBjAHIAYQBmAHQAUgBlAGcAdQBsAGEAcgAAAAEAAwABAAAADAAEACAAAAAEAAQAAQAAAH7//wAAACD////hAAEAAAAAAAMAAAAAAAD/tQAyAAAAAAAAAAAAAAAAAAAAAAAAAAA=') format('opentype'); font-weight: normal; font-style: normal; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding-top: 150px; }
+.top-fixed-bar { position: fixed; top: 0; left: 0; width: 100%; height: 150px; background: #0b0b0e; border-bottom: 1px solid #232329; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
+.top-bar-left { display: flex; align-items: center; gap: 16px; }
+.top-bar-image { width: 96px; height: 96px; border-radius: 10px; object-fit: contain; image-rendering: pixelated; }
+.top-bar-title { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 45px; color: #fff; letter-spacing: 1px; }
+
+.container { position: relative; z-index: 1; width: 1250px; max-width: 100%; background: #131318; padding: 0; padding-bottom: 20px; border-radius: 0 0 14px 14px; border: 1px solid #232329; margin: 20px auto; box-shadow: 0 0 30px rgba(0,0,0,0.4); overflow: visible; }
+.tab-bar { display: flex; width: 100%; height: 70px; margin: 0; background: transparent; border-bottom: none; }
+.tab-button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: #8b8b96; background: #1c1c22; border: none; margin-right: 3px; transition: background 0.15s, color 0.15s; user-select: none; font-size: 15px; font-weight: 700; letter-spacing: 0.4px; font-family: Arial, sans-serif; border-radius: 8px 8px 0 0; }
+.tab-button:last-child { margin-right: 0; }
+.tab-button:hover { background: #22222a; color: #c9c9d1; }
+.tab-button.active { background: #26262e; color: #fff; }
+.tab-button.active span.tab-label { color: #fff; }
+.tab-button img, .mini-tier-circle img, .tier-icon-circle img { image-rendering: pixelated; }
+.tab-label { font-size: 15px; font-weight: 700; letter-spacing: 0.4px; white-space: nowrap; }
+
+.top-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 14px 20px; }
+h2 { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 18px; letter-spacing: 2px; font-weight: 800; text-transform: uppercase; font-family: 'Orbitron', sans-serif; padding: 0 20px; }
+.title-icon { width: 48px; height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.title-icon img { width: 100%; height: 100%; image-rendering: pixelated; }
+
+.info-btn-wrapper { position: relative; }
+.info-btn { display: flex; align-items: center; gap: 7px; background: #1c1c22; border: 1px solid #2c2c34; color: #c9c9d1; padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.info-btn:hover { background: #26262e; }
+.info-icon { width: 16px; height: 16px; border-radius: 50%; background: #3a3a44; color: #fff; font-size: 11px; font-weight: 800; font-style: italic; display: flex; align-items: center; justify-content: center; }
+.info-tooltip { position: absolute; top: calc(100% + 8px); right: 0; background: #191920; border: 1px solid #2c2c34; border-radius: 10px; padding: 12px 16px; min-width: 180px; display: none; z-index: 50; }
+.info-tooltip.active { display: block; }
+.info-tooltip.overall-tooltip { min-width: 336px; padding: 17px 24px; }
+.search-btn-wrapper { position: relative; }
+.search-btn { display: flex; align-items: center; gap: 7px; background: #1c1c22; border: 1px solid #2c2c34; color: #c9c9d1; padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.search-btn:hover { background: #26262e; }
+.search-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+.search-panel { position: absolute; top: calc(100% + 8px); right: 0; background: #191920; border: 1px solid #2c2c34; border-radius: 10px; padding: 14px; width: 250px; display: none; z-index: 70; }
+.search-panel.active { display: block; }
+.search-input { width: 100%; background: #131318; border: 1px solid #2c2c34; border-radius: 7px; color: #fff; padding: 8px 10px; font-size: 13px; margin-bottom: 10px; }
+.search-results { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.search-result-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 600; }
+.search-result-item:hover { background: #22222a; }
+.search-result-item img { width: 26px; height: 26px; border-radius: 5px; }
+.search-empty { color: #5c5c66; font-size: 12px; padding: 6px 2px; }
+
+.overall-headers { display: flex; align-items: center; margin: 10px 20px 0 20px; padding: 0 20px; font-size: 12px; font-weight: 600; color: #6b6b7a; text-transform: uppercase; letter-spacing: 0.5px; }
+.overall-headers .header-position { width: 150px; padding-left: 20px; }
+.overall-headers .header-player { flex: 1; padding-left: 20px; }
+.overall-headers .header-tiers { width: 150px; text-align: right; padding-right: 26px; }
+
+.player { display: flex; align-items: stretch; background: #191920; border-radius: 12px; margin: 14px 20px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, filter 0.15s; min-height: 99px; }
+.player:hover { transform: scale(1.035); box-shadow: 0 6px 16px rgba(0,0,0,0.45); filter: brightness(1.25); }
+.rank-flag { position: relative; display: flex; align-items: center; gap: 16px; padding: 18px 32px 18px 20px; background: #22222a; clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%); min-width: 150px; }
+.rank-num { font-size: 32px; font-weight: 700; font-style: italic; color: #c7c7ce; width: 32px; }
+.avatar { width: 60px; height: 60px; border-radius: 8px; background: #000; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #666; flex-shrink: 0; overflow: hidden; }
+.avatar img { width: 100%; height: 100%; image-rendering: pixelated; }
+.info { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 12px; }
+.player-name { font-size: 26px; font-weight: 700; letter-spacing: 0.3px; font-family: 'Bahnschrift', sans-serif; }
+.player-title-row { display: flex; align-items: center; gap: 10px; }
+.player-title-badge { background: #191920; border: 1px solid #2c2c34; border-radius: 6px; padding: 4px 14px; display: flex; align-items: center; height: 32px; }
+.player-title-text { font-size: 16px; font-weight: 900; font-family: 'Bahnschrift', sans-serif; letter-spacing: 0.3px; white-space: nowrap; background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.player-points { font-size: 16px; font-weight: 600; color: #8b8b96; white-space: nowrap; }
+.elo-wrap { display: flex; align-items: center; gap: 14px; padding: 0 26px; }
+.mini-tiers-row { display: flex; align-items: center; gap: 18px; }
+.mini-tier-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; cursor: default; }
+.mini-tier-circle { width: 36px; height: 36px; border-radius: 50%; background: #131318; display: flex; align-items: center; justify-content: center; border: 2px solid #454b54; overflow: hidden; }
+.mini-tier-circle img { width: 24px; height: 24px; }
+.mini-tier-label { font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #1a1a22; border: 1px solid #454b54; color: #8b8b96; letter-spacing: 0.3px; text-align: center; width: 40px; }
+.global-mini-tip { position: fixed; background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 8px 16px; font-size: 18px; font-weight: 700; display: none; z-index: 1000; pointer-events: none; transform: translate(-50%, -100%); text-align: center; line-height: 1.4; white-space: normal; }
+.global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; }
+.global-mini-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-top: 2px; }
+.global-mini-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
+
+.tier-columns { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin: 8px 20px; }
+.tier-column { flex: 0 0 200px; min-width: 160px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
+.tier-column-1 { background: #2a2a1a; } .tier-column-2 { background: #2a2a30; } .tier-column-3 { background: #2a221a; } .tier-column-4 { background: #22222a; } .tier-column-5 { background: #22222a; }
+.tier-header { text-align: center; font-size: 18px; font-weight: 800; padding: 10px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+.tier-players { padding: 6px 4px; display: flex; flex-direction: column; gap: 3px; }
+.tier-player { display: flex; align-items: center; gap: 8px; background: #16161e; border-radius: 6px; padding: 4px 8px; transition: background 0.2s; cursor: pointer; border: 1px solid transparent; }
+.tier-player:hover { background: #2a2a36; }
+.tier-player.plus { background: #1e1e2a; }
+.tier-player.plus:hover { background: #3a3a4a; }
+.tier-player .tier-avatar { width: 28px; height: 28px; border-radius: 5px; overflow: hidden; flex-shrink: 0; }
+.tier-player .tier-avatar img { width: 100%; height: 100%; }
+.tier-player .tier-name { flex: 1; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tier-player .tier-badge { font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 12px; background: #2a2a36; color: #a9b6ff; flex-shrink: 0; }
+.tier-player .tier-badge.plus { background: #1a3a5a; color: #6bb6ff; border: 1px solid #4a8af4; }
+
+.rank-1 .rank-flag { background: linear-gradient(100deg, #f4c744, #c99a1e); } .rank-1 .rank-num { color: #3a2c00; }
+.rank-2 .rank-flag { background: linear-gradient(100deg, #d6d9dd, #9ea3aa); } .rank-2 .rank-num { color: #2b2e33; }
+.rank-3 .rank-flag { background: linear-gradient(100deg, #d98b45, #a85f24); } .rank-3 .rank-num { color: #3a2000; }
+
+.toggle-btn { display: block; width: calc(100% - 40px); margin: 10px 20px; padding: 10px; background: #22222a; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; }
+.toggle-btn:hover { background: #2e2e38; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+.modal-overlay.active { display: flex; }
+.modal-box { background: #131318; border-radius: 16px; padding: 36px; width: 460px; max-width: 100%; max-height: 90vh; overflow-y: auto; position: relative; text-align: center; border: 1px solid #232329; }
+.modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: #22222a; border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: #2e2e38; }
+.modal-avatar { width: 110px; height: 110px; border-radius: 16px; background: #000; margin: 6px auto 16px; overflow: hidden; border: 2px solid #2a2a32; }
+.modal-avatar img { width: 100%; height: 100%; }
+.modal-name { font-family: 'Bahnschrift', sans-serif; font-size: 26px; font-weight: 700; margin-bottom: 16px; }
+.role-badge { position: absolute; top: 16px; left: 16px; padding: 5px 14px; border-radius: 999px; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; }
+.role-player { color: #c9c9d1; border: 1px solid #5a5a64; background: #202024; }
+.role-developer { color: #ff5c5c; border: 1px solid #7a2323; background: #241414; }
+.role-owner { color: #5be6e6; border: 1px solid #1f6b70; background: #132628; }
+.title-section { display: flex; justify-content: center; margin: 2px 0 28px; position: relative; }
+.title-text-box { background: #191920; border: 1px solid #2c2c34; border-radius: 10px; height: 46px; display: flex; align-items: center; padding: 0 20px; }
+.title-badge-text { font-size: 19px; font-weight: 900; font-family: 'Bahnschrift', sans-serif; letter-spacing: 0.4px; white-space: nowrap; }
+.title-grad { background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; font-weight: 800; }
+.title-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0e0e12; border: 1px solid #2c2c34; border-radius: 8px; padding: 6px 14px; font-size: 14px; font-weight: 700; color: #a9b6ff; white-space: nowrap; display: none; }
+.title-section:hover .title-tooltip { display: block; }
+.modal-section-label { text-align: left; color: #8b8b96; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+.position-card { display: flex; align-items: stretch; background: #191920; border-radius: 10px; overflow: hidden; margin-bottom: 22px; }
+.position-card .rank-flag { min-width: 70px; padding: 12px 22px 12px 14px; }
+.position-card .pos-info { flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 14px; font-weight: 700; font-size: 15px; }
+.pos-overall { color: #fff; font-size: 20px; font-weight: 800; }
+.pos-points { color: #8b8b96; font-size: 15px; font-weight: 600; }
+.tiers-row { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; margin-bottom: 6px; }
+.tier-icon-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.tier-icon-circle { width: 54px; height: 54px; border-radius: 50%; background: #191920; display: flex; align-items: center; justify-content: center; border: 3px solid #454b54; overflow: hidden; }
+.tier-icon-circle img { width: 32px; height: 32px; }
+.tier-icon-label { font-size: 12px; font-weight: 800; letter-spacing: 0.4px; }
+.tier-elo-tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 5px 12px; font-size: 18px; font-weight: 700; white-space: nowrap; display: none; z-index: 10; box-shadow: 0 6px 14px rgba(0,0,0,0.5); pointer-events: none; text-align: center; line-height: 1.4; }
+.tier-elo-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; }
+.tier-elo-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-top: 2px; }
+.tier-elo-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
+.tier-icon-wrap:hover .tier-elo-tip { display: block; }
+</style>
+</head>
+<body>
+<div class="top-fixed-bar">
+  <div class="top-bar-left">
+    <img class="top-bar-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==" alt="Nexo">
+    <div class="top-bar-title">Nexo Tiers</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tab-bar" id="tabBar"></div>
+  <div class="top-bar">
+    <div class="info-btn-wrapper">
+      <button class="info-btn" id="infoBtn"><span class="info-icon">i</span>Info</button>
+      <div class="info-tooltip" id="infoTooltip">Loading...</div>
+    </div>
+    <div class="search-btn-wrapper" id="searchWrapper">
+      <button class="search-btn" id="searchBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+        Search
+      </button>
+      <div class="search-panel" id="searchPanel">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search player...">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2><span class="title-icon" id="titleIcon"></span><span id="titleText">Overall Leaderboard</span></h2>
+  <div class="overall-headers" id="overallHeaders">
+    <div class="header-position">Position</div>
+    <div class="header-player">Player</div>
+    <div class="header-tiers">Tiers</div>
+  </div>
+  <div id="list">Loading...</div>
+  <button id="toggleBtn" class="toggle-btn" style="display:none;">Show all</button>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="role-badge" id="modalRoleBadge"></div>
+    <div class="modal-avatar" id="modalAvatar"></div>
+    <div class="modal-name" id="modalName"></div>
+    <div class="title-section" id="titleSection">
+      <div class="title-text-box"><span class="title-badge-text title-grad" id="modalTitleText"></span>
+        <div class="title-tooltip" id="titleTooltip"></div>
+      </div>
+    </div>
+    <div class="modal-section-label">Position</div>
+    <div class="position-card" id="modalPositionCard"></div>
+    <div class="modal-section-label">Tiers</div>
+    <div class="tiers-row" id="tiersRow"></div>
+  </div>
+</div>
+<div class="global-mini-tip" id="globalMiniTip"></div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+const SUPABASE_URL = "https://dazigsqkyuejrwcbumtx.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhemlnc3FreXVlanJ3Y2J1bXR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNTkyNTQsImV4cCI6MjEwNjkzNTI1NH0.fD-amuhdDveY9TV2Uwpq6dZLjt_Yd8WsORqOlz4ulLw";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const COLLAPSED_COUNT = 5;
+let allPlayers = [];
+let expanded = false;
+let currentBoard = 'Overall';
+let currentProfileName = null;
+
+const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
+const LOWBLOCK_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
+const OVERALL_ICON_URL = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><path fill='#E8BA3A' d='M2 5h2v3h2V4h4v4h2V5h2v8H2z'/><path fill='#B8901F' d='M2 11h12v2H2z'/></svg>");
+
+const LEADERBOARDS = {
+  Overall: { key: "Overall", label: "Overall", title: "Overall Leaderboard", icon: OVERALL_ICON_URL },
+  NeliSMP: { key: "NeliSMP", label: "NeliSMP", title: "NeliSMP Leaderboard", icon: NELISMP_ICON_URL, col: "nelismp" },
+  Lowblock: { key: "Lowblock", label: "Lowblock", title: "Lowblock Leaderboard", icon: LOWBLOCK_ICON_URL, col: "lowblockranked" }
+};
+const SUB_BOARDS = ["NeliSMP", "Lowblock"];
+const NUM_MODES = SUB_BOARDS.length;
+
+// Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
+const TIER_POINTS = { "1+": 1000, "1": 800, "2+": 600, "2": 400, "3+": 250, "3": 150, "4+": 75, "4": 50, "5+": 25, "5": 15 };
+const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#655B79", "4+": "#81749a", "4": "#655B79", "5+": "#81749a", "5": "#655B79" };
+const TIER_LIGHT_COLORS = { 1: "#ffd54f", 2: "#e0e0e0", 3: "#e0a86c", 4: "#d0d8ff", 5: "#9fb0f0" };
+const TIER_ORDER = { "1+": 0, "1": 1, "2+": 2, "2": 3, "3+": 4, "3": 5, "4+": 6, "4": 7, "5+": 8, "5": 9, "none": 10 };
+
+const tierKey = (t, plus) => plus ? `${t}+` : `${t}`;
+function shortTierLabel(t, plus) { return `${plus ? 'HT' : 'LT'}${t}`; }
+function fullTierLabel(t, plus) { return shortTierLabel(t, plus); }
+function peakTierLabel(t, plus) { return `Peak ${shortTierLabel(t, plus)}`; }
+
+function isPeakBetter(cT, cP, pT, pP) {
+  if (pT == null || cT == null) return false;
+  return TIER_ORDER[tierKey(pT, pP)] < TIER_ORDER[tierKey(cT, cP)];
+}
+
+function generateTierTooltipHTML(mode, cT, cP, pT, pP) {
+  const ck = tierKey(cT, cP);
+  let html = `<div class="tip-tier" style="color:${TIER_COLORS[ck] || '#fff'}">${fullTierLabel(cT, cP)}</div>`;
+  if (pT != null && isPeakBetter(cT, cP, pT, pP)) {
+    html += `<div class="tip-peak" style="color:${TIER_COLORS[tierKey(pT, pP)] || '#fff'}">${peakTierLabel(pT, pP)}</div>`;
+  }
+  return html + `<div class="tip-points">(${TIER_POINTS[ck] || 0} points)</div>`;
+}
+
+// HT = plus, LT = no plus
+function recomputePlus() {
+  allPlayers.forEach(p => SUB_BOARDS.forEach(m => { p[`_computed_plus_${m}`] = p[`${m}_tier`] != null && p[`${m}_plus`]; }));
+}
+
+function computePlayerPoints(player) {
+  let total = 0;
+  SUB_BOARDS.forEach(key => {
+    const tier = player[`${key}_tier`];
+    if (tier != null && tier >= 1 && tier <= 5) total += TIER_POINTS[tierKey(tier, player[`_computed_plus_${key}`])] || 0;
+  });
+  return total;
+}
+
+function getPlayerTitle(points, player) {
+  const isNexo = SUB_BOARDS.every(m => {
+    const sorted = allPlayers.filter(p => p[`${m}_tier`] != null).sort((a, b) => TIER_ORDER[tierKey(a[`${m}_tier`], a[`_computed_plus_${m}`])] - TIER_ORDER[tierKey(b[`${m}_tier`], b[`_computed_plus_${m}`])]);
+    return sorted.length > 0 && sorted[0].id === player.id;
+  });
+  if (isNexo) return "Nexo";
+  if (points >= 750 * NUM_MODES) return "Divine";
+  if (points >= 350 * NUM_MODES) return "Celestial";
+  if (points >= 250 * NUM_MODES) return "Eternal";
+  if (points >= 100 * NUM_MODES) return "Ascendant";
+  return null;
+}
+
+const TITLE_COLORS = {
+  Nexo: "linear-gradient(100deg, #c190ec, #a13ca5)",
+  Divine: "linear-gradient(100deg, #cbd4ec, #6468ab)",
+  Celestial: "linear-gradient(100deg, #fac140, #c34513)",
+  Eternal: "linear-gradient(100deg, #f8ab86, #cb322b)",
+  Ascendant: "linear-gradient(100deg, #d67638, #b0483c)"
+};
+const TITLE_REQUIREMENTS = {
+  Nexo: "Rank #1 in all gamemodes",
+  Divine: `Get ${750 * NUM_MODES}+ points`,
+  Celestial: `Get ${350 * NUM_MODES}+ points`,
+  Eternal: `Get ${250 * NUM_MODES}+ points`,
+  Ascendant: `Get ${100 * NUM_MODES}+ points`
+};
+
+const list = document.getElementById("list");
+const toggleBtn = document.getElementById("toggleBtn");
+const tabBar = document.getElementById("tabBar");
+const titleIcon = document.getElementById("titleIcon");
+const titleText = document.getElementById("titleText");
+const infoTooltip = document.getElementById("infoTooltip");
+const overallHeaders = document.getElementById("overallHeaders");
+
+// ---------- Routing ----------
+const hist = (m, u) => { try { history[m](null, '', u); } catch (e) {} };
+function parseRoute() {
+  const p = window.location.pathname.split('/').filter(Boolean);
+  let board = 'Overall', profile = null;
+  if (p[0] === 'player' && p[1]) profile = decodeURIComponent(p[1]);
+  else if (p[0]) { const k = Object.keys(LEADERBOARDS).find(k => k.toLowerCase() === p[0].toLowerCase()); if (k) board = k; }
+  return { board, profile };
+}
+function navigateTo(board, profileName) {
+  const newPath = profileName ? `/player/${encodeURIComponent(profileName)}` : `/${board.toLowerCase()}`;
+  if (window.location.pathname !== newPath) hist('pushState', newPath);
+}
+function openRouteProfile() {
+  const player = allPlayers.find(p => p.name.toLowerCase() === currentProfileName.toLowerCase());
+  if (player) openProfile(player);
+  else { currentProfileName = null; hist('replaceState', `/${currentBoard.toLowerCase()}`); }
+}
+function handleRoute() {
+  const { board, profile } = parseRoute();
+  currentBoard = board;
+  currentProfileName = profile;
+  renderTabBar();
+  setTitle(currentBoard);
+  overallHeaders.style.display = (currentBoard === 'Overall') ? 'flex' : 'none';
+  if (!profile) document.getElementById("modalOverlay").classList.remove('active');
+  loadPlayersAndRender().then(() => { if (profile) openRouteProfile(); });
+}
+window.addEventListener('popstate', handleRoute);
+
+function renderTabBar() {
+  tabBar.innerHTML = "";
+  Object.values(LEADERBOARDS).forEach(board => {
+    const el = document.createElement("div");
+    el.className = "tab-button" + (board.key === currentBoard && !currentProfileName ? " active" : "");
+    el.innerHTML = `<img src="${board.icon}" alt="${board.label}" style="width:32px;height:32px;"><span class="tab-label">${board.label}</span>`;
+    el.addEventListener("click", () => {
+      currentProfileName = null;
+      currentBoard = board.key;
+      navigateTo(board.key, null);
+      renderTabBar();
+      setTitle(board.key);
+      overallHeaders.style.display = (board.key === 'Overall') ? 'flex' : 'none';
+      loadPlayersAndRender();
+    });
+    tabBar.appendChild(el);
+  });
+}
+
+function setTitle(key) {
+  titleIcon.innerHTML = `<img src="${LEADERBOARDS[key].icon}" alt="${LEADERBOARDS[key].label}" style="width:48px;height:48px;">`;
+  titleText.textContent = LEADERBOARDS[key].title;
+}
+
+// ---------- Rendering ----------
+function tierEntries(player) {
+  const entries = SUB_BOARDS.map(key => ({
+    tier: player[`${key}_tier`], plus: player[`_computed_plus_${key}`],
+    peakTier: player[`${key}_peak_tier`] ?? null, peakPlus: player[`${key}_peak_plus`] ?? false,
+    board: LEADERBOARDS[key], mode: key
+  }));
+  const k = e => e.tier != null ? tierKey(e.tier, e.plus) : "none";
+  return entries.sort((a, b) => TIER_ORDER[k(a)] - TIER_ORDER[k(b)]);
+}
+
+function renderMiniTierIcons(player) {
+  let html = "";
+  tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
+    if (tier != null && tier >= 1 && tier <= 5) {
+      const color = TIER_COLORS[tierKey(tier, plus)];
+      html += `
+        <div class="mini-tier-wrap" data-mode="${mode}" data-current-tier="${tier}" data-current-plus="${plus ? '1' : '0'}" data-peak-tier="${peakTier ?? ''}" data-peak-plus="${peakPlus ? '1' : '0'}">
+          <div class="mini-tier-circle" style="border-color:${color}"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="mini-tier-label" style="border-color:${color}; color:${color};">${shortTierLabel(tier, plus)}</div>
+        </div>`;
+    } else {
+      html += `
+        <div class="mini-tier-wrap no-tier" data-mode="${mode}" data-current-tier="" data-current-plus="" data-peak-tier="" data-peak-plus="">
+          <div class="mini-tier-circle"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="mini-tier-label">-</div>
+        </div>`;
+    }
+  });
+  return html;
+}
+
+const globalMiniTip = document.getElementById("globalMiniTip");
+list.addEventListener("mouseover", (e) => {
+  const wrap = e.target.closest(".mini-tier-wrap");
+  if (!wrap) return;
+  const cT = parseInt(wrap.dataset.currentTier);
+  globalMiniTip.innerHTML = isNaN(cT)
+    ? `<div class="tip-tier">No Tier</div>`
+    : generateTierTooltipHTML(wrap.dataset.mode, cT, wrap.dataset.currentPlus === '1', wrap.dataset.peakTier ? parseInt(wrap.dataset.peakTier) : null, wrap.dataset.peakPlus === '1');
+  globalMiniTip.style.display = "block";
+  const rect = wrap.getBoundingClientRect();
+  globalMiniTip.style.left = (rect.left + rect.width / 2) + "px";
+  globalMiniTip.style.top = (rect.top - 8) + "px";
+});
+list.addEventListener("mouseout", (e) => {
+  if (!e.target.closest(".mini-tier-wrap")?.contains(e.relatedTarget)) globalMiniTip.style.display = "none";
+});
+document.addEventListener("scroll", () => { globalMiniTip.style.display = "none"; }, true);
+
+function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
+
+function render() {
+  const isOverall = currentBoard === "Overall";
+  list.innerHTML = "";
+  overallHeaders.style.display = isOverall ? 'flex' : 'none';
+
+  if (isOverall) {
+    renderInfoTooltip();
+    const sorted = [...allPlayers]
+      .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
+      .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
+      .sort((a, b) => b.__points - a.__points);
+
+    if (sorted.length === 0) {
+      list.innerHTML = `<div style="text-align:center;padding:30px;color:#8b8b96;">No players on this leaderboard yet</div>`;
+      toggleBtn.style.display = "none";
+      return;
+    }
+    (expanded ? sorted : sorted.slice(0, COLLAPSED_COUNT)).forEach((p, i) => {
+      const rank = i + 1;
+      const div = document.createElement("div");
+      div.className = `player ${rankClass(rank)}`;
+      div.innerHTML = `
+        <div class="rank-flag">
+          <span class="rank-num">${rank}.</span>
+          <div class="avatar"><img src="${avatarUrl(p.name, 38)}" alt="${p.name}" onerror="this.parentElement.innerHTML='?'"></div>
+        </div>
+        <div class="info">
+          <div class="player-name">${p.name}</div>
+          <div class="player-title-row">
+            ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]}">${p.__title}</span></div>` : ''}
+            <span class="player-points">(${p.__points} points)</span>
+          </div>
+        </div>
+        <div class="elo-wrap"><div class="mini-tiers-row">${renderMiniTierIcons(p)}</div></div>`;
+      div.addEventListener("click", () => openFromList(p));
+      list.appendChild(div);
+    });
+    toggleBtn.style.display = sorted.length > COLLAPSED_COUNT ? "block" : "none";
+    toggleBtn.textContent = expanded ? "Show less" : `Show all (${sorted.length})`;
+  } else {
+    const mode = currentBoard;
+    const tierGroups = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+    allPlayers.forEach(p => { const t = p[`${mode}_tier`]; if (t >= 1 && t <= 5) tierGroups[t].push(p); });
+    for (let t = 1; t <= 5; t++) {
+      tierGroups[t].sort((a, b) => (b[`_computed_plus_${mode}`] - a[`_computed_plus_${mode}`]) || a.name.localeCompare(b.name));
+    }
+    const columnsDiv = document.createElement("div");
+    columnsDiv.className = "tier-columns";
+    for (let t = 1; t <= 5; t++) {
+      const col = document.createElement("div");
+      col.className = `tier-column tier-column-${t}`;
+      col.innerHTML = `<div class="tier-header" style="color:${TIER_COLORS[tierKey(t, true)]}">Tier ${t}</div>`;
+      const playersDiv = document.createElement("div");
+      playersDiv.className = "tier-players";
+      tierGroups[t].forEach(p => {
+        const plus = p[`_computed_plus_${mode}`];
+        const lightColor = TIER_LIGHT_COLORS[t];
+        const div = document.createElement("div");
+        div.className = `tier-player${plus ? ' plus' : ''}`;
+        if (plus) div.style.border = `1px solid ${lightColor}`;
+        const badgeHtml = plus
+          ? `<span class="tier-badge plus" style="background:${lightColor}; color:#1a1a1a; border:1px solid ${lightColor};">HT</span>`
+          : `<span class="tier-badge"></span>`;
+        div.innerHTML = `
+          <div class="tier-avatar"><img src="${avatarUrl(p.name, 28)}" alt="${p.name}" onerror="this.parentElement.innerHTML='?'"></div>
+          <span class="tier-name">${p.name}</span>
+          ${badgeHtml}`;
+        div.addEventListener("click", () => openFromList(p));
+        playersDiv.appendChild(div);
+      });
+      col.appendChild(playersDiv);
+      columnsDiv.appendChild(col);
+    }
+    list.appendChild(columnsDiv);
+    toggleBtn.style.display = "none";
+  }
+}
+
+// ---------- Info tooltip ----------
+let infoTab = 'titles';
+function renderInfoTooltip() {
+  const titlesHtml = Object.keys(TITLE_REQUIREMENTS).map(name => `
+    <div class="info-tooltip-row title-row">
+      <span class="title-word title-grad" style="background-image:${TITLE_COLORS[name]}">${name}</span>
+      <span class="title-desc">${TITLE_REQUIREMENTS[name]}</span>
+    </div>`).join('');
+  const pointsHtml = ["1+", "1", "2+", "2", "3+", "3", "4+", "4", "5+", "5"].map(key => `
+    <div class="info-tooltip-row points-row">
+      <span class="tier-name" style="color:${TIER_COLORS[key]}">${shortTierLabel(parseInt(key), key.endsWith('+'))}</span>
+      <span class="tier-pts">${TIER_POINTS[key]} points</span>
+    </div>`).join('');
+  infoTooltip.innerHTML = `
+    <div class="tooltip-tabs">
+      <span class="tooltip-tab ${infoTab === 'titles' ? 'active' : ''}" data-tab="titles">Titles</span>
+      <span class="tooltip-tab ${infoTab === 'points' ? 'active' : ''}" data-tab="points">Points</span>
+    </div>
+    <div class="tooltip-content ${infoTab === 'titles' ? '' : 'hidden'}" id="tooltipTitles"><div class="info-tooltip-title">Titles</div>${titlesHtml}</div>
+    <div class="tooltip-content ${infoTab === 'points' ? '' : 'hidden'}" id="tooltipPoints"><div class="info-tooltip-title">Points</div>${pointsHtml}</div>`;
+  infoTooltip.classList.add("overall-tooltip");
+  infoTooltip.querySelectorAll('.tooltip-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.stopPropagation();
+      infoTab = tab.dataset.tab;
+      infoTooltip.querySelectorAll('.tooltip-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tooltipTitles').classList.toggle('hidden', infoTab !== 'titles');
+      document.getElementById('tooltipPoints').classList.toggle('hidden', infoTab !== 'points');
+    });
+  });
+}
+
+function getRole(name) {
+  if (name === "TestingCheats") return { label: "Developer", cls: "role-developer" };
+  if (name === "cutekiss") return { label: "Tierlist Owner", cls: "role-owner" };
+  return { label: "Player", cls: "role-player" };
+}
+function rankClass(rank) { return rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : ""; }
+function avatarUrl(name, size) { return `https://mc-heads.net/avatar/${encodeURIComponent(name)}/${size}`; }
+
+// ---------- Profile modal ----------
+function renderProfileTiers(player) {
+  let html = "";
+  tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
+    if (tier != null && tier >= 1 && tier <= 5) {
+      const color = TIER_COLORS[tierKey(tier, plus)];
+      html += `
+        <div class="tier-icon-wrap">
+          <div class="tier-icon-circle" style="border-color:${color}"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="tier-icon-label" style="color:${color}">${shortTierLabel(tier, plus)}</div>
+          <div class="tier-elo-tip">${generateTierTooltipHTML(mode, tier, plus, peakTier, peakPlus)}</div>
+        </div>`;
+    } else {
+      html += `
+        <div class="tier-icon-wrap" style="opacity:0.6">
+          <div class="tier-icon-circle" style="border-color:#454b54"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="tier-icon-label" style="color:#8b8b96">No Tier</div>
+          <div class="tier-elo-tip"><div class="tip-tier">No Tier</div></div>
+        </div>`;
+    }
+  });
+  document.getElementById("tiersRow").innerHTML = html;
+}
+
+function openProfile(player) {
+  document.getElementById("modalAvatar").innerHTML = `<img src="${avatarUrl(player.name, 110)}" alt="${player.name}" onerror="this.parentElement.innerHTML='?'">`;
+  document.getElementById("modalName").textContent = player.name;
+  const role = getRole(player.name);
+  const roleBadge = document.getElementById("modalRoleBadge");
+  roleBadge.textContent = role.label;
+  roleBadge.className = `role-badge ${role.cls}`;
+  const totalPoints = computePlayerPoints(player);
+  const title = getPlayerTitle(totalPoints, player);
+  const titleSection = document.getElementById("titleSection");
+  if (title) {
+    document.getElementById("modalTitleText").textContent = title;
+    document.getElementById("modalTitleText").style.backgroundImage = TITLE_COLORS[title];
+    document.getElementById("titleTooltip").textContent = TITLE_REQUIREMENTS[title] || "";
+    titleSection.style.display = "flex";
+  } else titleSection.style.display = "none";
+  const overallSorted = allPlayers
+    .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
+    .map(p => ({ ...p, __points: computePlayerPoints(p) }))
+    .sort((a, b) => b.__points - a.__points);
+  const rank = overallSorted.findIndex(p => p.id === player.id) + 1;
+  const posCard = document.getElementById("modalPositionCard");
+  posCard.className = `position-card ${rankClass(rank)}`;
+  posCard.innerHTML = `
+    <div class="rank-flag"><span class="rank-num">${rank}.</span></div>
+    <div class="pos-info"><span class="pos-overall">Overall</span><span class="pos-points">(${totalPoints} Points)</span></div>`;
+  renderProfileTiers(player);
+  document.getElementById("modalOverlay").classList.add("active");
+}
+
+function closeProfile() {
+  document.getElementById("modalOverlay").classList.remove("active");
+  currentProfileName = null;
+  navigateTo(currentBoard, null);
+}
+document.getElementById("modalClose").addEventListener("click", closeProfile);
+document.getElementById("modalOverlay").addEventListener("click", (e) => { if (e.target === document.getElementById("modalOverlay")) closeProfile(); });
+
+// ---------- Search ----------
+const searchBtn = document.getElementById("searchBtn");
+const searchPanel = document.getElementById("searchPanel");
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+searchBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  searchPanel.classList.toggle("active");
+  if (searchPanel.classList.contains("active")) { searchInput.value = ""; renderSearchResults(""); setTimeout(() => searchInput.focus(), 30); }
+});
+searchInput.addEventListener("input", () => renderSearchResults(searchInput.value));
+function renderSearchResults(query) {
+  const q = query.trim().toLowerCase();
+  const matches = (q ? allPlayers.filter(p => p.name.toLowerCase().includes(q)) : allPlayers).slice(0, 8);
+  if (matches.length === 0) { searchResults.innerHTML = '<div class="search-empty">No players found</div>'; return; }
+  searchResults.innerHTML = "";
+  matches.forEach(p => {
+    const row = document.createElement("div");
+    row.className = "search-result-item";
+    row.innerHTML = `<img src="${avatarUrl(p.name, 26)}" alt="" onerror="this.style.display='none'"><span>${p.name}</span>`;
+    row.addEventListener("click", () => { searchPanel.classList.remove("active"); openFromList(p); });
+    searchResults.appendChild(row);
+  });
+}
+document.addEventListener("click", (e) => {
+  if (!document.querySelector(".search-btn-wrapper").contains(e.target)) searchPanel.classList.remove("active");
+  if (!infoTooltip.contains(e.target) && e.target !== document.getElementById("infoBtn")) infoTooltip.classList.remove("active");
+});
+document.getElementById("infoBtn").addEventListener("click", (e) => { e.stopPropagation(); infoTooltip.classList.toggle("active"); });
+
+// ---------- Data ----------
+function parseTier(t) {
+  const m = /^([HL])T([1-5])$/i.exec((t || '').trim());
+  return m ? { tier: +m[2], plus: m[1].toUpperCase() === 'H' } : { tier: null, plus: false };
+}
+function mapPlayer(row) {
+  const o = { id: row.id, name: row.player };
+  SUB_BOARDS.forEach(key => {
+    const col = LEADERBOARDS[key].col;
+    const cur = parseTier(row[`${col}_tier`]), peak = parseTier(row[`${col}_peaktier`]);
+    o[`${key}_tier`] = cur.tier; o[`${key}_plus`] = cur.plus;
+    o[`${key}_peak_tier`] = peak.tier; o[`${key}_peak_plus`] = peak.plus;
+  });
+  return o;
+}
+
+async function loadPlayersAndRender() {
+  const { data, error } = await supabase.from("players")
+    .select("id,player,nelismp_tier,nelismp_peaktier,lowblockranked_tier,lowblockranked_peaktier");
+  if (error) { console.error(error); list.innerHTML = `<div style="padding:30px;text-align:center;color:#ff6b6b;">Error loading data<br><small style="color:#8b8b96">${error.code || ""} ${error.message || ""}</small></div>`; return; }
+  allPlayers = data.filter(r => r.player).map(mapPlayer);
+  recomputePlus();
+  render();
+}
+
+toggleBtn.addEventListener("click", () => { expanded = !expanded; render(); });
+
+// ---------- Initial load ----------
+handleRoute();
+setInterval(loadPlayersAndRender, 5000);
+</script>
+</body>
+</html>
