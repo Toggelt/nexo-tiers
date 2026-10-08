@@ -15,14 +15,14 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .top-bar-image { width: 96px; height: 96px; border-radius: 10px; object-fit: contain; }
 .top-bar-title { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 45px; color: #fff; letter-spacing: 1px; }
 
-.container { position: relative; z-index: 1; width: 1250px; max-width: 100%; background: #131318; padding: 0; padding-bottom: 20px; border-radius: 0 0 14px 14px; border: 1px solid #232329; border-top: none; margin: 20px auto; box-shadow: 0 0 30px rgba(0,0,0,0.4); overflow: visible; }
-.tab-bar { display: flex; width: 100%; height: 70px; margin: 0; background: transparent; border-bottom: none; }
+.container { position: relative; z-index: 1; width: 1100px; max-width: 100%; min-height: calc(100vh - 150px); background: #131318; padding: 0; padding-bottom: 20px; border-radius: 0; border: 1px solid #232329; border-top: none; border-bottom: none; margin: 0 auto; overflow: visible; }
+.tab-bar { display: flex; width: 100%; height: 52px; margin: 0; background: transparent; border-bottom: none; }
 .tab-button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: #8b8b96; background: #1c1c22; border: none; margin-right: 3px; transition: background 0.15s, color 0.15s; user-select: none; font-size: 15px; font-weight: 700; letter-spacing: 0.4px; font-family: Arial, sans-serif; border-radius: 8px 8px 0 0; }
 .tab-button:last-child { margin-right: 0; }
 .tab-button:hover { background: #22222a; color: #c9c9d1; }
 .tab-button.active { background: #131318; color: #fff; }
 .tab-button.active span.tab-label { color: #fff; }
-.tab-button img { width: 40px !important; height: 40px !important; }
+.tab-button img { width: 28px !important; height: 28px !important; }
 .tab-button img, .mini-tier-circle img, .tier-icon-circle img { image-rendering: pixelated; }
 .tab-label { font-size: 17.6px; font-weight: 700; letter-spacing: 0.4px; white-space: nowrap; }
 
@@ -149,6 +149,18 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-elo-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
 .tier-elo-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 .tier-icon-wrap:hover .tier-elo-tip { display: block; }
+
+/* ---------- Minecraft-style inventory ---------- */
+.mc-inv { width: 520px; max-width: calc(100% - 40px); margin: 30px auto 10px; background: #c6c6c6; padding: 14px 16px 16px; border: 4px solid; border-color: #fff #555 #555 #fff; outline: 2px solid #000; font-family: 'Minecraft', monospace; image-rendering: pixelated; }
+.mc-inv-title { color: #404040; font-size: 18px; margin: 0 0 8px 2px; }
+.mc-grid { display: grid; grid-template-columns: repeat(9, 1fr); }
+.mc-hotbar { display: grid; grid-template-columns: repeat(9, 1fr); margin-top: 10px; }
+.mc-slot { position: relative; aspect-ratio: 1 / 1; background: #8b8b8b; border: 2px solid; border-color: #373737 #fff #fff #373737; display: flex; align-items: center; justify-content: center; cursor: default; }
+.mc-slot img.mc-icon { width: 80%; height: 80%; image-rendering: pixelated; object-fit: contain; pointer-events: none; }
+.mc-fallback { width: 70%; height: 70%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; border: 2px solid rgba(0,0,0,0.45); pointer-events: none; }
+.mc-count { position: absolute; right: 2px; bottom: 0; color: #fff; font-size: 16px; text-shadow: 2px 2px 0 #3f3f3f; pointer-events: none; }
+.mc-slot:hover::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.5); pointer-events: none; }
+.mc-tip { position: fixed; z-index: 2000; display: none; pointer-events: none; background: rgba(16,0,16,0.94); border: 2px solid #25005c; box-shadow: inset 0 0 0 1px #5000a0, 0 0 0 2px rgba(16,0,16,0.94); padding: 6px 8px; font-family: 'Minecraft', monospace; font-size: 16px; line-height: 1.35; white-space: nowrap; text-shadow: 2px 2px 0 #3f3f3f; image-rendering: pixelated; }
 </style>
 </head>
 <body>
@@ -218,13 +230,15 @@ let currentProfileName = null;
 
 const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
 const LOWBLOCK_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
+const INVENTORY_ICON_URL = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="3" width="14" height="11" fill="#a0692f"/><rect x="1" y="3" width="14" height="1" fill="#c88a45"/><rect x="1" y="7" width="14" height="2" fill="#5b3a16"/><rect x="1" y="13" width="14" height="1" fill="#5b3a16"/><rect x="7" y="6" width="2" height="4" fill="#d8d8d8"/><rect x="1" y="3" width="1" height="11" fill="#5b3a16"/><rect x="14" y="3" width="1" height="11" fill="#5b3a16"/></svg>');
 const OVERALL_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true";
 const imgStyle = b => b.key === "Overall" ? "image-rendering:auto;border-radius:6px;" : "";
 
 const LEADERBOARDS = {
   Overall: { key: "Overall", label: "Overall", title: "Overall Leaderboard", icon: OVERALL_ICON_URL },
   NeliSMP: { key: "NeliSMP", label: "NeliSMP", title: "NeliSMP Leaderboard", icon: NELISMP_ICON_URL, col: "nelismp" },
-  Lowblock: { key: "Lowblock", label: "Lowblock", title: "Lowblock Leaderboard", icon: LOWBLOCK_ICON_URL, col: "lowblockranked" }
+  Lowblock: { key: "Lowblock", label: "Lowblock", title: "Lowblock Leaderboard", icon: LOWBLOCK_ICON_URL, col: "lowblockranked" },
+  Inventory: { key: "Inventory", label: "Inventory", title: "Inventory", icon: INVENTORY_ICON_URL, isInventory: true }
 };
 const SUB_BOARDS = ["NeliSMP", "Lowblock"];
 const NUM_MODES = SUB_BOARDS.length;
@@ -287,7 +301,7 @@ const TITLE_COLORS = {
   Nova: "linear-gradient(100deg, #c190ec, #a13ca5)",
   Divine: "linear-gradient(100deg, #cbd4ec, #6468ab)",
   Celestial: "linear-gradient(100deg, #fac140, #c34513)",
-  Eternal: "linear-gradient(100deg, #f8ab86, #cb322b)",
+  Eternal: "linear-gradient(100deg, #b6f5a8, #1f9e45)",
   Ascendant: "linear-gradient(100deg, #d67638, #b0483c)"
 };
 const TITLE_REQUIREMENTS = {
@@ -407,9 +421,111 @@ function assignRanks(sorted) {
   return sorted;
 }
 
+
+// ---------- Minecraft-style inventory ----------
+// EDIT YOUR ITEMS HERE.
+//  slot:   0-26 = main inventory (top-left to bottom-right), 27-35 = hotbar
+//  name:   item name. Supports Minecraft colour codes: &0-&9 &a-&f, &l bold, &o italic, &r reset
+//  rarity: "common" (white) | "uncommon" (yellow) | "rare" (aqua) | "epic" (light purple)
+//  icon:   image URL (optional, e.g. https://github.com/Toggelt/nexo-tiers/blob/main/assets/sword.png?raw=true)
+//  color:  fallback square colour when no icon is given
+//  count:  stack size (shown bottom-right when above 1)
+//  lore:   description lines ("" = blank line). Colour codes work here too.
+//  attributes: lines shown in blue like Minecraft attributes, e.g. "+7 Attack Damage"
+//  slotLabel: grey line before the attributes, e.g. "When in Main Hand:"
+const ITEMS = [
+  { slot: 0, name: "Example Sword", rarity: "epic", color: "#4fd6d6", count: 1,
+    lore: ["&7A placeholder item.", "&7Replace me in the ITEMS list."],
+    slotLabel: "When in Main Hand:", attributes: ["+7 Attack Damage", "+1.6 Attack Speed"] },
+  { slot: 1, name: "Example Apple", rarity: "uncommon", color: "#d94a4a", count: 16,
+    lore: ["&7Restores &chunger&7."] },
+  { slot: 2, name: "Example Kit Crate", rarity: "rare", color: "#8a5cd6", count: 3,
+    lore: ["&7Right click to open.", "", "&6Contains random rewards"] },
+  { slot: 27, name: "Example Pickaxe", rarity: "common", color: "#c0c0c0", count: 1,
+    lore: ["&7Mines blocks."], slotLabel: "When in Main Hand:", attributes: ["+2 Attack Damage"] }
+];
+
+const MC_COLORS = { 0:'#000000',1:'#0000AA',2:'#00AA00',3:'#00AAAA',4:'#AA0000',5:'#AA00AA',6:'#FFAA00',7:'#AAAAAA',8:'#555555',9:'#5555FF',a:'#55FF55',b:'#55FFFF',c:'#FF5555',d:'#FF55FF',e:'#FFFF55',f:'#FFFFFF' };
+const RARITY_COLORS = { common: '#FFFFFF', uncommon: '#FFFF55', rare: '#55FFFF', epic: '#FF55FF' };
+const escHtml = ch => ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : ch === '&' ? '&amp;' : ch;
+
+function mcText(str, base) {
+  let color = base, bold = false, italic = false, out = '', buf = '';
+  const flush = () => { if (buf) { out += `<span style="color:${color};${bold ? 'font-weight:bold;' : ''}${italic ? 'font-style:italic;' : ''}">${buf}</span>`; buf = ''; } };
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === '&' && i + 1 < str.length && /[0-9a-flor]/i.test(str[i + 1])) {
+      flush();
+      const c = str[++i].toLowerCase();
+      if (MC_COLORS[c]) { color = MC_COLORS[c]; bold = false; italic = false; }
+      else if (c === 'l') bold = true;
+      else if (c === 'o') italic = true;
+      else if (c === 'r') { color = base; bold = false; italic = false; }
+    } else buf += escHtml(str[i]);
+  }
+  flush();
+  return out || '&nbsp;';
+}
+
+function itemTooltipHTML(item) {
+  const base = RARITY_COLORS[item.rarity] || '#FFFFFF';
+  let html = `<div>${mcText(item.name, base)}</div>`;
+  (item.lore || []).forEach(l => { html += `<div>${l === '' ? '&nbsp;' : mcText(l, '#AA00AA')}</div>`; });
+  if (item.attributes && item.attributes.length) {
+    html += `<div>&nbsp;</div>`;
+    if (item.slotLabel) html += `<div>${mcText(item.slotLabel, '#AAAAAA')}</div>`;
+    item.attributes.forEach(a => { html += `<div>${mcText(' ' + a, '#5555FF')}</div>`; });
+  }
+  return html;
+}
+
+const mcTip = document.createElement('div');
+mcTip.className = 'mc-tip';
+document.body.appendChild(mcTip);
+function moveMcTip(e) {
+  const pad = 14;
+  let x = e.clientX + pad, y = e.clientY - 30;
+  const w = mcTip.offsetWidth, h = mcTip.offsetHeight;
+  if (x + w > window.innerWidth - 4) x = e.clientX - w - pad;
+  if (y + h > window.innerHeight - 4) y = window.innerHeight - h - 4;
+  if (y < 4) y = 4;
+  mcTip.style.left = Math.max(4, x) + 'px';
+  mcTip.style.top = y + 'px';
+}
+
+function renderInventory() {
+  const bySlot = {};
+  ITEMS.forEach(it => { bySlot[it.slot] = it; });
+  const slotHtml = i => {
+    const it = bySlot[i];
+    if (!it) return `<div class="mc-slot" data-slot="${i}"></div>`;
+    const icon = it.icon
+      ? `<img class="mc-icon" src="${it.icon}" alt="">`
+      : `<div class="mc-fallback" style="background:${it.color || '#888'}">${escHtml((it.name || '?')[0].toUpperCase())}</div>`;
+    return `<div class="mc-slot" data-slot="${i}">${icon}${it.count > 1 ? `<span class="mc-count">${it.count}</span>` : ''}</div>`;
+  };
+  let main = '', hot = '';
+  for (let i = 0; i < 27; i++) main += slotHtml(i);
+  for (let i = 27; i < 36; i++) hot += slotHtml(i);
+  list.innerHTML = `<div class="mc-inv"><div class="mc-inv-title">Inventory</div><div class="mc-grid">${main}</div><div class="mc-hotbar">${hot}</div></div>`;
+  list.querySelectorAll('.mc-slot').forEach(el => {
+    const it = bySlot[+el.dataset.slot];
+    if (!it) return;
+    el.addEventListener('mouseenter', e => { mcTip.innerHTML = itemTooltipHTML(it); mcTip.style.display = 'block'; moveMcTip(e); });
+    el.addEventListener('mousemove', moveMcTip);
+    el.addEventListener('mouseleave', () => { mcTip.style.display = 'none'; });
+  });
+}
+
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
 
 function render() {
+  if (currentBoard === "Inventory") {
+    overallHeaders.style.display = 'none';
+    toggleBtn.style.display = 'none';
+    if (!list.querySelector('.mc-inv')) { list.innerHTML = ""; renderInventory(); }
+    return;
+  }
+  mcTip.style.display = "none";
   const isOverall = currentBoard === "Overall";
   list.innerHTML = "";
   overallHeaders.style.display = isOverall ? 'flex' : 'none';
