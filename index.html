@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nexo Tiers</title>
+<link rel="preload" href="https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf" as="font" type="font/otf" crossorigin>
 <link rel="icon" type="image/png" href="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true">
 <style>
 @font-face { font-family: 'Minecraft'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
@@ -15,10 +16,11 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .top-bar-image { width: 96px; height: 96px; border-radius: 10px; object-fit: contain; }
 .top-bar-title { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 45px; color: #fff; letter-spacing: 1px; }
 
-.container { position: relative; z-index: 1; width: 1100px; max-width: 100%; min-height: calc(100vh - 150px); background: #131318; padding: 0; padding-bottom: 20px; border-radius: 0; border: 1px solid #232329; border-top: none; border-bottom: none; margin: 0 auto; overflow: visible; }
-.tab-bar { display: flex; width: 100%; height: 52px; margin: 0; background: transparent; border-bottom: none; }
+.container { position: relative; z-index: 1; width: 1100px; max-width: 100%; min-height: calc(100vh - 150px); background: #131318; padding: 0; padding-bottom: 20px; border-radius: 14px 14px 0 0; border: none; margin: 0 auto; overflow: visible; }
+.tab-bar { display: flex; width: 100%; height: 52px; margin: 0; background: #0b0b0e; border-bottom: none; border-radius: 14px 14px 0 0; overflow: hidden; }
 .tab-button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: #8b8b96; background: #1c1c22; border: none; margin-right: 3px; transition: background 0.15s, color 0.15s; user-select: none; font-size: 15px; font-weight: 700; letter-spacing: 0.4px; font-family: Arial, sans-serif; border-radius: 8px 8px 0 0; }
-.tab-button:last-child { margin-right: 0; }
+.tab-button:last-child { margin-right: 0; border-top-right-radius: 14px; }
+.tab-button:first-child { border-top-left-radius: 14px; }
 .tab-button:hover { background: #22222a; color: #c9c9d1; }
 .tab-button.active { background: #131318; color: #fff; }
 .tab-button.active span.tab-label { color: #fff; }
@@ -161,6 +163,25 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .mc-count { position: absolute; right: 2px; bottom: 0; color: #fff; font-size: 16px; text-shadow: 2px 2px 0 #3f3f3f; pointer-events: none; }
 .mc-slot:hover::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.5); pointer-events: none; }
 .mc-tip { position: fixed; z-index: 2000; display: none; pointer-events: none; background: rgba(16,0,16,0.94); border: 2px solid #25005c; box-shadow: inset 0 0 0 1px #5000a0, 0 0 0 2px rgba(16,0,16,0.94); padding: 6px 8px; font-family: 'Minecraft', monospace; font-size: 16px; line-height: 1.35; white-space: nowrap; text-shadow: 2px 2px 0 #3f3f3f; image-rendering: pixelated; }
+
+.discord-btn { display: inline-flex; align-items: center; gap: 9px; margin-left: 18px; padding: 10px 20px; background: #5865F2; color: #fff; border-radius: 999px; text-decoration: none; font-family: 'gg sans', 'Noto Sans', 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 600; font-size: 17px; transition: background 0.15s; }
+.discord-btn:hover { background: #4752C4; }
+.discord-btn svg { width: 24px; height: 24px; flex-shrink: 0; }
+.kit-box { width: 640px; }
+.kit-header { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 4px 0 6px; }
+.kit-header img { width: 44px; height: 44px; image-rendering: pixelated; }
+.kit-header span { font-family: 'Bahnschrift', sans-serif; font-size: 30px; font-weight: 700; }
+.kit-sub { font-size: 14px; color: #fff; margin-bottom: 18px; }
+.mc-inv { width: 100%; max-width: none; margin: 0; }
+.mc-row { display: grid; grid-template-columns: repeat(9, 1fr); }
+.mc-inv-title { margin: 10px 0 6px 2px; text-align: left; }
+.mc-glint { position: absolute; inset: 10%; pointer-events: none; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; image-rendering: pixelated; background: linear-gradient(120deg, rgba(120,40,255,0.35) 0%, rgba(190,120,255,0.85) 50%, rgba(120,40,255,0.35) 100%); background-size: 300% 300%; animation: mcglint 2.6s linear infinite; mix-blend-mode: screen; }
+@keyframes mcglint { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }
+
+/* ---------- Kit display: Minecraft font everywhere + equipment/player model area ---------- */
+.kit-box, .kit-box *, .mc-inv, .mc-inv *, .mc-tip, .mc-tip * { font-family: 'Minecraft', monospace !important; font-synthesis: none; }
+.kit-box button, .mc-count, .mc-fallback { font-family: 'Minecraft', monospace !important; }
+.mc-equip { display: grid; grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(4, auto); margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -168,12 +189,17 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
   <div class="top-bar-left">
     <img class="top-bar-image" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt="Nexo">
     <div class="top-bar-title">Nexo Tiers</div>
+    <a class="discord-btn" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+      <span>Discord</span>
+    </a>
   </div>
 </div>
 
 <div class="container">
   <div class="tab-bar" id="tabBar"></div>
   <div class="top-bar">
+    <button class="info-btn" id="kitBtn" style="display:none;">Kit</button>
     <div class="info-btn-wrapper">
       <button class="info-btn" id="infoBtn"><span class="info-icon">i</span>Info</button>
       <div class="info-tooltip" id="infoTooltip">Loading...</div>
@@ -216,6 +242,14 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
     <div class="tiers-row" id="tiersRow"></div>
   </div>
 </div>
+<div class="modal-overlay" id="kitOverlay">
+  <div class="modal-box kit-box">
+    <button class="modal-close" id="kitClose">✕</button>
+    <div class="kit-header"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==" alt="NeliSMP"><span>NeliSMP Kit</span></div>
+    <div class="kit-sub">Rounds are first to 3</div>
+    <div id="kitInventory"></div>
+  </div>
+</div>
 <div class="global-mini-tip" id="globalMiniTip"></div>
 
 <script type="module">
@@ -230,15 +264,13 @@ let currentProfileName = null;
 
 const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
 const LOWBLOCK_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
-const INVENTORY_ICON_URL = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="3" width="14" height="11" fill="#a0692f"/><rect x="1" y="3" width="14" height="1" fill="#c88a45"/><rect x="1" y="7" width="14" height="2" fill="#5b3a16"/><rect x="1" y="13" width="14" height="1" fill="#5b3a16"/><rect x="7" y="6" width="2" height="4" fill="#d8d8d8"/><rect x="1" y="3" width="1" height="11" fill="#5b3a16"/><rect x="14" y="3" width="1" height="11" fill="#5b3a16"/></svg>');
 const OVERALL_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true";
 const imgStyle = b => b.key === "Overall" ? "image-rendering:auto;border-radius:6px;" : "";
 
 const LEADERBOARDS = {
   Overall: { key: "Overall", label: "Overall", title: "Overall Leaderboard", icon: OVERALL_ICON_URL },
   NeliSMP: { key: "NeliSMP", label: "NeliSMP", title: "NeliSMP Leaderboard", icon: NELISMP_ICON_URL, col: "nelismp" },
-  Lowblock: { key: "Lowblock", label: "Lowblock", title: "Lowblock Leaderboard", icon: LOWBLOCK_ICON_URL, col: "lowblockranked" },
-  Inventory: { key: "Inventory", label: "Inventory", title: "Inventory", icon: INVENTORY_ICON_URL, isInventory: true }
+  Lowblock: { key: "Lowblock", label: "Lowblock", title: "Lowblock Leaderboard", icon: LOWBLOCK_ICON_URL, col: "lowblockranked" }
 };
 const SUB_BOARDS = ["NeliSMP", "Lowblock"];
 const NUM_MODES = SUB_BOARDS.length;
@@ -316,6 +348,7 @@ const list = document.getElementById("list");
 const toggleBtn = document.getElementById("toggleBtn");
 const tabBar = document.getElementById("tabBar");
 const infoTooltip = document.getElementById("infoTooltip");
+const kitBtn = document.getElementById("kitBtn");
 const overallHeaders = document.getElementById("overallHeaders");
 
 // ---------- Routing ----------
@@ -325,7 +358,8 @@ function parseRoute() {
   let board = 'Overall', profile = null;
   if (p[0] === 'player' && p[1]) profile = decodeURIComponent(p[1]);
   else if (p[0]) { const k = Object.keys(LEADERBOARDS).find(k => k.toLowerCase() === p[0].toLowerCase()); if (k) board = k; }
-  return { board, profile };
+  const kit = board === 'NeliSMP' && !profile && p[1] === 'kit';
+  return { board, profile, kit };
 }
 function navigateTo(board, profileName) {
   const newHash = profileName ? `#/player/${encodeURIComponent(profileName)}` : `#/${board.toLowerCase()}`;
@@ -337,17 +371,19 @@ function openRouteProfile() {
   else { currentProfileName = null; hist('replaceState', `#/${currentBoard.toLowerCase()}`); }
 }
 function handleRoute() {
-  const { board, profile } = parseRoute();
+  const { board, profile, kit } = parseRoute();
   currentBoard = board;
   currentProfileName = profile;
   renderTabBar();
   overallHeaders.style.display = (currentBoard === 'Overall') ? 'flex' : 'none';
   if (!profile) document.getElementById("modalOverlay").classList.remove('active');
-  loadPlayersAndRender().then(() => { if (profile) openRouteProfile(); });
+  if (!kit) { kitOverlay.classList.remove('active'); mcTip.style.display = 'none'; }
+  loadPlayersAndRender().then(() => { if (profile) openRouteProfile(); if (kit) openKit(); });
 }
 window.addEventListener('popstate', handleRoute);
 
 function renderTabBar() {
+  kitBtn.style.display = currentBoard === 'NeliSMP' ? 'flex' : 'none';
   tabBar.innerHTML = "";
   Object.values(LEADERBOARDS).forEach(board => {
     const el = document.createElement("div");
@@ -422,32 +458,66 @@ function assignRanks(sorted) {
 }
 
 
-// ---------- Minecraft-style inventory ----------
-// EDIT YOUR ITEMS HERE.
-//  slot:   0-26 = main inventory (top-left to bottom-right), 27-35 = hotbar
-//  name:   item name. Supports Minecraft colour codes: &0-&9 &a-&f, &l bold, &o italic, &r reset
-//  rarity: "common" (white) | "uncommon" (yellow) | "rare" (aqua) | "epic" (light purple)
-//  icon:   image URL (optional, e.g. https://github.com/Toggelt/nexo-tiers/blob/main/assets/sword.png?raw=true)
-//  color:  fallback square colour when no icon is given
-//  count:  stack size (shown bottom-right when above 1)
-//  lore:   description lines ("" = blank line). Colour codes work here too.
-//  attributes: lines shown in blue like Minecraft attributes, e.g. "+7 Attack Damage"
-//  slotLabel: grey line before the attributes, e.g. "When in Main Hand:"
-const ITEMS = [
-  { slot: 0, name: "Example Sword", rarity: "epic", color: "#4fd6d6", count: 1,
-    lore: ["&7A placeholder item.", "&7Replace me in the ITEMS list."],
-    slotLabel: "When in Main Hand:", attributes: ["+7 Attack Damage", "+1.6 Attack Speed"] },
-  { slot: 1, name: "Example Apple", rarity: "uncommon", color: "#d94a4a", count: 16,
-    lore: ["&7Restores &chunger&7."] },
-  { slot: 2, name: "Example Kit Crate", rarity: "rare", color: "#8a5cd6", count: 3,
-    lore: ["&7Right click to open.", "", "&6Contains random rewards"] },
-  { slot: 27, name: "Example Pickaxe", rarity: "common", color: "#c0c0c0", count: 1,
-    lore: ["&7Mines blocks."], slotLabel: "When in Main Hand:", attributes: ["+2 Attack Damage"] }
+// ---------- Minecraft-style kit inventory ----------
+const ICONS = {"helmet": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAtklEQVR4nO2SPwuCQADFf4W0ROG5OGrkYtD3/wIN0Sp4S5IHggaB/2hpsUlB76TWoDf+eO/du+Pg57UwwcDzOxO/qlTzW6bw3vNYrbcjXmQprhDdvSxHJdZcONyF5I+cqq0AcITT20Yly+mC/mR5k0P49WymJYO0AgAZR8g4wt7YACRKkShlspoLANqmHha0TT1n0x8RIDwckXHE5XwasSJLPy/o7/st1xR4fucKof0DVwgj/wveTDZHT6ahXGYAAAAASUVORK5CYII=", "chestplate": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABU0lEQVR4nMWST2vCQBDFf5pSkhZLpBIVYlqhRBQs/QIePIo3D37uQqGFINgGwT+0ZqtoFkHTQ5slGouXQue0M7PvzePNwH9HBuDu5jY6bAzeXjPJ/Lc/Z3FSbzTZrBaIUPIxmx6ddm0VMQ2d88srXp6fAMjGzRhsFSwAanZFTYzfVsFChJLNaqFIFYEIJTu5ZrNaUG802WoaNbsS1exKtNU0pXAn14hQpgncqku71UGEEjNn0uv22WoaW02j1+1j5kxEKGm3OrhVN23icvGJY9tk9QtMQ8cqOZQLZQDG72NmE1+p9EcjAKZB8G1iwvHooXmPVXIQS6GmiKXAKjkw8XkceEyDQG1IbSHphRh6uFVXKQDwht7RzaQITENXgCQorp8kEKHENPQ9BUkPThLs5Jq5XO/VZhOfeTA/reDHHHVA8cRD55OYvSSOYj6fuvtj4D+JL6qOpmvylayUAAAAAElFTkSuQmCC", "leggings": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nMWSvQrCMBSFP8VVxeJgoWgH30EcfP+1tC8gUohC6U9Cly51ijT1Bu3UMx5yvpx7E5hbi7FxPsW977DRDa+qcjKrcfh6uRHuQwBUoQCoTQ3AM78D9EOIA7BShfqEhgp2AY88d7ylBLDhrtV0rfZN5G9gw0mWAnCMIg5R/B/A3p5k6XBhvQ8gjjCuvd5sfUVlwBR9AaSlGd14lyk2KKtSPCz5DsDoZlIYhFcYf5Rf/vx6Az++VNQlFydiAAAAAElFTkSuQmCC", "boots": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAyUlEQVR4nN2PMQvCMBCFX4u4FArt4niBZoiCYn9HNwf/uqMgRSlI0iaI0iVOFtOkgqPedu/effcO+K8qhbCcmJ2ac2K2FMKZx++NuT+wq/YIQTgxu6v2ODeNo8dj4+V6mUx4OB48zQMAQEGERZYNKTgxWxAFoR6gNS3mSeoZQ9pkgm9qAHBidrlaAwD6m/aML2273jjvxaFlqaQHkEqiv2nMk9SBzMYXpJI41bWzbHQHozvkWe4diF4JjO4GsVEqCv37Hv2T78fqCZfIUzbiE118AAAAAElFTkSuQmCC", "totem": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABa0lEQVR4nKWTMUhCURSGP6O2Fw65vaFHIS0u4daShGCJNDkELjpE0GJLU4tE7kljgzYIDY6RudiDoJYnTQ0PMV0ub+g5pG4GryG8pF6j6Gznv/8557//uRf+GT4VWEqteio8XW5N8edVxfFcRjmtRNGbbDLVQAgXgCXjEIBhvwpAr9uWZz82AHAsG8fKshbbptdt41i2UhHAnAoMJQscba5g1+5wLFvmqlAqiL4VuH95IpS8Ztivyjz62wZnVw9ohs6wX6XXbXNuvTLofGAquD6YXpsQLpFYmGByC4BmpY5Za6DrgbHidLnlkx7EcxnWExsI4bJ/eYxm6DQrdZqVOpqhE4mFEcIlGFqWPKkAIB/xewC6HmDv4pSFxR15BfjazPPNoyw8Md99Yx6MgFIq4PW6bZxadkzuoCMQwpW8mSYK4XKbKyrsUofyL+Qjfi9xsMugIyRm1hpT02HGQ5oMzdD/pmCk4nuumg7wCYkYmdByP3kvAAAAAElFTkSuQmCC", "trident": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvUlEQVR4nNXSMQqCcBTH8a/RCRyEcA2EBgm3TuDqEjR5gb9nafNPSwepC9QkTvKgDqBd4jXZUEmmEPTWx+f3eI8HvyhrraqqjsIiogAi0j+sC1tr+wcMxgDGGA3TRJ9x7zXCNNHNfqthmrxgY4wCTD6F1NcLrj9jdz4iIhoEAVmWkee5A+B0QS9e6SJaUhUlAOt59Oi1uDMgTBN1/RlVUXI7nDqHvK12by9eff84/4mdUQcDpnXTUDfNIAxwByy8puaLugTUAAAAAElFTkSuQmCC", "bucket": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMUlEQVR4nK2TP0vDQBjGfxGxqGDOCBGEwhUKxdKhS8ZO+Qp18hP0w2R2zJCxfoVM3XrLTYZKxC1uZyuI1KVOLflzKlKf6Tie9/fyPNzBnnJsl0EQbGz3SqmG/9A2GIYhAFLKun9TB+0OQRBswjBkmo05PW7hX/oslysAPtdrAN4/1txc35Om6Q5yUMZPszEd2WbQl/gXJwjhAjDoS45aLTqyzTQbfx/BKyasCni+uuNcnCGEixAuj08vvC7fcB5u8X7qIEkStNZE0QQKWJVyesBoNKLb7RLHsR0AMBwOSZIEAK01AMYY8jyvW2l0sFWv17OaATyvGqIC2G78iyqA+Xz+64Axxg5QSjmz2QyAxWJhHd4WWH5IjQ7qMeob66oAlFJOFEUNSJ7n1u3wD59pb30BmENvP7N5unwAAAAASUVORK5CYII=", "elytra": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4nMWRsW6EMBBEHxfSrSVXFKFG4gP4C5SvPfkH0uIm5Skd0sWSm1wEoYkQKXK2MEeU8qZCMzuzOwbujWxLtG27hG/vPQBFUUTdGJN48q2xrmtEKqw9JsameWYc3wCWdVAezMGodRm3d12XBV3rEq1LRKoYZIzJDmGDSIVSI/N8+rPvPJ9QakSkivViBaVGAIZBgPON+XI5A4JSY5wFiBc4565m+Pz4ugkI3DAIzrnIxwtW3YCn3QpBF6mAl/QC719/e37vm9eatce0gjEm6/ueaZoAeHh8T4ze+8hN05T8ocN6KCAErbHHweoNrolL04C1Nm74T8vZYDuwDdk94674ATPojAFvOx16AAAAAElFTkSuQmCC", "mace": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB+0lEQVR4nI3TQUiTYRzH8e9jE8tcaS4nxetg6XKLHYRBaZcxDwuJmEYOxC7JAt3wEgQeOnno2iENgqGFO1htdAkZxvAQhRFE7rDmlmQDQcxtLgqHxdPBfHPuFfa/vc/zfv48z+95HqigXO4+6XL3Sa053WFopMOMQV/Lm2MW6R0YxGLvBJCxaETcGByWmxvrxKIRodngIH49Pw/AvfsTpFMJmUwskc9lAajSwnVHq0twMrFEJpNhOf6OJy9i5HNZvq0khGYDgA8nLqh4c2Oda739KIqCxd7J+Jifi11OWsxWCSAOC621rZ2mZqM61t3Tz/iYX/1uPG1k8e1CeYgjHWYmoxEBu6k3NRtRFEXF6VSC+oZT6v+aK/Bfv81E+DEtZqu80tNLOvW5BBsMRtKpBE79r/JTCNx9ztnGWjz1NmkzOZiZ9qnoIH76abV0C95AkIa6ahaXU9JmcjC7ENpN+19g+3FhewfYd5G8gSDHa/TEV79Kn6uL0eAUN7vdIl5TIDwXEpitMp/Lqvhlcu1/A28gSM0RHdn8mooHnG7xfWuH8FwIz/kzwJYAKGyj4pLyDD2Qr0Lv5TnXsLx15xneQFAr37LS7T0Sm8nBaHCKy/ZL4mfxB7MPhypqUAXQ2tbOzLSPL7FHovjnd8UYQOxdSYCrJ4ti8uNKxRjgL1fhzrJHZKP6AAAAAElFTkSuQmCC", "sword": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABK0lEQVR4nJ2QTUsCURiFnwkjoQ/F0XERQ6ghuJD8ASIuwoVLf1fblm3atQvCFq4iQgqDQgYGgwnEhaYhTrQIgrkt5A5N4+jkWV1e3ufc8x6FNVQvVIV8b6wDlxs1yo0avWH3fwYSHr+P3VloAwl3Hu7RkhpnpydYs6mihIXzlRJ965WDXJari3Os2VQBWGlQL1SFWtT5nNrsJGK0W00X9hjIZq/NG89sa3+P/qCHnkpjGIYHhj8dqEXdNQoD+06Qt77cPrOpOgwmb0thXwKpfKUUCvYlkClkad3Hu6WwL8FRJiu07Q/arSbO14xYOkUunhBBMEDkN3x8mOGy8zT/1TAEMDcBEZREka3b8W9GpumLLBMEGUQARs4Q25wsXFrVgaJFk2I36oRaXqQfQsCZTkyUro8AAAAASUVORK5CYII=", "axe": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA8klEQVR4nGNgoAfw0nT476Xp8B+bHAsxmm2C3CCcdQz/t10/wEi0ATDNJw/ugIowYahhxBBB0qxmZ8Bw/+o5uBiflDwD872rDAvOnIPrwzQSCm4+v4TC55OSZ/j07CHD4TsPiHMBAwMDg7KA0H8GBgYGKzdvhk/PHjI8fv2SQVZUnOHKlSsMdz+8Y8TrAgYGBoa7H94x8ggKMDDfu8pw5coVBllRcXzKMYG+otL/Ylfn/zCXKAsIwdlEaU4wMSJeA7pmZwdnojRjBKK+otJ/HglJhhfXr8MDCh9ACUR9RaX/IvKKRGvGsBk5wEgGJIUwNQEA6mBZrw/x9JUAAAAASUVORK5CYII=", "ender_pearl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABQklEQVR4nMWSMUvDQBiGnxpDl0oITUE7tQrVse0Sl24uRdwUioKIi0ux/oT8FHH2bxSaxbp6tKUg6JBKGqo4hBAHydmQs5PgCwe5u+99v+c7Av+t3KrLgl2Pk+9391FZu77KuHfZASDwZrxCrArKBBTserxs9MQYgK2jAwAm/jyOxFSGrKnMgTejc3ZKvt0i9ANCP8ATYzwxZvv8GK1WkaMpR7i6ueb2aYjoOpm7hCiRRFnunm+3EF2H6M2XhVrRRLdMAHTTYDEYEolpThJ8+nPZIXQfVGAAlO1miiL1BoE3+9WYyChZqb0MiMQ0N7m7p1Tb+ca0TLTiz9Itk6rTA5D4GYJEumnIkGRVnR4Xuw1GfTdVm/m7tFol3jw55OP5hdAPKNtNiT3qu6nuyoAkBGBjvyHPFoOhHHUlgSpIZfwzfQHDPYKsmtsEowAAAABJRU5ErkJggg==", "breeze_rod": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvElEQVR4nGNgoDcIz5n73y6u/T+Mz0Sq5jhLXQYbFVsG/aD6/yQZEJ4z93+Gsw7D0bu/GI7cOcxwcV0jI9EGwDRfu8fFcOTOYYZDiyoZYXKM+DQiOxtmM7Jmgi4gpBmvAeh+xqYZr83715/8X9V05D8stHEBDFORnb31wm54aOMCKF5AdjYxmsl2NoYL7OLa/8dZ6jLsvvwbJZEQbYCehArDgxecpIc2AwMDCwMDA8PhO1cYLr24Q7JmqgAAVa57xF8qMisAAAAASUVORK5CYII=", "cobweb": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nIVTsRHEIAyzf4g0v/8mqVNkghSkcJbQV+KEMXk3ISBZOoFtP07YSwFYnnduBdqPEy0CANAikIUmDkEABrACuV66ahGTSlbOmMm2qpBMEr+lA1WqgFl5csINNmJ42khJXZBpa+JaVS5lkwqgzSii1zsErD8K+idQWqtCzG+AmA8B7u7c/G6bmZndzzO4AwB3dzOz6w6bitZ1XT2kcn6y3Zx+no0lORNWip2zGue3MVaRHxHYfNiNnY/1AAAAAElFTkSuQmCC", "golden_apple": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMklEQVR4nL2SsUvDQBTGvx6FtCKUGHAvOOTWrEKmunWSzE6ls0uG+ge4+B84Zi4OpWOntpmErhFCyeYgkhAIsYGS55RrL7nior7l7l3e73vf3QvwH+GajE59Yz/Bs5FO0V77m+4A0DrVFQBW6xTRXkO/XQAAnt5KZb0Ehp5BJb1T6BnkXHVpNtLp8/WGQs8g12RUd9Q6hrnN0BsOcH52jY7miKJdMUWW+0jnCzw/JpKbtspJlvvIcl86Y9sYveEAYxxEAMUU2DZurNUeAHRuIfo4TEUIrNYpACAJNgJI5wskwUacq0J5heNinVtSXheSxuKajMYPuhKs8sl9jmn8JbiGg2BZgttMwDq3ROdgWTbcNn4M56JLd7cdcJsJoNp7Lzupu1KgEulfFiKvXr0O/0p8Ax48kA5GNLmUAAAAAElFTkSuQmCC", "wind_charge": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOUlEQVR4nN2ST0rDQBTGfw3dpA1lIq1IwF1FqLr2AAUFdx7AC4hHcOkRxAt4AOuyha5EtNhdV/0DCkIobWhGTTIbcVyEhP5JD6BvM/PefO9733wz8Ocjt+7g5rap5/Pzs+NM7EqxN9R6qwye5wIgpY+UktdxmEliLBcenluMPSiXHcyigxA2QggqJYOpr3VvqBeU5ZNNu6P100uDSskgj8to5KcgIWyq1T1CBffNBpkEmxvxahVMpPQRwgZiJaGCbveRIFLpsPphLrfgwZurddGMgfFUkU6RUhJEiunnDyf1I75CONhZIpg3MFSgQjc1MIgU+7UaZtFZaF4hALi6vtO72xZWwUyVCGHzjcNkBon0tQTtjtb9QYtKycAqmOm9++8BlxenK/jMz5E81WQG/UGL2UeU2fxP4hd4T4N+j1+kdgAAAABJRU5ErkJggg==", "strength_potion": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVR4nGP8//8/AyWAiSLdpBpwLc/j/7U8DxQnE20ATOPVGzdRxFmI0Rw38ch/6+PHGYQEhTAl////jxdvufD2P4w9w4Tv/wwTvv/I8kRr3nLhLYZmvAZcffb9Py7DkDHWMLj2/Md/rUecDFtfvf3/fKUwAwMDA8OJywwMDC1v/3vrCzEiq8WIhWvPf/zvS+Nk2MrxlsH7hzCDthIDg7YSA4OFLgPD+hphhriJRwhHo4Uugv30NYSGGYIOMAy4/+obAwMDA4PQaWGG45cZGF69g4gfE7nIwMNFhAEMDBD/Xr0HYQvxI9h7ThJhgLe+EOMvl8NwQ758Y2D4aHaR4fpcfYZfLocZFuXboAQiI67ciB5YDAwMGJrxGkAsAAAOFea9HMpdzQAAAABJRU5ErkJggg==", "shield": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA40lEQVR4nJWTQQrCMBBFf6UNNoigO7vxGN7Gne4Ud57BnehOL+F1vEBdKlKSkhbqIqSN00Tih0CSSd58JpMIRNvdvqF7tk7HQ2SvY3pACoHX/YaEMVRKYTLmKMoalVIAgNV601wv5xYyoICU83aeMAYA7WUadwJ4qg+Mhtrc8y2+gCbuBVApVf+MewFF2V00EOPqLwdGph5BAJPRLh51FeTAzkphQQAfLAjgyugqYn8HAGNx7/kqpVAAmIY6CFUPIGTXeS4XdtzrwNV9vo50/sb5YglA/4tZluGR5xBSQAo9bH0ANAtcnYrzIpcAAAAASUVORK5CYII=", "xp_bottle": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOklEQVR4nKWTMUsDQRCFv6iFaGl3CSEoGFJHAvFHhBQispaCrZEU/gtJ8hdEG4N46WJtddhYnkUI4gULLS9gCp9FvCPxNofowDDs7NvlzbyZjCT+Yytpl2Paehl5AGw7lxkrSJLVQ7VUr6JSFtWryA+MbLiMrYQxbR3uNuKz/zyNt55JMFmysYpo/8oWleAHRqUsegxMaglWBgA5p0IxD69/YRA1sB8YNd2yrlNYpD721NGBu6+mW1Z/wSdzJYxpayfX4Lhr2HAqnPfuGQxDAra4e/A57RrO9q54Gh3G0iUGqZiHZeADGAxD3oJ3ALKFaS6SNLI5BrPy3fQu5oC12hGflh6mjvJmYT2Oq0yY2EA2/WcVaLpleeqo/z0XP5u4cIjqVeJdiDxUKyGjdReAuNM5pxLn1jhJbOQXImhLhM8jq3oAAAAASUVORK5CYII="};
+
+// EDIT THE KIT HERE.
+//  slot:  2-5 = armour (helmet, chestplate, leggings, boots), 6 = offhand, 9-35 = main inventory, 36-44 = hotbar
+//  icon:  key from ICONS above (official Minecraft sprites)
+//  rarity: "common" | "uncommon" | "rare" | "epic"  (enchanted common items automatically turn aqua like in-game)
+//  enchants: list of enchantment lines. Any enchants = purple glint + aqua/rarity name, exactly like Minecraft.
+//  glint: true = purple glint without enchant lines (e.g. Bottle o' Enchanting)
+//  lore: extra lines (Minecraft colour codes work: &0-&9 &a-&f, &l bold, &o italic, &r reset)
+//  slotLabel + attributes: the "When in Main Hand:" block
+const WEAPON = "When in Main Hand:";
+const STRENGTH = { name: "Splash Potion of Strength", icon: "strength_potion", lore: ["&9Strength II (1:30)"] };
+const KIT_ITEMS = [
+  // armour + offhand
+  { slot: 2, name: "Netherite Helmet", icon: "helmet", enchants: ["Protection IV", "Respiration III", "Aqua Affinity", "Unbreaking III", "Mending"], slotLabel: "When on Head:", attributes: ["+3 Armor", "+3 Armor Toughness", "+10% Knockback Resistance"] },
+  { slot: 3, name: "Netherite Chestplate", icon: "chestplate", enchants: ["Protection IV", "Unbreaking III", "Mending"], slotLabel: "When on Body:", attributes: ["+8 Armor", "+3 Armor Toughness", "+10% Knockback Resistance"] },
+  { slot: 4, name: "Netherite Leggings", icon: "leggings", enchants: ["Protection IV", "Swift Sneak III", "Unbreaking III", "Mending"], slotLabel: "When on Legs:", attributes: ["+6 Armor", "+3 Armor Toughness", "+10% Knockback Resistance"] },
+  { slot: 5, name: "Netherite Boots", icon: "boots", enchants: ["Protection IV", "Feather Falling IV", "Depth Strider III", "Unbreaking III", "Mending"], slotLabel: "When on Feet:", attributes: ["+3 Armor", "+3 Armor Toughness", "+10% Knockback Resistance"] },
+  { slot: 6, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  // main inventory, row 1
+  { slot: 9, name: "Ender Pearl", icon: "ender_pearl", count: 16 },
+  { slot: 10, name: "Breeze Rod", icon: "breeze_rod", count: 64 },
+  { slot: 11, name: "Trident", icon: "trident", enchants: ["Riptide III"], slotLabel: WEAPON, attributes: ["&2 9 Attack Damage", "&2 1.1 Attack Speed"] },
+  { slot: 12, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  { slot: 13, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  { slot: 14, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  { slot: 15, ...STRENGTH },
+  { slot: 16, ...STRENGTH },
+  { slot: 17, ...STRENGTH },
+  // row 2
+  { slot: 18, name: "Ender Pearl", icon: "ender_pearl", count: 16 },
+  { slot: 19, name: "Bottle o' Enchanting", icon: "xp_bottle", rarity: "uncommon", glint: true, count: 64 },
+  { slot: 20, ...STRENGTH },
+  { slot: 21, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  { slot: 22, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  { slot: 23, name: "Totem of Undying", icon: "totem", rarity: "uncommon" },
+  { slot: 24, ...STRENGTH },
+  { slot: 25, ...STRENGTH },
+  { slot: 26, ...STRENGTH },
+  // row 3
+  { slot: 27, name: "Ender Pearl", icon: "ender_pearl", count: 16 },
+  { slot: 28, name: "Cobweb", icon: "cobweb", count: 64 },
+  ...[29, 30, 31, 32, 33, 34, 35].map(slot => ({ slot, ...STRENGTH })),
+  // hotbar
+  { slot: 36, name: "Netherite Sword", icon: "sword", enchants: ["Sharpness V", "Sweeping Edge III", "Knockback I", "Unbreaking III"], slotLabel: WEAPON, attributes: ["&2 8 Attack Damage", "&2 1.6 Attack Speed"] },
+  { slot: 37, name: "Ender Pearl", icon: "ender_pearl", count: 16 },
+  { slot: 38, name: "Water Bucket", icon: "bucket" },
+  { slot: 39, name: "Elytra", icon: "elytra", rarity: "uncommon" },
+  { slot: 40, name: "Golden Apple", icon: "golden_apple", rarity: "uncommon", count: 64 },
+  { slot: 41, name: "Mace", icon: "mace", rarity: "epic", enchants: ["Wind Burst I", "Density V", "Unbreaking III"], slotLabel: WEAPON, attributes: ["&2 6 Attack Damage", "&2 0.6 Attack Speed"] },
+  { slot: 42, name: "Wind Charge", icon: "wind_charge", count: 64 },
+  { slot: 43, name: "Netherite Axe", icon: "axe", enchants: ["Sharpness V", "Unbreaking III"], slotLabel: WEAPON, attributes: ["&2 10 Attack Damage", "&2 1 Attack Speed"] },
+  { slot: 44, name: "Shield", icon: "shield", enchants: ["Unbreaking III"] }
 ];
 
 const MC_COLORS = { 0:'#000000',1:'#0000AA',2:'#00AA00',3:'#00AAAA',4:'#AA0000',5:'#AA00AA',6:'#FFAA00',7:'#AAAAAA',8:'#555555',9:'#5555FF',a:'#55FF55',b:'#55FFFF',c:'#FF5555',d:'#FF55FF',e:'#FFFF55',f:'#FFFFFF' };
 const RARITY_COLORS = { common: '#FFFFFF', uncommon: '#FFFF55', rare: '#55FFFF', epic: '#FF55FF' };
 const escHtml = ch => ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : ch === '&' ? '&amp;' : ch;
+const isEnchanted = it => !!(it.enchants && it.enchants.length);
 
 function mcText(str, base) {
   let color = base, bold = false, italic = false, out = '', buf = '';
@@ -466,14 +536,21 @@ function mcText(str, base) {
   return out || '&nbsp;';
 }
 
-function itemTooltipHTML(item) {
-  const base = RARITY_COLORS[item.rarity] || '#FFFFFF';
-  let html = `<div>${mcText(item.name, base)}</div>`;
-  (item.lore || []).forEach(l => { html += `<div>${l === '' ? '&nbsp;' : mcText(l, '#AA00AA')}</div>`; });
-  if (item.attributes && item.attributes.length) {
+// Name colour: rarity colour; enchanted common items turn aqua (like in-game); enchanted uncommon stays as-is.
+function itemNameColor(it) {
+  const r = it.rarity || 'common';
+  if (r === 'common' && isEnchanted(it)) return RARITY_COLORS.rare;
+  return RARITY_COLORS[r] || '#FFFFFF';
+}
+
+function itemTooltipHTML(it) {
+  let html = `<div>${mcText(it.name, itemNameColor(it))}</div>`;
+  if (isEnchanted(it)) it.enchants.forEach(e => { html += `<div>${mcText(e, '#AAAAAA')}</div>`; });
+  (it.lore || []).forEach(l => { html += `<div>${l === '' ? '&nbsp;' : mcText(l, '#AA00AA')}</div>`; });
+  if (it.attributes && it.attributes.length) {
     html += `<div>&nbsp;</div>`;
-    if (item.slotLabel) html += `<div>${mcText(item.slotLabel, '#AAAAAA')}</div>`;
-    item.attributes.forEach(a => { html += `<div>${mcText(' ' + a, '#5555FF')}</div>`; });
+    if (it.slotLabel) html += `<div>${mcText(it.slotLabel, '#AAAAAA')}</div>`;
+    it.attributes.forEach(a => { html += `<div>${mcText(a.startsWith('&') ? a : ' ' + a, '#5555FF')}</div>`; });
   }
   return html;
 }
@@ -492,22 +569,30 @@ function moveMcTip(e) {
   mcTip.style.top = y + 'px';
 }
 
-function renderInventory() {
+function renderInventory(container) {
   const bySlot = {};
-  ITEMS.forEach(it => { bySlot[it.slot] = it; });
-  const slotHtml = i => {
+  KIT_ITEMS.forEach(it => { bySlot[it.slot] = it; });
+  const slotHtml = (i, style = '') => {
     const it = bySlot[i];
-    if (!it) return `<div class="mc-slot" data-slot="${i}"></div>`;
-    const icon = it.icon
-      ? `<img class="mc-icon" src="${it.icon}" alt="">`
-      : `<div class="mc-fallback" style="background:${it.color || '#888'}">${escHtml((it.name || '?')[0].toUpperCase())}</div>`;
-    return `<div class="mc-slot" data-slot="${i}">${icon}${it.count > 1 ? `<span class="mc-count">${it.count}</span>` : ''}</div>`;
+    if (!it) return `<div class="mc-slot" data-slot="${i}" style="${style}"></div>`;
+    const src = ICONS[it.icon];
+    const glint = (isEnchanted(it) || it.glint) ? `<div class="mc-glint" style="-webkit-mask-image:url(${src});mask-image:url(${src})"></div>` : '';
+    return `<div class="mc-slot" data-slot="${i}" style="${style}"><img class="mc-icon" src="${src}" alt="">${glint}${it.count > 1 ? `<span class="mc-count">${it.count}</span>` : ''}</div>`;
   };
-  let main = '', hot = '';
-  for (let i = 0; i < 27; i++) main += slotHtml(i);
-  for (let i = 27; i < 36; i++) hot += slotHtml(i);
-  list.innerHTML = `<div class="mc-inv"><div class="mc-inv-title">Inventory</div><div class="mc-grid">${main}</div><div class="mc-hotbar">${hot}</div></div>`;
-  list.querySelectorAll('.mc-slot').forEach(el => {
+  const rowHtml = (from, to) => { let h = ''; for (let i = from; i < to; i++) h += slotHtml(i); return h; };
+  container.innerHTML = `<div class="mc-inv">
+    <div class="mc-equip">
+      ${slotHtml(2, 'grid-column:1;grid-row:1')}
+      ${slotHtml(3, 'grid-column:1;grid-row:2')}
+      ${slotHtml(4, 'grid-column:1;grid-row:3')}
+      ${slotHtml(5, 'grid-column:1;grid-row:4')}
+      ${slotHtml(6, 'grid-column:2;grid-row:4')}
+    </div>
+    <div class="mc-inv-title">Inventory</div>
+    <div class="mc-row">${rowHtml(9, 36)}</div>
+    <div class="mc-row mc-hotbar">${rowHtml(36, 45)}</div>
+  </div>`;
+  container.querySelectorAll('.mc-slot').forEach(el => {
     const it = bySlot[+el.dataset.slot];
     if (!it) return;
     el.addEventListener('mouseenter', e => { mcTip.innerHTML = itemTooltipHTML(it); mcTip.style.display = 'block'; moveMcTip(e); });
@@ -516,16 +601,25 @@ function renderInventory() {
   });
 }
 
+// ---------- Kit window ----------
+const kitOverlay = document.getElementById("kitOverlay");
+function openKit() {
+  renderInventory(document.getElementById("kitInventory"));
+  kitOverlay.classList.add("active");
+  if (document.fonts && document.fonts.load) document.fonts.load("16px Minecraft").catch(() => {});
+}
+function closeKit() {
+  kitOverlay.classList.remove("active");
+  mcTip.style.display = "none";
+  navigateTo(currentBoard, null);
+}
+document.getElementById("kitClose").addEventListener("click", closeKit);
+kitOverlay.addEventListener("click", (e) => { if (e.target === kitOverlay) closeKit(); });
+kitBtn.addEventListener("click", () => { hist('pushState', '#/nelismp/kit'); openKit(); });
+
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
 
 function render() {
-  if (currentBoard === "Inventory") {
-    overallHeaders.style.display = 'none';
-    toggleBtn.style.display = 'none';
-    if (!list.querySelector('.mc-inv')) { list.innerHTML = ""; renderInventory(); }
-    return;
-  }
-  mcTip.style.display = "none";
   const isOverall = currentBoard === "Overall";
   list.innerHTML = "";
   overallHeaders.style.display = isOverall ? 'flex' : 'none';
