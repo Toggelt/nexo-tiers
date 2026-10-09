@@ -181,7 +181,72 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 /* ---------- Kit display: Minecraft font everywhere + equipment/player model area ---------- */
 .kit-box, .kit-box *, .mc-inv, .mc-inv *, .mc-tip, .mc-tip * { font-family: 'Minecraft', monospace !important; font-synthesis: none; }
 .kit-box button, .mc-count, .mc-fallback { font-family: 'Minecraft', monospace !important; }
+.kit-header span { font-family: 'Bahnschrift', sans-serif !important; }
+.kit-sub { font-family: Arial, sans-serif !important; }
 .mc-equip { display: grid; grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(4, auto); margin-bottom: 4px; }
+
+/* ---------- Phones ---------- */
+@media (max-width: 700px) {
+  body { padding-top: 80px; }
+  .top-fixed-bar { height: 80px; padding: 0 14px; }
+  .top-bar-left { gap: 10px; }
+  .top-bar-image { width: 48px; height: 48px; }
+  .top-bar-title { font-size: 22px; letter-spacing: 0; }
+  .discord-btn { margin-left: 4px; padding: 7px 12px; font-size: 14px; gap: 6px; }
+  .discord-btn svg { width: 18px; height: 18px; }
+
+  .container { border-radius: 0; min-height: calc(100vh - 80px); }
+  .tab-bar { height: 46px; border-radius: 0; }
+  .tab-button, .tab-button:first-child, .tab-button:last-child { border-radius: 8px 8px 0 0; gap: 5px; }
+  .tab-button img { width: 22px !important; height: 22px !important; }
+  .tab-label { font-size: 13px; }
+
+  .top-bar { position: relative; margin: 10px 12px; flex-wrap: wrap; gap: 8px; }
+  .info-btn-wrapper, .search-btn-wrapper { position: static; }
+  .info-tooltip, .search-panel { left: 0; right: 0; width: auto; }
+  .info-tooltip.overall-tooltip { min-width: 0; }
+  .info-btn, .search-btn { padding: 7px 13px; }
+
+  .overall-headers { display: none !important; }
+  .player { flex-wrap: wrap; margin: 10px 12px; min-height: 0; }
+  .player:hover { transform: none; box-shadow: none; }
+  .rank-flag { min-width: 96px; padding: 10px 24px 10px 12px; gap: 8px; }
+  .rank-num { font-size: 22px; width: 28px; }
+  .avatar { width: 44px; height: 44px; }
+  .info { padding: 8px 10px; gap: 6px; min-width: 0; }
+  .player-name { font-size: 18px; overflow: hidden; text-overflow: ellipsis; }
+  .player-title-row { flex-wrap: wrap; gap: 6px; }
+  .player-title-badge { height: 24px; padding: 2px 8px; }
+  .player-title-text { font-size: 13px; }
+  .player-points { font-size: 13px; }
+  .elo-wrap { width: 100%; justify-content: center; padding: 6px 0 12px; }
+  .mini-tiers-row { gap: 14px; }
+
+  .tier-columns { margin: 8px 12px; }
+  .tier-column { flex: 0 0 150px; min-width: 150px; }
+  .tier-column:first-child { margin-left: 0; }
+  .tier-column:last-child { margin-right: 0; }
+  .tier-header { font-size: 16px; }
+
+  .modal-overlay { padding: 12px; }
+  .modal-box { padding: 40px 16px 20px; max-width: 100%; }
+  .modal-avatar { width: 90px; height: 90px; }
+  .modal-name { font-size: 22px; }
+  .tiers-row { gap: 12px; }
+  .tier-elo-tip { font-size: 15px; }
+
+  .kit-box { width: 100%; padding: 36px 8px 14px; }
+  .kit-header { gap: 10px; }
+  .kit-header img { width: 32px; height: 32px; }
+  .kit-header span { font-size: 22px; }
+  .kit-sub { font-size: 12px; margin-bottom: 12px; }
+  .mc-inv { padding: 6px; border-width: 3px; outline-width: 1px; }
+  .mc-inv-title { font-size: 13px; margin: 6px 0 4px 2px; }
+  .mc-slot { border-width: 1px; }
+  .mc-count { font-size: 11px; right: 1px; text-shadow: 1px 1px 0 #3f3f3f; }
+  .mc-hotbar { margin-top: 6px; }
+  .mc-tip { font-size: 12px; padding: 4px 6px; text-shadow: 1px 1px 0 #3f3f3f; }
+}
 </style>
 </head>
 <body>
@@ -598,8 +663,10 @@ function renderInventory(container) {
     el.addEventListener('mouseenter', e => { mcTip.innerHTML = itemTooltipHTML(it); mcTip.style.display = 'block'; moveMcTip(e); });
     el.addEventListener('mousemove', moveMcTip);
     el.addEventListener('mouseleave', () => { mcTip.style.display = 'none'; });
+    el.addEventListener('click', e => { e.stopPropagation(); mcTip.innerHTML = itemTooltipHTML(it); mcTip.style.display = 'block'; moveMcTip(e); });
   });
 }
+document.addEventListener('click', e => { if (!e.target.closest('.mc-slot')) mcTip.style.display = 'none'; });
 
 // ---------- Kit window ----------
 const kitOverlay = document.getElementById("kitOverlay");
