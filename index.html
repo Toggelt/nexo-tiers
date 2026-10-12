@@ -250,6 +250,9 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
   .mc-hotbar { margin-top: 6px; }
   .mc-tip { font-size: 12px; padding: 4px 6px; text-shadow: 1px 1px 0 #3f3f3f; }
 }
+
+/* Player names use the regular Minecraft font */
+.player-name, .modal-name, .tier-player .tier-name, .search-result-item span { font-family: 'Minecraft', monospace; font-weight: normal; }
 </style>
 </head>
 <body>
@@ -399,8 +402,8 @@ const TITLE_COLORS = {
   Legend: "linear-gradient(100deg, #cbd4ec, #6468ab)",
   Grandmaster: `linear-gradient(90deg, #E2C473, #E8BA3A)`,
   Master: solidGrad(TIER_COLORS["1"]),
-  Elite: solidGrad("#f04b4b"),
-  Expert: solidGrad("#2fcf55"),
+  Elite: solidGrad("#FF5555"),
+  Expert: solidGrad("#3A97E8"),
   Novice: solidGrad("#c9a7f5"),
   Rookie: solidGrad("#9a9aa5")
 };
