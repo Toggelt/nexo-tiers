@@ -8,6 +8,7 @@
 <link rel="icon" type="image/x-icon" href="https://github.com/Toggelt/nexo-tiers/blob/main/assets/favicon.ico?raw=true">
 <style>
 @font-face { font-family: 'Minecraft'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'MinecraftBold'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/3%20Minecraft-Bold.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding-top: 150px; }
@@ -396,7 +397,7 @@ function getPlayerTitle(points) {
 const solidGrad = c => `linear-gradient(100deg, ${c}, ${c})`;
 const TITLE_COLORS = {
   Legend: "linear-gradient(100deg, #cbd4ec, #6468ab)",
-  Grandmaster: `linear-gradient(90deg, ${TIER_COLORS["1"]}, ${TIER_COLORS["1+"]})`,
+  Grandmaster: `linear-gradient(90deg, #E2C473, #E8BA3A)`,
   Master: solidGrad(TIER_COLORS["1"]),
   Elite: solidGrad("#f04b4b"),
   Expert: solidGrad("#2fcf55"),
@@ -406,6 +407,10 @@ const TITLE_COLORS = {
 const TITLE_REQUIREMENTS = {};
 Object.keys(TITLE_BASE).forEach(k => { TITLE_REQUIREMENTS[k] = `Get ${TITLE_MIN[k]}+ points`; });
 TITLE_REQUIREMENTS.Rookie = `Below ${TITLE_MIN.Novice} points`;
+// Legend / Grandmaster / Master use the Minecraft Bold font, every other title the regular Minecraft font
+const BOLD_TITLES = new Set(['Legend', 'Grandmaster', 'Master']);
+const titleFontFamily = n => BOLD_TITLES.has(n) ? "'MinecraftBold', 'Minecraft', monospace" : "'Minecraft', monospace";
+const titleFontCSS = n => `font-family:${titleFontFamily(n)};font-weight:normal;`;
 
 const list = document.getElementById("list");
 const toggleBtn = document.getElementById("toggleBtn");
@@ -712,7 +717,7 @@ function render() {
         <div class="info">
           <div class="player-name">${p.name}</div>
           <div class="player-title-row">
-            ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]}">${p.__title}</span></div>` : ''}
+            ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]};${titleFontCSS(p.__title)}">${p.__title}</span></div>` : ''}
             <span class="player-points">(${p.__points} points)</span>
           </div>
         </div>
@@ -768,7 +773,7 @@ let infoTab = 'titles';
 function renderInfoTooltip() {
   const titlesHtml = Object.keys(TITLE_REQUIREMENTS).map(name => `
     <div class="info-row title-row">
-      <span class="title-word title-grad" style="background-image:${TITLE_COLORS[name]}">${name}</span>
+      <span class="title-word title-grad" style="background-image:${TITLE_COLORS[name]};${titleFontCSS(name)}">${name}</span>
       <span class="info-desc">${TITLE_REQUIREMENTS[name]}</span>
     </div>`).join('');
   const pointsHtml = ["1+", "1", "2+", "2", "3+", "3", "4+", "4", "5+", "5"].map(key => `
@@ -843,6 +848,8 @@ function openProfile(player) {
   if (title) {
     document.getElementById("modalTitleText").textContent = title;
     document.getElementById("modalTitleText").style.backgroundImage = TITLE_COLORS[title];
+    document.getElementById("modalTitleText").style.fontFamily = titleFontFamily(title);
+    document.getElementById("modalTitleText").style.fontWeight = "normal";
     document.getElementById("titleTooltip").textContent = TITLE_REQUIREMENTS[title] || "";
     titleSection.style.display = "flex";
   } else titleSection.style.display = "none";
