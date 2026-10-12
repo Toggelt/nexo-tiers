@@ -386,7 +386,7 @@ function computePlayerPoints(player) {
 const cleanReq = v => (v % 100 === 50 && v > 50) ? v - 50 : v;
 const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 350, Elite: 250, Expert: 150, Novice: 50 };
 const TITLE_MIN = {};
-Object.keys(TITLE_BASE).forEach(k => { TITLE_MIN[k] = cleanReq(TITLE_BASE[k] * NUM_MODES); });
+Object.keys(TITLE_BASE).forEach(k => { const v = TITLE_BASE[k] * NUM_MODES; TITLE_MIN[k] = k === 'Novice' ? v : cleanReq(v); }); // Novice keeps its exact number
 
 function getPlayerTitle(points) {
   for (const k of Object.keys(TITLE_BASE)) if (points >= TITLE_MIN[k]) return k;
@@ -399,8 +399,8 @@ const TITLE_COLORS = {
   Grandmaster: `linear-gradient(90deg, ${TIER_COLORS["1+"]}, ${TIER_COLORS["1"]})`,
   Master: solidGrad(TIER_COLORS["1"]),
   Elite: solidGrad("#ff8f8f"),
-  Expert: solidGrad("#c9a7f5"),
-  Novice: solidGrad("#afa0cb"),
+  Expert: solidGrad("#9be59b"),
+  Novice: solidGrad("#c9a7f5"),
   Rookie: solidGrad("#9a9aa5")
 };
 const TITLE_REQUIREMENTS = {};
