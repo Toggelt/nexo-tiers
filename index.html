@@ -213,17 +213,19 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
   .rank-flag { min-width: 96px; padding: 10px 24px 10px 12px; gap: 8px; }
   .rank-num { font-size: 22px; width: 28px; }
   .avatar { width: 44px; height: 44px; }
-  .info { padding: 8px 10px; gap: 6px; min-width: 0; }
+  .info { flex: 1 1 120px; padding: 8px 10px; gap: 6px; min-width: 0; }
   .player-name { font-size: 18px; overflow: hidden; text-overflow: ellipsis; }
   .player-title-row { flex-wrap: wrap; gap: 6px; }
   .player-title-badge { height: 24px; padding: 2px 8px; }
   .player-title-text { font-size: 13px; }
   .player-points { font-size: 13px; }
-  .elo-wrap { width: 100%; justify-content: center; padding: 6px 0 12px; }
+  .elo-wrap { flex: 1 1 100%; width: 100%; justify-content: center; padding: 6px 0 12px; }
   .mini-tiers-row { gap: 14px; }
 
   .tier-columns { margin: 8px 12px; }
-  .tier-column { flex: 0 0 150px; min-width: 150px; }
+  .tier-column { flex: 0 0 min(230px, 72vw); min-width: min(230px, 72vw); }
+  .tier-player { gap: 8px; padding: 5px 8px; }
+  .tier-player .tier-name { font-size: 15px; }
   .tier-column:first-child { margin-left: 0; }
   .tier-column:last-child { margin-right: 0; }
   .tier-header { font-size: 16px; }
@@ -264,7 +266,6 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 <div class="container">
   <div class="tab-bar" id="tabBar"></div>
   <div class="top-bar">
-    <button class="info-btn" id="kitBtn" style="display:none;">Kit</button>
     <div class="info-btn-wrapper">
       <button class="info-btn" id="infoBtn"><span class="info-icon">i</span>Info</button>
       <div class="info-tooltip" id="infoTooltip">Loading...</div>
@@ -381,39 +382,35 @@ function computePlayerPoints(player) {
   return total;
 }
 
-function getPlayerTitle(points, player) {
-  const isNova = SUB_BOARDS.every(m => {
-    const sorted = allPlayers.filter(p => p[`${m}_tier`] != null).sort((a, b) => TIER_ORDER[tierKey(a[`${m}_tier`], a[`_computed_plus_${m}`])] - TIER_ORDER[tierKey(b[`${m}_tier`], b[`_computed_plus_${m}`])]);
-    return sorted.length > 0 && sorted[0].id === player.id;
-  });
-  if (isNova) return "Nova";
-  if (points >= 750 * NUM_MODES) return "Divine";
-  if (points >= 350 * NUM_MODES) return "Celestial";
-  if (points >= 250 * NUM_MODES) return "Eternal";
-  if (points >= 100 * NUM_MODES) return "Ascendant";
-  return null;
+// Point requirement = base x number of gamemodes, with a trailing 50 dropped (1950 -> 1900)
+const cleanReq = v => (v % 100 === 50 && v > 50) ? v - 50 : v;
+const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 350, Elite: 250, Expert: 150, Novice: 50 };
+const TITLE_MIN = {};
+Object.keys(TITLE_BASE).forEach(k => { TITLE_MIN[k] = cleanReq(TITLE_BASE[k] * NUM_MODES); });
+
+function getPlayerTitle(points) {
+  for (const k of Object.keys(TITLE_BASE)) if (points >= TITLE_MIN[k]) return k;
+  return "Rookie";
 }
 
+const solidGrad = c => `linear-gradient(100deg, ${c}, ${c})`;
 const TITLE_COLORS = {
-  Nova: "linear-gradient(100deg, #c190ec, #a13ca5)",
-  Divine: "linear-gradient(100deg, #cbd4ec, #6468ab)",
-  Celestial: "linear-gradient(100deg, #fac140, #c34513)",
-  Eternal: "linear-gradient(100deg, #b6f5a8, #1f9e45)",
-  Ascendant: "linear-gradient(100deg, #d67638, #b0483c)"
+  Legend: "linear-gradient(100deg, #cbd4ec, #6468ab)",
+  Grandmaster: `linear-gradient(90deg, ${TIER_COLORS["1+"]}, ${TIER_COLORS["1"]})`,
+  Master: solidGrad(TIER_COLORS["1"]),
+  Elite: solidGrad("#ff8f8f"),
+  Expert: solidGrad("#c9a7f5"),
+  Novice: solidGrad("#afa0cb"),
+  Rookie: solidGrad("#9a9aa5")
 };
-const TITLE_REQUIREMENTS = {
-  Nova: "Be the highest ranked player in every gamemode",
-  Divine: `Get ${750 * NUM_MODES}+ points`,
-  Celestial: `Get ${350 * NUM_MODES}+ points`,
-  Eternal: `Get ${250 * NUM_MODES}+ points`,
-  Ascendant: `Get ${100 * NUM_MODES}+ points`
-};
+const TITLE_REQUIREMENTS = {};
+Object.keys(TITLE_BASE).forEach(k => { TITLE_REQUIREMENTS[k] = `Get ${TITLE_MIN[k]}+ points`; });
+TITLE_REQUIREMENTS.Rookie = `Below ${TITLE_MIN.Novice} points`;
 
 const list = document.getElementById("list");
 const toggleBtn = document.getElementById("toggleBtn");
 const tabBar = document.getElementById("tabBar");
 const infoTooltip = document.getElementById("infoTooltip");
-const kitBtn = document.getElementById("kitBtn");
 const overallHeaders = document.getElementById("overallHeaders");
 
 // ---------- Routing ----------
@@ -448,7 +445,6 @@ function handleRoute() {
 window.addEventListener('popstate', handleRoute);
 
 function renderTabBar() {
-  kitBtn.style.display = currentBoard === 'NeliSMP' ? 'flex' : 'none';
   tabBar.innerHTML = "";
   Object.values(LEADERBOARDS).forEach(board => {
     const el = document.createElement("div");
@@ -682,7 +678,6 @@ function closeKit() {
 }
 document.getElementById("kitClose").addEventListener("click", closeKit);
 kitOverlay.addEventListener("click", (e) => { if (e.target === kitOverlay) closeKit(); });
-kitBtn.addEventListener("click", () => { hist('pushState', '#/nelismp/kit'); openKit(); });
 
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
 
@@ -691,8 +686,9 @@ function render() {
   list.innerHTML = "";
   overallHeaders.style.display = isOverall ? 'flex' : 'none';
 
+  renderInfoTooltip();
+
   if (isOverall) {
-    renderInfoTooltip();
     const sorted = [...allPlayers]
       .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
       .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
@@ -784,6 +780,7 @@ function renderInfoTooltip() {
     <div class="tooltip-tabs">
       <span class="tooltip-tab ${infoTab === 'titles' ? 'active' : ''}" data-tab="titles">Titles</span>
       <span class="tooltip-tab ${infoTab === 'points' ? 'active' : ''}" data-tab="points">Points</span>
+      ${currentBoard === 'NeliSMP' ? '<span class="tooltip-tab" data-tab="kit">Kit</span>' : ''}
     </div>
     <div class="tooltip-content ${infoTab === 'titles' ? '' : 'hidden'}" id="tooltipTitles">${titlesHtml}</div>
     <div class="tooltip-content ${infoTab === 'points' ? '' : 'hidden'}" id="tooltipPoints">${pointsHtml}</div>`;
@@ -791,6 +788,7 @@ function renderInfoTooltip() {
   infoTooltip.querySelectorAll('.tooltip-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (tab.dataset.tab === 'kit') { infoTooltip.classList.remove('active'); hist('pushState', '#/nelismp/kit'); openKit(); return; }
       infoTab = tab.dataset.tab;
       infoTooltip.querySelectorAll('.tooltip-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
