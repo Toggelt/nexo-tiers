@@ -303,7 +303,6 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
   .top-bar-logo { height: 26px; max-width: 40vw; }
   .top-bar-right { gap: 8px; }
   .top-bar-right .search-btn { padding: 8px 11px; }
-  .search-label { display: none; }
   .hero { padding: 30px 14px 28px; gap: 18px; }
   .hero-text { font-size: 15px; }
   .hero-btn { padding: 12px 20px; font-size: 14px; }
@@ -401,19 +400,19 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 }
 
 /* Title bars load in and ease to a stop; tier columns open downward and are only as tall as their content */
-.ti-fill { animation: barLoad 1.6s cubic-bezier(0.1, 0.75, 0.2, 1) backwards; }
-@keyframes barLoad { from { width: 0; } to { width: var(--w); } }
+.ti-fill { width: 0; transition: width 2.3s cubic-bezier(0.1, 0.75, 0.2, 1); }
+.in-view .ti-fill { width: var(--w); }
 .tier-columns { align-items: flex-start; }
 .tier-column.open { animation: colOpen 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) backwards; }
 @keyframes colOpen { from { clip-path: inset(0 0 100% 0 round 10px); } to { clip-path: inset(0 0 0 0 round 10px); } }
-@media (prefers-reduced-motion: reduce) { .ti-fill, .tier-column.open { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .ti-fill { transition: none; } .tier-column.open { animation: none; } }
 
 /* Overall rows grow in from nothing, staggered down the list */
 .player.pop { animation: playerPop 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
 @keyframes playerPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .player.pop { animation: none; } }
 
-/* Profile glow: colour = title colour, size grows with the title (--gs). Rookie / Novice have none.
+/* Profile glow: colour = title colour, size grows with the title (--gs). Novice / Cadet have none.
    Four side glows push out and pull back with staggered timing, so a slow wave travels around the box. */
 @property --w1 { syntax: '<number>'; inherits: true; initial-value: 0; }
 @property --w2 { syntax: '<number>'; inherits: true; initial-value: 0; }
@@ -471,29 +470,48 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .skin-wrap { width: 64px; min-height: 72px; }
   .modal-avatar.skin { width: 150px; height: 150px; }
 }
+
+/* ---------- Search pill, rank button, hero row ---------- */
+.top-bar-lefts { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.is-home .top-bar-left { display: none; }
+.rank-btn { display: none; }
+.is-home .rank-btn { display: inline-flex; }
+.rank-btn img { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+.rank-btn svg { margin-left: 4px; }
+.hero-buttons { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; width: 100%; }
+.hero-buttons > .hero-search { justify-self: end; }
+.hero-search .search-btn-wrapper { position: relative; }
+.search-btn { width: 200px; padding: 7px 16px; cursor: pointer; user-select: none; }
+.search-btn svg { flex-shrink: 0; }
+.search-inline { display: none; flex: 1; min-width: 0; height: 17px; background: none; border: none; outline: none; color: #fff; font-size: 13px; font-weight: 700; font-family: inherit; padding: 0; }
+.search-inline::placeholder { color: #8b8b96; }
+.search-btn-wrapper.open .search-label { display: none; }
+.search-btn-wrapper.open .search-inline { display: block; }
+.search-btn-wrapper.open .search-btn { background: #22222a; border-color: #3a3a44; cursor: text; }
+.search-panel { left: 0; right: auto; width: 100%; min-width: 200px; padding: 8px; }
+@media (max-width: 700px) {
+  .hero-buttons { gap: 8px; }
+  .hero-search .search-btn-wrapper { min-height: 38px; min-width: 42px; }
+  .hero-search .search-btn { width: auto; padding: 11px 13px; }
+  .hero-search .search-label { display: none; }
+  .hero-search .search-btn-wrapper.open .search-btn { position: absolute; right: 0; top: 0; width: 230px; padding: 11px 14px; z-index: 80; }
+  .hero-search .search-panel { left: auto; right: 0; width: 230px; top: calc(100% + 8px); }
+}
 </style>
 </head>
 <body>
 <div class="top-fixed-bar">
-  <a class="top-bar-left" href="#/home" aria-label="Nexo Tiers home">
-    <img class="top-bar-trophy" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt="">
-    <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
-  </a>
+  <div class="top-bar-lefts">
+    <a class="top-bar-left" href="#/home" aria-label="Nexo Tiers home">
+      <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
+    </a>
+    <a class="hero-btn hero-btn-primary rank-btn" id="rankBtn" href="#/overall"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>View rankings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
   <div class="top-bar-right">
     <a class="discord-btn" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
       <span>Discord</span>
     </a>
-    <div class="search-btn-wrapper" id="searchWrapper">
-      <button class="search-btn" id="searchBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
-        <span class="search-label">Search</span>
-      </button>
-      <div class="search-panel" id="searchPanel">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search player...">
-        <div class="search-results" id="searchResults"></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -511,8 +529,20 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
       <img class="hero-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
       <p class="hero-text">Nexo Tiers is a competitive platform for players to compete in realistic kits based on SMPs</p>
       <div class="hero-buttons">
-        <a class="hero-btn hero-btn-primary" href="#/overall">View rankings <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <span></span>
         <a class="hero-btn hero-btn-secondary" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">Get tier tested</a>
+        <div class="hero-search" id="heroSearch">
+          <div class="search-btn-wrapper" id="searchWrapper">
+            <div class="search-btn" id="searchBtn" role="button" tabindex="0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
+              <span class="search-label">Player search</span>
+              <input type="text" class="search-inline" id="searchInput" placeholder="Player search" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="search-panel" id="searchPanel">
+              <div class="search-results" id="searchResults"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <section class="home-section">
@@ -581,7 +611,7 @@ const SUB_BOARDS = ["NeliSMP", "Lowblock"];
 const NUM_MODES = SUB_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
-const TIER_POINTS = { "1+": 1000, "1": 800, "2+": 600, "2": 400, "3+": 250, "3": 150, "4+": 75, "4": 50, "5+": 25, "5": 15 };
+const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 200, "3": 125, "4+": 75, "4": 50, "5+": 25, "5": 15 };
 const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#C67B42", "4+": "#81749a", "4": "#655B79", "5+": "#81749a", "5": "#655B79" };
 const TIER_LIGHT_COLORS = { 1: "#ffd54f", 2: "#e0e0e0", 3: "#e0a86c", 4: "#d0d8ff", 5: "#9fb0f0" };
 const TIER_ORDER = { "1+": 0, "1": 1, "2+": 2, "2": 3, "3+": 4, "3": 5, "4+": 6, "4": 7, "5+": 8, "5": 9, "none": 10 };
@@ -623,13 +653,14 @@ function computePlayerPoints(player) {
 
 // Point requirement = base x number of gamemodes, with a trailing 50 dropped (1950 -> 1900)
 const cleanReq = v => (v % 100 === 50 && v > 50) ? v - 50 : v;
-const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 500, Elite: 300, Expert: 150, Novice: 50 };
+const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 500, Champion: 300, Veteran: 150, Cadet: 50 };
 const TITLE_MIN = {};
-Object.keys(TITLE_BASE).forEach(k => { const v = TITLE_BASE[k] * NUM_MODES; TITLE_MIN[k] = k === 'Novice' ? v : cleanReq(v); }); // Novice keeps its exact number
+Object.keys(TITLE_BASE).forEach(k => { const v = TITLE_BASE[k] * NUM_MODES; TITLE_MIN[k] = k === 'Cadet' ? v : cleanReq(v); }); // Cadet keeps its exact number
 
 function getPlayerTitle(points) {
+  if (!points) return null;
   for (const k of Object.keys(TITLE_BASE)) if (points >= TITLE_MIN[k]) return k;
-  return "Rookie";
+  return "Novice";
 }
 
 const solidGrad = c => `linear-gradient(100deg, ${c}, ${c})`;
@@ -637,17 +668,17 @@ const TITLE_COLORS = {
   Legend: "linear-gradient(100deg, #cbd4ec, #6468ab)",
   Grandmaster: `linear-gradient(90deg, #E2C473, #E8BA3A)`,
   Master: solidGrad(TIER_COLORS["1"]),
-  Elite: solidGrad("#FF5555"),
-  Expert: solidGrad("#A744D9"),
-  Novice: solidGrad("#c9a7f5"),
-  Rookie: solidGrad("#9a9aa5")
+  Champion: solidGrad("#A744D9"),
+  Veteran: solidGrad("#3474eb"),
+  Cadet: solidGrad("#34b7eb"),
+  Novice: solidGrad("#9a9aa5")
 };
 // Solid colour per title (profile glow + avatar ring) and glow size in px (0 = no glow)
-const TITLE_SOLID = { Legend: "#8a93d6", Grandmaster: "#E8BA3A", Master: "#D5B355", Elite: "#FF5555", Expert: "#A744D9", Novice: "#c9a7f5", Rookie: "#9a9aa5" };
-const TITLE_GLOW_SIZE = { Legend: 80, Grandmaster: 66, Master: 54, Elite: 42, Expert: 30, Novice: 0, Rookie: 0 };
+const TITLE_SOLID = { Legend: "#8a93d6", Grandmaster: "#E8BA3A", Master: "#D5B355", Champion: "#A744D9", Veteran: "#3474eb", Cadet: "#34b7eb", Novice: "#9a9aa5" };
+const TITLE_GLOW_SIZE = { Legend: 80, Grandmaster: 66, Master: 54, Champion: 42, Veteran: 30, Cadet: 0, Novice: 0 };
 const TITLE_REQUIREMENTS = {};
 Object.keys(TITLE_BASE).forEach(k => { TITLE_REQUIREMENTS[k] = `Get ${TITLE_MIN[k]}+ points`; });
-TITLE_REQUIREMENTS.Rookie = `Below ${TITLE_MIN.Novice} points`;
+TITLE_REQUIREMENTS.Novice = `Below ${TITLE_MIN.Cadet} points`;
 // Legend / Grandmaster / Master use the Minecraft Bold font, every other title the regular Minecraft font
 const BOLD_TITLES = new Set(['Legend', 'Grandmaster', 'Master']);
 const titleFontFamily = n => BOLD_TITLES.has(n) ? "'MinecraftBold', 'Minecraft', monospace" : "'Minecraft', monospace";
@@ -959,6 +990,9 @@ function buildOverallRow(p) {
 
 function applyView() {
   const home = currentBoard === 'Home';
+  const searchTarget = home ? document.getElementById('heroSearch') : topBarEl;
+  if (searchWrapper.parentElement !== searchTarget) { searchTarget.appendChild(searchWrapper); closeSearch(); }
+  if (!home) document.getElementById('titlesCard').classList.remove('in-view');
   document.body.classList.toggle('is-home', home);
   document.querySelector('.container').classList.toggle('is-home-view', home);
   homeView.style.display = home ? 'block' : 'none';
@@ -1022,18 +1056,24 @@ function renderInfoSections() {
   let titles = `<h3>Titles</h3>
     <div class="info-card-desc">Your title follows your total points across every gamemode.</div>`;
   Object.keys(TITLE_REQUIREMENTS).forEach((name, idx) => {
-    const isRookie = name === 'Rookie';
-    const width = isRookie ? 4 : Math.max(4, Math.round(TITLE_MIN[name] / TITLE_MIN.Legend * 100));
-    const req = isRookie ? `Under ${TITLE_MIN.Novice} points` : `${TITLE_MIN[name]}+ points`;
+    const isNovice = name === 'Novice';
+    const width = isNovice ? 4 : Math.max(4, Math.round(TITLE_MIN[name] / TITLE_MIN.Legend * 100));
+    const req = isNovice ? `Under ${TITLE_MIN.Cadet} points` : `${TITLE_MIN[name]}+ points`;
     titles += `<div class="ti-row">
       <div class="ti-head">
         <span class="ti-name title-grad" style="background-image:${TITLE_COLORS[name]};${titleFontCSS(name)}">${name}</span>
         <span class="ti-req">${req}</span>
       </div>
-      <div class="ti-track"><div class="ti-fill" style="--w:${width}%;width:var(--w);animation-delay:${idx * 110}ms;background:${TITLE_COLORS[name]}"></div></div>
+      <div class="ti-track"><div class="ti-fill" style="--w:${width}%;transition-delay:${idx * 110}ms;background:${TITLE_COLORS[name]}"></div></div>
     </div>`;
   });
-  document.getElementById("titlesCard").innerHTML = titles;
+  const titlesCard = document.getElementById("titlesCard");
+  titlesCard.innerHTML = titles;
+  // Bars load once the top bar scrolls into view (the class is removed again when leaving Home, so it replays)
+  const firstBar = titlesCard.querySelector('.ti-track');
+  if (firstBar && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) titlesCard.classList.add('in-view'); }, { threshold: 0.6 }).observe(firstBar);
+  } else titlesCard.classList.add('in-view');
 }
 
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
@@ -1253,11 +1293,11 @@ const searchBtn = document.getElementById("searchBtn");
 const searchPanel = document.getElementById("searchPanel");
 const searchInput = document.getElementById("searchInput");
 const searchResults = document.getElementById("searchResults");
-searchBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  searchPanel.classList.toggle("active");
-  if (searchPanel.classList.contains("active")) { searchInput.value = ""; renderSearchResults(""); setTimeout(() => searchInput.focus(), 30); }
-});
+const searchWrapper = document.getElementById("searchWrapper");
+function openSearch() { searchWrapper.classList.add("open"); searchPanel.classList.add("active"); searchInput.value = ""; renderSearchResults(""); setTimeout(() => searchInput.focus(), 30); }
+function closeSearch() { searchWrapper.classList.remove("open"); searchPanel.classList.remove("active"); searchInput.blur(); }
+searchBtn.addEventListener("click", (e) => { e.stopPropagation(); if (!searchWrapper.classList.contains("open")) openSearch(); });
+searchInput.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSearch(); });
 searchInput.addEventListener("input", () => renderSearchResults(searchInput.value));
 function renderSearchResults(query) {
   const q = query.trim().toLowerCase();
@@ -1268,14 +1308,14 @@ function renderSearchResults(query) {
     const row = document.createElement("div");
     row.className = "search-result-item";
     row.innerHTML = `<img src="${avatarUrl(p.name, 26)}" alt="" onerror="this.style.display='none'"><span>${p.name}</span>`;
-    row.addEventListener("click", () => { searchPanel.classList.remove("active"); openFromList(p); });
+    row.addEventListener("click", () => { closeSearch(); openFromList(p); });
     searchResults.appendChild(row);
   });
 }
 // Outside-click check uses the event path, so it still works after a tab click re-renders (and detaches) the clicked element
 document.addEventListener("click", (e) => {
   const path = e.composedPath();
-  if (!path.includes(document.querySelector(".search-btn-wrapper"))) searchPanel.classList.remove("active");
+  if (!path.includes(searchWrapper)) closeSearch();
   if (!path.includes(infoTooltip) && !path.includes(document.getElementById("infoBtn"))) infoTooltip.classList.remove("active");
 });
 document.getElementById("infoBtn").addEventListener("click", (e) => { e.stopPropagation(); infoTooltip.classList.toggle("active"); });
