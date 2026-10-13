@@ -350,7 +350,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 html { scrollbar-color: #2c2c34 #0b0b0e; }
 body { background: radial-gradient(900px 420px at 50% 0, #17172b 0%, rgba(11,11,14,0) 70%) no-repeat, #0b0b0e; }
 .top-fixed-bar { background: rgba(11,11,14,0.88); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #1a1a22; }
-.container { background: linear-gradient(180deg, #16161e 0, #131318 320px); border: 1px solid #1d1d25; border-bottom: none; box-shadow: 0 0 50px rgba(0,0,0,0.45); }
+.container { background: none; border: none; box-shadow: none; }
 .tab-button { transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
 .tab-button.active { box-shadow: inset 0 -2px 0 #6468ab; }
 .info-btn, .search-btn, .discord-btn, .hero-btn { transition: background 0.15s, transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
@@ -362,7 +362,7 @@ body { background: radial-gradient(900px 420px at 50% 0, #17172b 0%, rgba(11,11,
 .player:hover { border-color: #34343f; }
 .tier-column { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
 .tier-columns, .search-results, .modal-box { scrollbar-width: thin; scrollbar-color: #2c2c34 transparent; }
-.hero { background: radial-gradient(520px 230px at 50% 32%, rgba(100,104,171,0.16), rgba(100,104,171,0) 70%); }
+.hero { background: radial-gradient(520px 230px at 50% 32%, rgba(190,70,80,0.14), rgba(190,70,80,0) 70%); }
 .hero-btn { box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
 .hero-btn:hover { transform: translateY(-2px); }
 .home-section { border-top: 1px solid #25252d; }
@@ -379,19 +379,19 @@ body { background: radial-gradient(900px 420px at 50% 0, #17172b 0%, rgba(11,11,
 .position-card, .modal-avatar { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 @media (max-width: 700px) {
   .container { border-left: none; border-right: none; box-shadow: none; }
-  .hero { background: radial-gradient(360px 180px at 50% 30%, rgba(100,104,171,0.16), rgba(100,104,171,0) 70%); }
+  .hero { background: radial-gradient(360px 180px at 50% 30%, rgba(190,70,80,0.14), rgba(190,70,80,0) 70%); }
 }
 
 /* ---------- Round 3 tweaks ---------- */
 /* Page gradient reaches the full width and sits behind the top bar too */
-body { background: radial-gradient(ellipse 110% 560px at 50% 0, #1a1a31 0%, rgba(11,11,14,0) 100%) no-repeat fixed, #0b0b0e; }
-.top-fixed-bar { background: radial-gradient(ellipse 110% 560px at 50% 0, #1a1a31 0%, rgba(11,11,14,0) 100%) no-repeat fixed, #0b0b0e; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: none; }
+body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba(11,11,14,0) 100%) no-repeat, #0b0b0e; padding-top: 0; }
+.top-fixed-bar { position: relative; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: none; }
 
 /* Selected tab matches the container background */
 .tab-button.active { background: #16161e; box-shadow: none; }
 
 /* Ranking numbers: bold italic sans-serif */
-.rank-num { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif !important; font-weight: 800; font-style: italic; }
+.rank-num { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif !important; font-weight: 800; font-style: italic; color: #fff !important; text-shadow: 2px 2px 0 #000; }
 
 /* Top 3: moving shine across the static colour */
 .rank-1 .rank-flag::before, .rank-2 .rank-flag::before, .rank-3 .rank-flag::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 100%; background: linear-gradient(105deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 65%); transform: translateX(-130%); animation: rankShine 3s ease-in-out infinite; pointer-events: none; }
@@ -401,7 +401,54 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #1a1a31 0%, rgba
 }
 
 /* Glow below the profile card (white by default, top 3 colours for top 3 players) */
-.modal-box { box-shadow: 0 34px 80px -16px var(--glow, rgba(255,255,255,0.4)), 0 14px 34px rgba(0,0,0,0.55); }
+.modal-box { box-shadow: 0 0 42px 2px var(--glow, rgba(255,255,255,0.3)); animation: glowWave 9s ease-in-out infinite; }
+@keyframes glowWave {
+  0%, 100% { box-shadow: 0 0 42px 2px var(--glow, rgba(255,255,255,0.3)); }
+  33% { box-shadow: 5px 3px 52px 5px var(--glow, rgba(255,255,255,0.3)); }
+  66% { box-shadow: -5px -3px 48px 3px var(--glow, rgba(255,255,255,0.3)); }
+}
+@media (prefers-reduced-motion: reduce) { .modal-box { animation: none; } }
+.tier-player .tier-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 10px; }
+.tier-player .tier-badge svg { width: 13px; height: 13px; display: block; }
+
+/* ---------- Round 4 tweaks ---------- */
+.tab-bar { background: none; }
+.container::before { content: ''; position: absolute; left: 0; right: 0; top: 52px; bottom: 0; z-index: -1; background: linear-gradient(180deg, #16161e 0, #131318 320px); }
+.container.is-home-view::before { top: 0; border-radius: 14px 14px 0 0; }
+.is-home .top-bar-logo { display: none; }
+.hero-logo { animation: logoPop 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+@keyframes logoPop {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-logo { animation: none; } }
+@media (max-width: 700px) {
+  .container::before { top: 46px; }
+  .container.is-home-view::before { top: 0; border-radius: 0; }
+}
+
+/* Home page uses the same background as the top of the page */
+.container.is-home-view::before { background: none; }
+/* The hero glow was clipped by the hero's own box, leaving a hard edge under the top bar */
+.hero { background: none; }
+
+/* Smooth transition: the panel fades in from transparent instead of starting with a hard edge */
+.container:not(.is-home-view)::before { background: linear-gradient(180deg, rgba(19,19,24,0) 0, rgba(19,19,24,0.7) 220px, #131318 480px); }
+.tab-button.active { background: transparent; }
+
+/* ---------- Player skins (overall rows + profile) ---------- */
+.rank-flag.has-skin { align-items: stretch; gap: 6px; padding: 0 34px 0 20px; min-width: 190px; }
+.rank-flag.has-skin .rank-num { align-self: center; }
+.skin-wrap { position: relative; z-index: 1; flex-shrink: 0; align-self: stretch; width: 96px; min-height: 99px; }
+.skin-wrap img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; max-width: none; transform: translateX(-50%); image-rendering: pixelated; }
+.modal-avatar.skin { width: 100%; height: 180px; background: none; border: none; box-shadow: none; border-radius: 0; overflow: visible; margin: 6px 0 14px; }
+.modal-avatar.skin img { display: block; height: 100%; width: auto; margin: 0 auto; image-rendering: pixelated; }
+@media (max-width: 700px) {
+  .rank-flag.has-skin { min-width: 138px; padding: 0 24px 0 12px; gap: 4px; }
+  .skin-wrap { width: 64px; min-height: 72px; }
+  .modal-avatar.skin { height: 150px; }
+}
 </style>
 </head>
 <body>
@@ -553,7 +600,7 @@ function computePlayerPoints(player) {
 
 // Point requirement = base x number of gamemodes, with a trailing 50 dropped (1950 -> 1900)
 const cleanReq = v => (v % 100 === 50 && v > 50) ? v - 50 : v;
-const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 350, Elite: 250, Expert: 150, Novice: 50 };
+const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 500, Elite: 300, Expert: 150, Novice: 50 };
 const TITLE_MIN = {};
 Object.keys(TITLE_BASE).forEach(k => { const v = TITLE_BASE[k] * NUM_MODES; TITLE_MIN[k] = k === 'Novice' ? v : cleanReq(v); }); // Novice keeps its exact number
 
@@ -707,7 +754,7 @@ function assignRanks(sorted) {
 
 
 // ---------- Minecraft-style kit inventory ----------
-const ICONS = {"helmet": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAtklEQVR4nO2SPwuCQADFf4W0ROG5OGrkYtD3/wIN0Sp4S5IHggaB/2hpsUlB76TWoDf+eO/du+Pg57UwwcDzOxO/qlTzW6bw3vNYrbcjXmQprhDdvSxHJdZcONyF5I+cqq0AcITT20Yly+mC/mR5k0P49WymJYO0AgAZR8g4wt7YACRKkShlspoLANqmHha0TT1n0x8RIDwckXHE5XwasSJLPy/o7/st1xR4fucKof0DVwgj/wveTDZHT6ahXGYAAAAASUVORK5CYII=", "chestplate": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABU0lEQVR4nMWST2vCQBDFf5pSkhZLpBIVYlqhRBQs/QIePIo3D37uQqGFINgGwT+0ZqtoFkHTQ5slGouXQue0M7PvzePNwH9HBuDu5jY6bAzeXjPJ/Lc/Z3FSbzTZrBaIUPIxmx6ddm0VMQ2d88srXp6fAMjGzRhsFSwAanZFTYzfVsFChJLNaqFIFYEIJTu5ZrNaUG802WoaNbsS1exKtNU0pXAn14hQpgncqku71UGEEjNn0uv22WoaW02j1+1j5kxEKGm3OrhVN23icvGJY9tk9QtMQ8cqOZQLZQDG72NmE1+p9EcjAKZB8G1iwvHooXmPVXIQS6GmiKXAKjkw8XkceEyDQG1IbSHphRh6uFVXKQDwht7RzaQITENXgCQorp8kEKHENPQ9BUkPThLs5Jq5XO/VZhOfeTA/reDHHHVA8cRD55OYvSSOYj6fuvtj4D+JL6qOpmvylayUAAAAAElFTkSuQmCC", "leggings": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nMWSvQrCMBSFP8VVxeJgoWgH30EcfP+1tC8gUohC6U9Cly51ijT1Bu3UMx5yvpx7E5hbi7FxPsW977DRDa+qcjKrcfh6uRHuQwBUoQCoTQ3AM78D9EOIA7BShfqEhgp2AY88d7ylBLDhrtV0rfZN5G9gw0mWAnCMIg5R/B/A3p5k6XBhvQ8gjjCuvd5sfUVlwBR9AaSlGd14lyk2KKtSPCz5DsDoZlIYhFcYf5Rf/vx6Az++VNQlFydiAAAAAElFTkSuQmCC", "boots": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAyUlEQVR4nN2PMQvCMBCFX4u4FArt4niBZoiCYn9HNwf/uqMgRSlI0iaI0iVOFtOkgqPedu/effcO+K8qhbCcmJ2ac2K2FMKZx++NuT+wq/YIQTgxu6v2ODeNo8dj4+V6mUx4OB48zQMAQEGERZYNKTgxWxAFoR6gNS3mSeoZQ9pkgm9qAHBidrlaAwD6m/aML2273jjvxaFlqaQHkEqiv2nMk9SBzMYXpJI41bWzbHQHozvkWe4diF4JjO4GsVEqCv37Hv2T78fqCZfIUzbiE118AAAAAElFTkSuQmCC", "totem": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABa0lEQVR4nKWTMUhCURSGP6O2Fw65vaFHIS0u4daShGCJNDkELjpE0GJLU4tE7kljgzYIDY6RudiDoJYnTQ0PMV0ub+g5pG4GryG8pF6j6Gznv/+557h8fvjuvffe/nc/Z3FSbzTZrBaIUPIxmx6ddm0VMQ2d88srXp6fAMjGzRhsFSwAanZFTYzfVsFChJLNaqFIFYEIJTu5ZrNaUG802WoaNbsS1exKtNU0pXAn14hQpgncqku71UGEEjNn0uv22WoaW02j1+1j5kxEKGm3OrhVN23icvGJY9tk9QtMQ8cqOZQLZQDG72NmE1+p9EcjAKZB8G1iwvHooXmPVXIQS6GmiKXAKjkw8XkceEyDQG1IbSHphRh6uFVXKQDwht7RzaQITENXgCQorp8kEKHENPQ9BUkPThLs5Jq5XO/VZhOfeTA/reDHHHVA8cRD55OYvSSOYj6fuvtj4D+JL6qOpmvylayUAAAAAElFTkSuQmCC", "trident": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvUlEQVR4nNXSMQqCcBTH8a/RCRyEcA2EBgm3TuDqEjR5gb9nafNPSwepC9QkTvKgDqBd4jXZUEmmEPTWx+f3eI8HvyhrraqqjsIiogAi0j+sC1tr+wcMxgDGGA3TRJ9x7zXCNNHNfqthmrxgY4wCTD6F1NcLrj9jdz4iIhoEAVmWkee5A+B0QS9e6SJaUhUlAOt59Oi1uDMgTBN1/RlVUXI7nDqHvK12by9eff84/4mdUQcDpnXTUDfNIAxwByy8puaLugTUAAAAAElFTkSuQmCC", "bucket": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMUlEQVR4nK2TP0vDQBjGfxGxqGDOCBGEwhUKxdKhS8ZO+Qp18hP0w2R2zJCxfoVM3XrLTYZKxC1uZyuI1KVOLflzKlKf6Tie9/fyPNzBnnJsl0EQbGz3SqmG/9A2GIYhAFLKun9TB+0OQRBswjBkmo05PW7hX/oslysAPtdrAN4/1txc35Om6Q5yUMZPszEd2WbQl/gXJwjhAjDoS45aLTqyzTQbfx/BKyasCni+uuNcnCGEixAuj08vvC7fcB5u8X7qIEkStNZE0QQKWJVyesBoNKLb7RLHsR0AMBwOSZIEAK01AMYY8jyvW2l0sFWv17OaATyvGqIC2G78iyqA+Xz+64Axxg5QSjmz2QyAxWJhHd4WWH5IjQ7qMeob66oAlFJOFEUNSJ7n1u3wD59pb30BmENvP7N5unwAAAAASUVORK5CYII=", "elytra": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4nMWRsW6EMBBEHxfSrSVXFKFG4gP4C5SvPfkH0uIm5Skd0sWSm1wEoYkQKXK2MEeU8qZCMzuzOwbujWxLtG27hG/vPQBFUUTdGJN48q2xrmtEKqw9JsameWYc3wCWdVAezMGodRm3d12XBV3rEq1LRKoYZIzJDmGDSIVSI/N8+rPvPJ9QakSkivViBaVGAIZBgPON+XI5A4JSY5wFiBc4565m+Pz4ugkI3DAIzrnIxwtW3YCn3QpBF6mAl/QC719/e37vm9eatce0gjEm6/ueaZoAeHh8T4ze+8hN05T8ocN6KCAErbHHweoNrolL04C1Nm74T8vZYDuwDdk94674ATPojAFvOx16AAAAAElFTkSuQmCC", "mace": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB+0lEQVR4nI3TQUiTYRzH8c9jE8tcaS4nxetg6XKLHYRBaZcxDwuJmEYOxC7JAt3wEgQeOnno2iENgqGFO1htdAkZxvAQhRFE7rDmlmQDQcxtLgqHxdPBfHPuFfa/vc/zfv48z+95HqigXO4+6XL3Sa053WFopMOMQV/Lm2MW6R0YxGLvBJCxaETcGByWmxvrxKIRodngIH49Pw/AvfsTpFMJmUwskc9lAajSwnVHq0twMrFEJpNhOf6OJy9i5HNZvq0khGYDgA8nLqh4c2Oda739KIqCxd7J+Jifi11OWsxWCSAOC621rZ2mZqM61t3Tz/iYX/1uPG1k8e1CeYgjHWYmoxEBu6k3NRtRFEXF6VSC+oZT6v+aK/Bfv81E+DEtZqu80tNLOvW5BBsMRtKpBE79r/JTCNx9ztnGWjz1NmkzOZiZ9qnoIH76abV0C95AkIa6ahaXU9JmcjC7ENpN+19g+3FhewfYd5G8gSDHa/TEV79Kn6uL0eAUN7vdIl5TIDwXEpitMp/Lqvhlcu1/A28gSM0RHdn8mooHnG7xfWuH8FwIz/kzwJYAKGyj4pLyDD2Qr0Lv5TnXsLx15xneQFAr37LS7T0Sm8nBaHCKy/ZL4mfxB7MPhypqUAXQ2tbOzLSPL7FHovjnd8UYQOxdSYCrJ4ti8uNKxRjgL1fhzrJHZKP6AAAAAElFTkSuQmCC", "sword": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABK0lEQVR4nJ2QTUsCURiFnwkjoQ/F0XERQ6ghuJD8ASIuwoVLf1fblm3atQvCFq4iQgqDQgYGgwnEhaYhTrQIgrkt5A5N4+jkWV1e3ufc8x6FNVQvVIV8b6wDlxs1yo0avWH3fwYSHr+P3VloAwl3Hu7RkhpnpydYs6mihIXzlRJ965WDXJari3Os2VQBWGlQL1SFWtT5nNrsJGK0W00X9hjIZq/NG89sa3+P/qCHnkpjGIYHhj8dqEXdNQoD+06Qt77cPrOpOgwmb0thXwKpfKUUCvYlkClkad3Hu6WwL8FRJiu07Q/arSbO14xYOkUunhBBMEDkN3x8mOGy8zT/1TAEMDcBEZREka3b8W9GpumLLBMEGUQARs4Q25wsXFrVgaJFk2I36oRaXqQfQsCZTkyUro8AAAAAElFTkSuQmCC", "axe": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA8klEQVR4nGNgoAfw0nT476Xp8B+bHAsxmm2C3CCcdQz/t10/wEi0ATDNJw/ugIowYahhxBBB0qxmZ8Bw/+o5uBiflDwD872rDAvOnIPrwzQSCm4+v4TC55OSZ/j07CHD4TsPiHMBAwMDg7KA0H8GBgYGKzdvhk/PHjI8fv2SQVZUnOHKlSsMdz+8Y8TrAgYGBoa7H94x8ggKMDDfu8pw5coVBllRcXzKMYG+otL/Ylfn/zCXKAsIwdlEaU4wMSJeA7pmZwdnojRjBKK+otJ/HglJhhfXr8MDCh9ACUR9RaX/IvKKRGvGsBk5wEgGJIUwNQEA6mBZrw/x9JUAAAAAElFTkSuQmCC", "ender_pearl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABQklEQVR4nMWSMUvDQBiGnxpDl0oITUE7tQrVse0Sl24uRdwUioKIi0ux/oT8FHH2bxSaxbp6tKUg6JBKGqo4hBAHydmQs5PgCwe5u+99v+f7Dv5bubXLgl2Pk+9391FZu77KuHfZASDwZrxCrArKBBTserxs9MQYgK2jAwAm/jyOxFSGrKnMgTejc3ZKvt0i9ANCP8ATYzwxZvv8GK1WkaMpR7i6ueb2aYjoOpm7hCiRRFnunm+3EF2H6M2XhVrRRLdMAHTTYDEYEolpThJ8+nPZIXQfVGAAlO1miiL1BoE3+9WYyChZqb0MiMQ0N7m7p1Tb+ca0TLTiz9Itk6rTA5D4GYJEumnIkGRVnR4Xuw1GfTdVm/m7tFol3jw55OP5hdAPKNtNiT3qu6nuyoAkBGBjvyHPFoOhHHUlgSpIZfwzfQHDPYKsmtsEowAAAABJRU5ErkJggg==", "breeze_rod": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvElEQVR4nGNgoDcIz5n73y6u/T+Mz0Sq5jhLXQYbFVsG/aD6/yQZEJ4z93+Gsw7D0bu/GI7cOcxwcV0jI9EGwDRfu8fFcOTOYYZDiyoZYXKM+DQiOxtmM7Jmgi4gpBmvAeh+xqYZr83715/8X9V05D8stHEBDFORnb31wm54aOMCKF5AdjYxmsl2NoYL7OLa/8dZ6jLsvvwbJZEQbYCehArDgxecpIc2AwMDCwMDA8PhO1cYLr24Q7JmqgAAVa57xF8qMisAAAAASUVORK5CYII=", "cobweb": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nIVTsRHEIAyzf4g0v/8mqVNkghSkcJbQV+KEMXk3ISBZOoFtP07YSwFYnnduBdqPEy0CANAikIUmDkEABrACuV66ahGTSlbOmMm2qpBMEr+lA1WqgFl5csINNmJ42khJXZBpa+JaVS5lkwqgzSii1zsErD8K+idQWqtCzG+AmA8B7u7c/G6bmZndzzO4AwB3dzOz6w6bitZ1XT2kcn6y3Zx+no0lORNWip2zGue3MVaRHxHYfNiNnY/1AAAAAElFTkSuQmCC", "golden_apple": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMklEQVR4nL2SsUvDQBTGv x6FtCKUGHAvOOTWrEKmunWSzE6ls0uG+ge4+B84Zi4OpWOntpmErhFCyeYgkhAIsYGS55RrL7nior7l7l3e73vf7dnwH+GajE59Yz/Bs5FO0V77m+4A0DrVFQBW6xTRXkO/XQAAnt5KZb0Ehp5BJb1T6BnkXHVpNtLp8/WGQs8g12RUd9Q6hrnN0BsOcH52jY7miKJdMUWW+0jnCzw/JpKbtspJlvvIcl86Y9sYveEAYxxEAMUU2DZurNUeAHRuIfo4TEUIrNYpACAJNgJI5wskwUacq0J5heNinVtSXheSxuKajMYPuhKs8sl9jmn8JbiGg2BZgttMwDq3ROdgWTbcNn4M56JLd7cdcJsJoNp7Lzupu1KgEulfFiKvXr0O/0p8Ax48kA5GNLmUAAAAAElFTkSuQmCC", "wind_charge": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOUlEQVR4nN2ST0rDQBTGfw3dpA1lIq1IwF1FqLr2AAUFdx7AC4hHcOkRxAt4AOuyha5EtNhdV/0DCkIobWhGTTIbcVyEhP5JD6BvM/PefO9733wz8Ocjt+7g5rap5/Pzs+NM7EqxN9R6qwye5wIgpY+UktdxmEliLBcenluMPSiXHcyigxA2QggqJYOpr3VvqBeU5ZNNu6P100uDSskgj8to5KcgIWyq1T1CBffNBpkEmxvxahVMpPQRwgZiJaGCbveRIFLpsPphLrfgwZurddGMgfFUkU6RUhJEiunnDyf1I75CONhZIpg3MFSgQjc1MIgU+7UaZtFZaF4hALi6vtO72xZWwUyVCGHzjcNkBon0tQTtjtb9QYtKycAqmOm9++8BlxenK/jMz5E81WQG/UGL2UeU2fxP4hd4T4N+j1+kdgAAAABJRU5ErkJggg==", "strength_potion": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVR4nGP8//8/AyWAiSLdpBpwLc/j/7U8DxQnE20ATOPVGzdRxFmI0Rw38ch/6+PHGYQEhTAl////jxdvufD2P4w9w4Tv/wwTvv/I8kRr3nLhLYZmvAZcffb9Py7DkDHWMLj2/Md/rUecDFtfvf3/fKUwAwMDA8OJywwMDC1v/3vrCzEiq8WIhWvPf/zvS+Nk2MrxlsH7hzCDthIDg7YSA4OFLgPD+hphhriJRwhHo4Uugv30NYSGGYIOMAy4/+obAwMDA4PQaWGG45cZGF69g4gfE7nIwMNFhAEMDBD/Xr0HYQvxI9h7ThJhgLe+EOMvl8NwQ758Y2D4aHaR4fpcfYZfLocZFuXboAQiI67ciB5YDAwMGJrxGkAsAAAOFea9HMpdzQAAAABJRU5ErkJggg==", "shield": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA40lEQVR4nJWTQQrCMBBFf6UNNoigO7vxGN7Gne4Ud57BnehOL+F1vEBdKlKSkhbqIqSN00Tih0CSSd58JpMIRNvdvqF7tk7HQ2SvY3pACoHX/YaEMVRKYTLmKMoalVIAgNV601wv5xYyoICU83aeMAYA7WUadwJ4qg+Mhtrc8y2+gCbuBVApVf+MewFF2V00EOPqLwdGph5BAJPRLh51FeTAzkphQQAfLAjgyugqYn8HAGNx7/kqpVAAmIY6CFUPIGTXeS4XdtzrwNV9vo50/sb5YglA/4tZluGR5xBSQAo9bH0ANAtcnYrzIpcAAAAASUVORK5CYII=", "xp_bottle": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOklEQVR4nKWTMUsDQRCFv6iFaGl3CSEoGFJHAvFHhBQispaCrZEU/gtJ8hdEG4N46WJtddhYnkUI4gULLS9gCp9FvCPxNofowDDs7NvlzbyZjCT+Yytpl2Paehl5AGw7lxkrSJLVQ7VUr6JSFtWryA+MbLiMrYQxbR3uNuKz/zyNt55JMFmysYpo/8oWleAHRqUsegxMaglWBgA5p0IxD69/YRA1sB8YNd2yrlNYpD721NGBu6+mW1Z/wSdzJYxpayfX4Lhr2HAqnPfuGQxDAra4e/A57RrO9q54Gh3G0iUGqZiHZeADGAxD3oJ3ALKFaS6SNLI5BrPy3fQu5oC12hGflh6mjvJmYT2Oq0yY2EA2/WcVaLpleeqo/z0XP5u4cIjqVeJdiDxUKyGjdReAuNM5pxLn1jhJbOQXImhLhM8jq3oAAAAASUVORK5CYII="};
+const ICONS = {"helmet": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAtklEQVR4nO2SPwuCQADFf4W0ROG5OGrkYtD3/wIN0Sp4S5IHggaB/2hpsUlB76TWoDf+eO/du+Pg57UwwcDzOxO/qlTzW6bw3vNYrbcjXmQprhDdvSxHJdZcONyF5I+cqq0AcITT20Yly+mC/mR5k0P49WymJYO0AgAZR8g4wt7YACRKkShlspoLANqmHha0TT1n0x8RIDwckXHE5XwasSJLPy/o7/st1xR4fucKof0DVwgj/wveTDZHT6ahXGYAAAAASUVORK5CYII=", "chestplate": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABU0lEQVR4nMWST2vCQBDFf5pSkhZLpBIVYlqhRBQs/QIePIo3D37uQqGFINgGwT+0ZqtoFkHTQ5slGouXQue0M7PvzXsz8N8RAbi7uY0OG4O310wy/+3PWZzUG002qwUilHzMpkenXVtFTEPn/PKKl+cnALJxMwZbBQuAml1RE+O3VbAQoWSzWihSRSBCyU6u2awW1BtNtppGza5ENbsSbTVNKdzJNSKUaQK36tJudRChxMyZ9Lp9tprGVtPodfuYORMRStqtDm7VTZu4XHzi2DZZ/QLT0LFKDuVCGYDx+5jZxFcq/dEIgGkQfJuYcDx6aN5jlRzEUqgpYimwSg5MfB4HHtMgUBtSW0h6IYYeblVVCgC8oXd0MykC09AVIAmK6ycJRCgxDX1PQdKDkwQ7uWYu13u12cRnHsxPK/gxRx1QPPHQ+SRmL4mjmM+n7v4Y+E/ii6qjqZr8JWslAAAAAElFTkSuQmCC", "leggings": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nMWSvQrCMBSFP8VVxeJgoWgH30EcfP+1tC8gUohC6U9Cly51ijT1Bu3UMx5yvpx7E5hbi7FxPsW977DRDa+qcjKrcfh6uRHuQwBUoQCoTQ3AM78D9EOIA7BShfqEhgp2AY88d7ylBLDhrtV0rfZN5G9gw0mWAnCMIg5R/B/A3p5k6XBhvQ8gjjCuvd5sfUVlwBR9AaSlGd14lyk2KKtSPCz5DsDoZlIYhFcYf5Rf/vx6Az++VNQlFydiAAAAAElFTkSuQmCC", "boots": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAyUlEQVR4nN2PMQvCMBCFv6iFaGl3CSEoGFJHAvFHhBQispaCrZEU/gtJ8hdEG4N46WJtddhYnkFhzeoMmQvKHk8emtxKz4mp1R55CGcdrfO5E3HyIoIMd+oDI+Cs1oEaqjTXV7FjEsnLEJVvX3d3x6CKI7OACTlC7oFQd3jt/6C4oHtaEAAAAABJRU5ErkJggg==", "totem": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABa0lEQVR4nKWTMUhCURSGP6O2Fw65vaFHIS0u4daShGCJNDkELjpE0GJLU4tE7kljgzYIDY6RudiDoJYnTQ0PMV0ub+g5pG4GryG8pF6j6Gznv/+557h8fvjuvffe/nc/Z3FSbzTZrBaIUPIxmx6ddm0VMQ2d88srXp6fAMjGzRhsFSwAanZFTYzfVsFChJLNaqFIFYEIJTu5ZrNaUG802WoaNbsS1exKtNU0pXAn14hQpgncqku71UGEEjNn0uv22WoaW02j1+1j5kxEKGm3OrhVN23icvGJY9tk9QtMQ8cqOZQLZQDG72NmE1+p9EcjAKZB8G1iwvHooXmPVXIQS6GmiKXAKjkw8XkceEyDQG1IbSHphRh6uFVXKQDwht7RzaQITENXgCQorp8kEKHENPQ9BUkPThLs5Jq5XO/VZhOfeTA/reDHHHVA8cRD55OYvSSOYj6fuvtj4D+JL6qOpmvylayUAAAAAElFTkSuQmCC", "trident": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvUlEQVR4nNXSMQqCcBTH8a/RCRyEcA2EBgm3TuDqEjR5gb9nafNPSwepC9QkTvKgDqBd4jXZUEmmEPTWx+f3eI8HvyhrraqqjsIiogAi0j+sC1tr+wcMxgDGGA3TRJ9x7zXCNNHNfqthmrxgY4wCTD6F1NcLrj9jdz4iIhoEAVmWkee5A+B0QS9e6SJaUhUlAOt59Oi1uDMgTBN1/RlVUXI7nDqHvK12by9eff84/4mdUQcDpnXTUDfNIAxwByy8puaLugTUAAAAAElFTkSuQmCC", "bucket": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMUlEQVR4nK2TP0vDQBjGfxGxqGDOCBGEwhUKxdKhS8ZO+Qp18hP0w2R2zJCxfoVM3XrLTYZKxC1uZyuI1KVOLflzKlKf6Tie9/fyvHfws+fIcl0GQbCx3SulGv5D22AYhgBIKev+TR20OwRBsAnDkGk25vS4hX/ps1yuAPhcrwF4/1hzc39Pmqa7LAdl/DQb05FtBn2Jf3GCEC4Ag77kqNWiI9tMs/H3EbxiwqqA56s7zsUZQrgI4fL49MLr8g3n4Rbvpw6SJEFrTRRNoIBVKacHjEYjut0ucRzbAQDD4ZAkSQDQWgNgjCHP87qVRgdb9Xo9qxnA86ohKoDtxr+oApjP578OGGPsAKWUM5vNAFgsFtbhbYHlh9TooB6jvrGuCkAp5URR1IDkeW7dDv/wmfbWF4A59PYzm6fLBwAAAABJRU5ErkJggg==", "elytra": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4nMWRsW6EMBBEHxfSrSVXFKFG4gP4C5SvPfkH0uIm5Skd0sWSm1wEoYkQKXK2MEeU8qZCMzuzOwbujWxLtG27hG/vPQBFUUTdGJN48q2xrmtEKqw9JsameWYc3wCWdVAezMGodRm3d12XBV3rEq1LRKoYZIzJDmGDSIVSI/N8+rPvPJ9QakSkivViBaVGAIZBgPON+XI5A4JSY5wFiBc4565m+Pz4ugkI3DAIzrnIxwtW3YCn3QpBF6mAl/QC719/e37vm9eatce0gjEm6/ueaZoAeHh8T4ze+8hN05T8ocN6KCAErbHHweoNrolL04C1Nm74T8vZYDuwDdk94674ATPojAFvOx16AAAAAElFTkSuQmCC", "mace": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB+0lEQVR4nI3TQUiTYRzH8c9jE8tcaS4nxetg6XKLHYRBaZcxDwuJmEYOxC7JAt3wEgQeOnno2iENgqGFO1htdAkZxvAQhRFE7rDmlmQDQcxtLgqHxdPBfHPuFfa/vc/zfv48z+95HqigXO4+6XL3Sa053WFopMOMQV/Lm2MW6R0YxGLvBJCxaETcGByWmxvrxKIRodngIH49Pw/AvfsTpFMJmUwskc9lAajSwnVHq0twMrFEJpNhOf6OJy9i5HNZvq0khGYDgA8nLqh4c2Oda739KIqCxd7J+Jifi11OWsxWCSAOC621rZ2mZqM61t3Tz/iYX/1uPG1k8e1CeYgjHWYmoxEBu6k3NRtRFEXF6VSC+oZT6v+aK/Bfv81E+DEtZqu80tNLOvW5BBsMRtKpBE79r/JTCNx9ztnGWjz1NmkzOZiZ9qnoIH76abV0C95AkIa6ahaXU9JmcjC7ENpN+19g+3FhewfYd5G8gSDHa/TEV79Kn6uL0eAUN7vdIl5TIDwXEpitMp/Lqvhlcu1/A28gSM0RHdn8mooHnG7xfWuH8FwIz/kzwJYAKGyj4pLyDD2Qr0Lv5TnXsLx15xneQFAr37LS7T0Sm8nBaHCKy/ZL4mfxB7MPhypqUAXQ2tbOzLSPL7FHovjnd8UYQOxdSYCrJ4ti8uNKxRjgL1fhzrJHZKP6AAAAAElFTkSuQmCC", "sword": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABK0lEQVR4nJ2QTUsCURiFnwkjoQ/F0XERQ6ghuJD8ASIuwoVLf1fblm3atQvCFq4iQgqDQgYGgwnEhaYhTrQIgrkt5A5N4+jkWV1e3ufc8x6FNVQvVIV8b6wDlxs1yo0avWH3fwYSHr+P3VloAwl3Hu7RkhpnpydYs6mihIXzlRJ965WDXJari3Os2VQBWGlQL1SFWtT5nNrsJGK0W00X9hjIZq/NG89sa3+P/qCHnkpjGIYHhj8dqEXdNQoD+06Qt77cPrOpOgwmb0thXwKpfKUUCvYlkClkad3Hu6WwL8FRJiu07Q/arSbO14xYOkUunhBBMEDkN3x8mOGy8zT/1TAEMDcBEZREka3b8W9GpumLLBMEGUQARs4Q25wsXFrVgaJFk2I36oRaXqQfQsCZTkyUro8AAAAASUVORK5CYII=", "axe": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA8klEQVR4nGNgoAfw0nT476Xp8B+bHAsxmm2C3CCcdQz/t10/wEi0ATDNJw/ugIowYahhxBBB0qxmZ8Bw/+o5uBiflDwD872rDAvOnIPrwzQSCm4+v4TC55OSZ/j07CHD4TsPiHMBAwMDg7KA0H8GBgYGKzdvhk/PHjI8fv2SQVZUnOHKlSsMdz+8Y8TrAgYGBoa7H94x8ggKMDDfu8pw5coVBllRcXzKMYG+otL/Ylfn/zCXKAsIwdlEaU4wMSJeA7pmZwdnojRjBKK+otJ/HglJhhfXr8MDCh9ACUR9RaX/IvKKRGvGsBk5wEgGJIUwNQEA6mBZrw/x9JUAAAAASUVORK5CYII=", "ender_pearl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABQklEQVR4nMWSMUvDQBiGnxpDl0oITUE7tQrVse0Sl24uRdwUioKIi0ux/oT8FHH2bxSaxbp6tKUg6JBKGqo4hBAHydmQs5PgCwe5u+99v+f7Dv5bubXLgl2Pk+9391FZu77KuHfZASDwZrxCrArKBBTserxs9MQYgK2jAwAm/jyOxFSGrKnMgTejc3ZKvt0i9ANCP8ATYzwxZvv8GK1WkaMpR7i6ueb2aYjoOpm7hCiRRFnunm+3EF2H6M2XhVrRRLdMAHTTYDEYEolpThJ8+nPZIXQfVGAAlO1miiL1BoE3+9WYyChZqb0MiMQ0N7m7p1Tb+ca0TLTiz9Itk6rTA5D4GYJEumnIkGRVnR4Xuw1GfTdVm/m7tFol3jw55OP5hdAPKNtNiT3qu6nuyoAkBGBjvyHPFoOhHHUlgSpIZfwzfQHDPYKsmtsEowAAAABJRU5ErkJggg==", "breeze_rod": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvElEQVR4nGNgoDcIz5n73y6u/T+Mz0Sq5jhLXQYbFVsG/aD6/yQZEJ4z93+Gsw7D0bu/GI7cOcxwcV0jI9EGwDRfu8fFcOTOYYZDiyoZYXKM+DQiOxtmM7Jmgi4gpBmvAeh+xqYZr83715/8X9V05D8stHEBDFORnb31wm54aOMCKF5AdjYxmsl2NoYL7OLa/8dZ6jLsvvwbJZEQbYCehArDgxecpIc2AwMDCwMDA8PhO1cYLr24Q7JmqgAAVa57xF8qMisAAAAASUVORK5CYII=", "cobweb": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nIVTsRHEIAyzf4g0v/8mqVNkghSkcJbQV+KEMXk3ISBZOoFtP07YSwFYnnduBdqPEy0CANAikIUmDkEABrACuV66ahGTSlbOmMm2qpBMEr+lA1WqgFl5csINNmJ42khJXZBpa+JaVS5lkwqgzSii1zsErD8K+idQWqtCzG+AmA8B7u7c/G6bmZndzzO4AwB3dzOz6w6bitZ1XT2kcn6y3Zx+no0lORNWip2zGue3MVaRHxHYfNiNnY/1AAAAAElFTkSuQmCC", "golden_apple": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMklEQVR4nL2SsUvDQBTGv x6FtCKUGHAvOOTWrEKmunWSzE6ls0uG+ge4+B84Zi4OpWOntpmErhFCyeYgkhAIsYGS55RrL7nior7l7l3e73vf7dnwH+GajE59Yz/Bs5FO0V77m+4A0DrVFQBW6xTRXkO/XQAAnt5KZb0Ehp5BJb1T6BnkXHVpNtLp8/WGQs8g12RUd9Q6hrnN0BsOcH52jY7miKJdMUWW+0jnCzw/JpKbtspJlvvIcl86Y9sYveEAYxxEAMUU2DZurNUeAHRuIfo4TEUIrNYpACAJNgJI5wskwUacq0J5heNinVtSXheSxuKajMYPuhKs8sl9jmn8JbiGg2BZgttMwDq3ROdgWTbcNn4M56JLd7cdcJsJoNp7Lzupu1KgEulfFiKvXr0O/0p8Ax48kA5GNLmUAAAAAElFTkSuQmCC", "wind_charge": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOUlEQVR4nN2ST0rDQBTGfw3dpA1lIq1IwF1FqLr2AAUFdx7AC4hHcOkRxAt4AOuyha5EtNhdV/0DCkIobWhGTTIbcVyEhP5JD6BvM/PefO9733wz8Ocjt+7g5rap5/Pzs+NM7EqxN9R6qwye5wIgpY+UktdxmEliLBcenluMPSiXHcyigxA2QggqJYOpr3VvqBeU5ZNNu6P100uDSskgj8to5KcgIWyq1T1CBffNBpkEmxvxahVMpPQRwgZiJaGCbveRIFLpsPphLrfgwZurddGMgfFUkU6RUhJEiunnDyf1I75CONhZIpg3MFSgQjc1MIgU+7UaZtFZaF4hALi6vtO72xZWwUyVCGHzjcNkBon0tQTtjtb9QYtKycAqmOm9++8BlxenK/jMz5E81WQG/UGL2UeU2fxP4hd4T4N+j1+kdgAAAABJRU5ErkJggg==", "strength_potion": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVR4nGP8//8/AyWAiSLdpBpwLc/j/7U8DxQnE20ATOPVGzdRxFmI0Rw38ch/6+PHGYQEhTAl////jxdvufD2P4w9w4Tv/wwTvv/I8kRr3nLhLYZmvAZcffb9Py7DkDHWMLj2/Md/rUecDFtfvf3/fKUwAwMDA8OJywwMDC1v/3vrCzEiq8WIhWvPf/zvS+Nk2MrxlsH7hzCDthIDg7YSA4OFLgPD+hphhriJRwhHo4Uugv30NYSGGYIOMAy4/+obAwMDA4PQaWGG45cZGF69g4gfE7nIwMNFhAEMDBD/Xr0HYQvxI9h7ThJhgLe+EOMvl8NwQ758Y2D4aHaR4fpcfYZfLocZFuXboAQiI67ciB5YDAwMGJrxGkAsAAAOFea9HMpdzQAAAABJRU5ErkJggg==", "shield": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA40lEQVR4nJWTQQrCMBBFf6UNNoigO7vxGN7Gne4Ud57BnehOL+F1vEBdKlKSkhbqIqSN00Tih0CSSd58JpMIRNvdvqF7tk7HQ2SvY3pACoHX/YaEMVRKYTLmKMoalVIAgNV601wv5xYyoICU83aeMAYA7WUadwJ4qg+Mhtrc8y2+gCbuBVApVf+MewFF2V00EOPqLwdGph5BAJPRLh51FeTAzkphQQAfLAjgyugqYn8HAGNx7/kqpVAAmIY6CFUPIGTXeS4XdtzrwNV9vo50/sb5YglA/4tZluGR5xBSQAo9bH0ANAtcnYrzIpcAAAAASUVORK5CYII=", "xp_bottle": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOklEQVR4nKWTMUsDQRCFv6iFaGl3CSEoGFJHAvFHhBQispaCrZEU/gtJ8hdEG4N46WJtddhYnkUI4gULLS9gCp9FvCPxNofowDDs7NvlzbyZjCT+Yytpl2Paehl5AGw7lxkrSJLVQ7VUr6JSFtWryA+MbLiMrYQxbR3uNuKz/zyNt55JMFmysYpo/8oWleAHRqUsegxMaglWBgA5p0IxD69/YRA1sB8YNd2yrlNYpD721NGBu6+mW1Z/wSdzJYxpayfX4Lhr2HAqnPfuGQxDAra4e/A57RrO9q54Gh3G0iUGqZiHZeADGAxD3oJ3ALKFaS6SNLI5BrPy3fQu5oC12hGflh6mjvJmYT2Oq0yY2EA2/WcVaLpleeqo/z0XP5u4cIjqVeJdiDxUKyGjdReAuNM5pxLn1jhJbOQXImhLhM8jq3oAAAAASUVORK5CYII="};
 
 // EDIT THE KIT HERE.
 //  slot:  2-5 = armour (helmet, chestplate, leggings, boots), 6 = offhand, 9-35 = main inventory, 36-44 = hotbar
@@ -864,9 +911,9 @@ function buildOverallRow(p) {
   const div = document.createElement("div");
   div.className = `player ${rankClass(rank)}`;
   div.innerHTML = `
-    <div class="rank-flag">
+    <div class="rank-flag has-skin">
       <span class="rank-num">${rank}.</span>
-      <div class="avatar"><img src="${avatarUrl(p.name, 38)}" alt="${p.name}" onerror="this.parentElement.innerHTML='?'"></div>
+      <div class="skin-wrap">${skinImg(p.name, 160)}</div>
     </div>
     <div class="info">
       <div class="player-name">${p.name}</div>
@@ -886,6 +933,8 @@ function buildOverallRow(p) {
 
 function applyView() {
   const home = currentBoard === 'Home';
+  document.body.classList.toggle('is-home', home);
+  document.querySelector('.container').classList.toggle('is-home-view', home);
   homeView.style.display = home ? 'block' : 'none';
   tabBar.style.display = home ? 'none' : '';
   topBarEl.style.display = home ? 'none' : '';
@@ -913,6 +962,10 @@ function renderGamemodes() {
     return `<a class="gm-card" href="#/${key.toLowerCase()}"><div class="gm-icon"><img src="${b.icon}" alt="${b.label}"></div><span class="gm-name">${b.label}</span></a>`;
   }).join('');
 }
+
+const chevSvg = pts => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${pts}</svg>`;
+const CHEV_HT = chevSvg('<polyline points="6 11 12 5 18 11"/><polyline points="6 18 12 12 18 18"/>');
+const CHEV_LT = chevSvg('<polyline points="6 15 12 9 18 15"/>');
 
 function hexA(hex, a) {
   const n = parseInt(hex.slice(1), 16);
@@ -1003,9 +1056,10 @@ function render() {
         div.className = `tier-player${plus ? ' plus' : ''}`;
         // HT: colored outline + filled badge. LT: same outline/badge shape, but no filled background.
         div.style.border = `1px solid ${plus ? lightColor : ltColor}`;
+        const htColor = TIER_COLORS[tierKey(t, true)];
         const badgeHtml = plus
-          ? `<span class="tier-badge plus" style="background:${lightColor}; color:#1a1a1a; border:1px solid ${lightColor};">HT</span>`
-          : `<span class="tier-badge lt" style="color:${ltColor}; border:1px solid ${ltColor};">LT</span>`;
+          ? `<span class="tier-badge plus" title="HT${t}" style="background:${hexA(htColor, 0.22)}; color:${htColor}; border:1px solid ${htColor};">${CHEV_HT}</span>`
+          : `<span class="tier-badge lt" title="LT${t}" style="color:${ltColor}; border:1px solid ${ltColor};">${CHEV_LT}</span>`;
         div.innerHTML = `
           <div class="tier-avatar"><img src="${avatarUrl(p.name, 28)}" alt="${p.name}" onerror="this.parentElement.innerHTML='?'"></div>
           <span class="tier-name">${p.name}</span>
@@ -1075,6 +1129,9 @@ function getRole(name) {
 }
 function rankClass(rank) { return rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : ""; }
 function avatarUrl(name, size) { return `https://mc-heads.net/avatar/${encodeURIComponent(name)}/${size}`; }
+// Upper-body skin render (used in the overall rows and the profile). Falls back to the face if it fails to load.
+function skinUrl(name, size) { return `https://minotar.net/armor/bust/${encodeURIComponent(name)}/${size}.png`; }
+function skinImg(name, size) { return `<img src="${skinUrl(name, size)}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='${avatarUrl(name, 96)}'">`; }
 
 // ---------- Profile modal ----------
 function renderProfileTiers(player) {
@@ -1103,7 +1160,9 @@ function renderProfileTiers(player) {
 function openProfile(player) {
   globalMiniTip.style.display = "none";
   mcTip.style.display = "none";
-  document.getElementById("modalAvatar").innerHTML = `<img src="${avatarUrl(player.name, 110)}" alt="${player.name}" onerror="this.parentElement.innerHTML='?'">`;
+  const modalAvatar = document.getElementById("modalAvatar");
+  modalAvatar.className = "modal-avatar skin";
+  modalAvatar.innerHTML = skinImg(player.name, 300);
   document.getElementById("modalName").textContent = player.name;
   const role = getRole(player.name);
   const roleBadge = document.getElementById("modalRoleBadge");
@@ -1132,8 +1191,8 @@ function openProfile(player) {
     <div class="rank-flag"><span class="rank-num">${rank}.</span></div>
     <div class="pos-info"><span class="pos-overall">Overall</span><span class="pos-points">(${totalPoints} Points)</span></div>`;
   renderProfileTiers(player);
-  const RANK_GLOW = { 1: 'rgba(244,199,68,0.65)', 2: 'rgba(214,217,221,0.6)', 3: 'rgba(217,139,69,0.65)' };
-  document.querySelector(".modal-box").style.setProperty("--glow", RANK_GLOW[rank] || "rgba(255,255,255,0.4)");
+  const RANK_GLOW = { 1: 'rgba(244,199,68,0.5)', 2: 'rgba(214,217,221,0.45)', 3: 'rgba(217,139,69,0.5)' };
+  document.querySelector(".modal-box").style.setProperty("--glow", RANK_GLOW[rank] || "rgba(255,255,255,0.3)");
   document.getElementById("modalOverlay").classList.add("active");
 }
 
