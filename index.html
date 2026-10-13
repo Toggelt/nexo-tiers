@@ -261,8 +261,9 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .kit-pane .mc-inv { margin: 0; }
 
 /* ---------- Top bar (logo image + discord + search) ---------- */
-.top-bar-left { text-decoration: none; }
-.top-bar-logo { height: 96px; width: auto; max-width: 55vw; object-fit: contain; display: block; }
+.top-bar-left { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.top-bar-trophy { height: 58px; width: auto; object-fit: contain; display: block; border-radius: 6px; flex-shrink: 0; }
+.top-bar-logo { height: 58px; width: auto; max-width: 50vw; object-fit: contain; display: block; }
 .top-bar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
 .top-bar-right .discord-btn { margin-left: 0; }
 .top-bar-right .search-btn { padding: 11px 18px; font-size: 14px; }
@@ -297,7 +298,9 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .gm-name { font-family: 'Minecraft', monospace; font-size: 18px; }
 
 @media (max-width: 700px) {
-  .top-bar-logo { height: 44px; max-width: 46vw; }
+  .top-bar-left { gap: 8px; }
+  .top-bar-trophy { height: 28px; }
+  .top-bar-logo { height: 26px; max-width: 40vw; }
   .top-bar-right { gap: 8px; }
   .top-bar-right .search-btn { padding: 8px 11px; }
   .search-label { display: none; }
@@ -342,11 +345,48 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
   .ti-name { font-size: 15px; }
   .ti-req { font-size: 11px; }
 }
+
+/* ---------- Visual polish ---------- */
+html { scrollbar-color: #2c2c34 #0b0b0e; }
+body { background: radial-gradient(900px 420px at 50% 0, #17172b 0%, rgba(11,11,14,0) 70%) no-repeat, #0b0b0e; }
+.top-fixed-bar { background: rgba(11,11,14,0.88); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #1a1a22; }
+.container { background: linear-gradient(180deg, #16161e 0, #131318 320px); border: 1px solid #1d1d25; border-bottom: none; box-shadow: 0 0 50px rgba(0,0,0,0.45); }
+.tab-button { transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
+.tab-button.active { box-shadow: inset 0 -2px 0 #6468ab; }
+.info-btn, .search-btn, .discord-btn, .hero-btn { transition: background 0.15s, transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
+.info-btn:hover, .search-btn:hover { border-color: #3a3a44; transform: translateY(-1px); }
+.discord-btn { box-shadow: 0 4px 14px rgba(88,101,242,0.28); }
+.discord-btn:hover { transform: translateY(-1px); }
+.info-tooltip, .search-panel, .modal-box { box-shadow: 0 14px 34px rgba(0,0,0,0.55); }
+.player { border: 1px solid #24242d; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+.player:hover { border-color: #34343f; }
+.tier-column { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
+.tier-columns, .search-results, .modal-box { scrollbar-width: thin; scrollbar-color: #2c2c34 transparent; }
+.hero { background: radial-gradient(520px 230px at 50% 32%, rgba(100,104,171,0.16), rgba(100,104,171,0) 70%); }
+.hero-btn { box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+.hero-btn:hover { transform: translateY(-2px); }
+.home-section { border-top: 1px solid #25252d; }
+.home-heading { color: #a2a2ad; }
+.gm-title { letter-spacing: 0.5px; }
+.gm-card { background: linear-gradient(180deg, #1c1c24, #17171d); border-color: #26262f; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+.gm-card:hover { background: linear-gradient(180deg, #2a2a35, #20202a); border-color: #34343f; }
+.gm-icon { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03), 0 4px 10px rgba(0,0,0,0.3); }
+.info-card { background: linear-gradient(180deg, #1c1c24, #17171d); border-color: #26262f; box-shadow: 0 2px 14px rgba(0,0,0,0.28); }
+.tp-row { border-radius: 12px; }
+.tp-pill { letter-spacing: 0.3px; }
+.ti-track { background: #101015; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03); }
+.ti-fill { box-shadow: 0 0 10px rgba(255,255,255,0.08); }
+.position-card, .modal-avatar { box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+@media (max-width: 700px) {
+  .container { border-left: none; border-right: none; box-shadow: none; }
+  .hero { background: radial-gradient(360px 180px at 50% 30%, rgba(100,104,171,0.16), rgba(100,104,171,0) 70%); }
+}
 </style>
 </head>
 <body>
 <div class="top-fixed-bar">
   <a class="top-bar-left" href="#/home" aria-label="Nexo Tiers home">
+    <img class="top-bar-trophy" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt="">
     <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
   </a>
   <div class="top-bar-right">
@@ -382,7 +422,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
       <p class="hero-text">Nexo Tiers is a competitive platform for players to compete in realistic kits based on SMPs</p>
       <div class="hero-buttons">
         <a class="hero-btn hero-btn-primary" href="#/overall">View rankings <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-        <a class="hero-btn hero-btn-secondary" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">Join Discord</a>
+        <a class="hero-btn hero-btn-secondary" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">Get tier tested</a>
       </div>
     </section>
     <section class="home-section">
@@ -867,11 +907,12 @@ function renderInfoSections() {
     <div class="info-card-desc">Each gamemode ranks players in five tiers, split into <b>High (HT)</b> and <b>Low (LT)</b>. Your tiers earn points, and points decide your place on the overall leaderboard.</div>`;
   for (let t = 1; t <= 5; t++) {
     const ht = TIER_COLORS[tierKey(t, true)], lt = TIER_COLORS[tierKey(t, false)], light = TIER_LIGHT_COLORS[t];
-    const bg = t <= 3 ? `background:${hexA(ht, 0.2)};border-color:${hexA(ht, 0.35)};` : '';
+    const colBg = { 1: '#2a2a1a', 2: '#2a2a30', 3: '#2a221a', 4: '#22222a', 5: '#22222a' }[t];
+    const bg = `background:${colBg};border-color:${colBg};`;
     tiers += `<div class="tp-row" style="${bg}">
       <div class="tp-name" style="color:${ht}"><span>Tier ${t}</span></div>
       <div class="tp-pills">
-        <span class="tp-pill" style="background:${light};color:#1a1a1a;border-color:${light};">${ICON_HT}HT${t}<span class="tp-pts" style="color:#1a1a1a;">&middot; ${TIER_POINTS[tierKey(t, true)]} pts</span></span>
+        <span class="tp-pill" style="background:${hexA(ht, 0.22)};color:${ht};border-color:${ht};">${ICON_HT}HT${t}<span class="tp-pts" style="color:${ht};">&middot; ${TIER_POINTS[tierKey(t, true)]} pts</span></span>
         <span class="tp-pill" style="background:transparent;color:${lt};border-color:${lt};">${ICON_LT}LT${t}<span class="tp-pts" style="color:${lt};">&middot; ${TIER_POINTS[tierKey(t, false)]} pts</span></span>
       </div>
     </div>`;
