@@ -481,7 +481,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .hero-buttons { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; width: 100%; }
 .hero-buttons > .hero-search { justify-self: end; }
 .hero-search .search-btn-wrapper { position: relative; }
-.search-btn { width: 200px; padding: 7px 16px; cursor: pointer; user-select: none; }
+.search-btn { width: auto; padding: 7px 16px; cursor: pointer; user-select: none; }
 .search-btn svg { flex-shrink: 0; }
 .search-inline { display: none; flex: 1; min-width: 0; height: 17px; background: none; border: none; outline: none; color: #fff; font-size: 13px; font-weight: 700; font-family: inherit; padding: 0; }
 .search-inline::placeholder { color: #8b8b96; }
@@ -497,6 +497,23 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .hero-search .search-btn-wrapper.open .search-btn { position: absolute; right: 0; top: 0; width: 230px; padding: 11px 14px; z-index: 80; }
   .hero-search .search-panel { left: auto; right: 0; width: 230px; top: calc(100% + 8px); }
 }
+.search-inline { flex: none; width: 92px; }
+.search-panel { min-width: 190px; }
+.tp-pill { width: 128px; justify-content: center; text-align: center; }
+.tp-pills { gap: 8px; }
+.tp-compact .tp-row { padding: 7px 10px; margin-top: 6px; gap: 6px; flex-wrap: nowrap; border-radius: 9px; }
+.tp-compact .tp-row:first-child { margin-top: 0; }
+.tp-compact .tp-name { font-size: 14px; white-space: nowrap; }
+.tp-compact .tp-pills { gap: 5px; flex-wrap: nowrap; }
+.tp-compact .tp-pill { width: 104px; padding: 4px 5px; font-size: 11px; gap: 3px; }
+.tp-compact .tp-pill svg { width: 10px; height: 10px; }
+@media (max-width: 700px) {
+  .tp-pill { width: 104px; }
+  .tp-compact .tp-pill { width: 98px; }
+  .search-inline { width: 92px; }
+  .hero-search .search-btn-wrapper.open .search-btn { width: 230px; }
+  .hero-search .search-btn-wrapper.open .search-inline { flex: 1; width: auto; }
+}
 </style>
 </head>
 <body>
@@ -505,7 +522,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
     <a class="top-bar-left" href="#/home" aria-label="Nexo Tiers home">
       <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
     </a>
-    <a class="hero-btn hero-btn-primary rank-btn" id="rankBtn" href="#/overall"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>View rankings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a class="hero-btn hero-btn-secondary rank-btn" id="rankBtn" href="#/overall"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>View rankings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
   </div>
   <div class="top-bar-right">
     <a class="discord-btn" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">
@@ -530,7 +547,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
       <p class="hero-text">Nexo Tiers is a competitive platform for players to compete in realistic kits based on SMPs</p>
       <div class="hero-buttons">
         <span></span>
-        <a class="hero-btn hero-btn-secondary" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">Get tier tested</a>
+        <a class="hero-btn hero-btn-primary" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">Get tier tested</a>
         <div class="hero-search" id="heroSearch">
           <div class="search-btn-wrapper" id="searchWrapper">
             <div class="search-btn" id="searchBtn" role="button" tabindex="0">
@@ -1032,18 +1049,15 @@ function hexA(hex, a) {
   return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
 
-function renderInfoSections() {
+function tiersRowsHTML() {
   const SVG = pts => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${pts}</svg>`;
   const ICON_HT = SVG('<polyline points="6 11 12 5 18 11"/><polyline points="6 18 12 12 18 18"/>');
   const ICON_LT = SVG('<polyline points="6 15 12 9 18 15"/>');
-
-  let tiers = `<h3>Tiers and points</h3>
-    <div class="info-card-desc">Each gamemode ranks players in five tiers, split into <b>High (HT)</b> and <b>Low (LT)</b>. Your tiers earn points, and points decide your place on the overall leaderboard.</div>`;
+  let rows = "";
   for (let t = 1; t <= 5; t++) {
-    const ht = TIER_COLORS[tierKey(t, true)], lt = TIER_COLORS[tierKey(t, false)], light = TIER_LIGHT_COLORS[t];
+    const ht = TIER_COLORS[tierKey(t, true)], lt = TIER_COLORS[tierKey(t, false)];
     const colBg = { 1: '#2a2a1a', 2: '#2a2a30', 3: '#2a221a', 4: '#22222a', 5: '#22222a' }[t];
-    const bg = `background:${colBg};border-color:${colBg};`;
-    tiers += `<div class="tp-row" style="${bg}">
+    rows += `<div class="tp-row" style="background:${colBg};border-color:${colBg};">
       <div class="tp-name" style="color:${ht}"><span>Tier ${t}</span></div>
       <div class="tp-pills">
         <span class="tp-pill" style="background:${hexA(ht, 0.22)};color:${ht};border-color:${ht};">${ICON_HT}HT${t}<span class="tp-pts" style="color:${ht};">&middot; ${TIER_POINTS[tierKey(t, true)]} pts</span></span>
@@ -1051,6 +1065,12 @@ function renderInfoSections() {
       </div>
     </div>`;
   }
+  return rows;
+}
+
+function renderInfoSections() {
+  let tiers = `<h3>Tiers and points</h3>
+    <div class="info-card-desc">Each gamemode ranks players in five tiers, split into <b>High (HT)</b> and <b>Low (LT)</b>. Your tiers earn points, and points decide your place on the overall leaderboard.</div>` + tiersRowsHTML();
   document.getElementById("tiersCard").innerHTML = tiers;
 
   let titles = `<h3>Titles</h3>
@@ -1168,11 +1188,7 @@ function renderInfoTooltip() {
       <span class="title-word title-grad" style="background-image:${TITLE_COLORS[name]};${titleFontCSS(name)}">${name}</span>
       <span class="info-desc">${TITLE_REQUIREMENTS[name]}</span>
     </div>`).join('');
-  const pointsHtml = ["1+", "1", "2+", "2", "3+", "3", "4+", "4", "5+", "5"].map(key => `
-    <div class="info-row points-row">
-      <span class="points-label" style="color:${TIER_COLORS[key]}">${shortTierLabel(parseInt(key), key.endsWith('+'))}</span>
-      <span class="info-desc">${TIER_POINTS[key]} points</span>
-    </div>`).join('');
+  const pointsHtml = `<div class="tp-compact">${tiersRowsHTML()}</div>`;
   const kitHtml = currentBoard === 'NeliSMP'
     ? `<div class="kit-pane">
          <div class="kit-header"><img src="${NELISMP_ICON_URL}" alt="NeliSMP"><span>NeliSMP Kit</span></div>
