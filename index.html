@@ -400,6 +400,14 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .rank-1 .rank-flag::before, .rank-2 .rank-flag::before, .rank-3 .rank-flag::before { animation: none; display: none; }
 }
 
+/* Title bars load in and ease to a stop; tier columns open downward and are only as tall as their content */
+.ti-fill { animation: barLoad 1.6s cubic-bezier(0.1, 0.75, 0.2, 1) backwards; }
+@keyframes barLoad { from { width: 0; } to { width: var(--w); } }
+.tier-columns { align-items: flex-start; }
+.tier-column.open { animation: colOpen 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) backwards; }
+@keyframes colOpen { from { clip-path: inset(0 0 100% 0 round 10px); } to { clip-path: inset(0 0 0 0 round 10px); } }
+@media (prefers-reduced-motion: reduce) { .ti-fill, .tier-column.open { animation: none; } }
+
 /* Overall rows grow in from nothing, staggered down the list */
 .player.pop { animation: playerPop 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
 @keyframes playerPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
@@ -1013,7 +1021,7 @@ function renderInfoSections() {
 
   let titles = `<h3>Titles</h3>
     <div class="info-card-desc">Your title follows your total points across every gamemode.</div>`;
-  Object.keys(TITLE_REQUIREMENTS).forEach(name => {
+  Object.keys(TITLE_REQUIREMENTS).forEach((name, idx) => {
     const isRookie = name === 'Rookie';
     const width = isRookie ? 4 : Math.max(4, Math.round(TITLE_MIN[name] / TITLE_MIN.Legend * 100));
     const req = isRookie ? `Under ${TITLE_MIN.Novice} points` : `${TITLE_MIN[name]}+ points`;
@@ -1022,7 +1030,7 @@ function renderInfoSections() {
         <span class="ti-name title-grad" style="background-image:${TITLE_COLORS[name]};${titleFontCSS(name)}">${name}</span>
         <span class="ti-req">${req}</span>
       </div>
-      <div class="ti-track"><div class="ti-fill" style="width:${width}%;background:${TITLE_COLORS[name]}"></div></div>
+      <div class="ti-track"><div class="ti-fill" style="--w:${width}%;width:var(--w);animation-delay:${idx * 110}ms;background:${TITLE_COLORS[name]}"></div></div>
     </div>`;
   });
   document.getElementById("titlesCard").innerHTML = titles;
@@ -1059,6 +1067,7 @@ function render() {
     toggleBtn.style.display = sorted.length > visibleCount ? "block" : "none";
     toggleBtn.textContent = "Show more";
   } else {
+    const firstShow = lastAnimBoard !== currentBoard;
     lastAnimBoard = currentBoard;
     const mode = currentBoard;
     const tierGroups = { 1: [], 2: [], 3: [], 4: [], 5: [] };
@@ -1070,7 +1079,8 @@ function render() {
     columnsDiv.className = "tier-columns";
     for (let t = 1; t <= 5; t++) {
       const col = document.createElement("div");
-      col.className = `tier-column tier-column-${t}`;
+      col.className = `tier-column tier-column-${t}` + (firstShow ? ' open' : '');
+      if (firstShow) col.style.animationDelay = ((t - 1) * 120) + 'ms';
       col.innerHTML = `<div class="tier-header" style="color:${TIER_COLORS[tierKey(t, true)]}">Tier ${t}</div>`;
       const playersDiv = document.createElement("div");
       playersDiv.className = "tier-players";
