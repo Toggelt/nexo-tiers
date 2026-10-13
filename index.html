@@ -259,37 +259,143 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .info-tooltip.overall-tooltip.kit-open { width: 540px; max-width: calc(100vw - 24px); }
 .kit-empty { text-align: center; color: #8b8b96; font-size: 14px; font-weight: 700; padding: 26px 0 22px; }
 .kit-pane .mc-inv { margin: 0; }
+
+/* ---------- Top bar (logo image + discord + search) ---------- */
+.top-bar-left { text-decoration: none; }
+.top-bar-logo { height: 96px; width: auto; max-width: 55vw; object-fit: contain; display: block; }
+.top-bar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.top-bar-right .discord-btn { margin-left: 0; }
+.top-bar-right .search-btn { padding: 11px 18px; font-size: 14px; }
+
+/* ---------- Home page ---------- */
+.home-view { padding-bottom: 24px; }
+.hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; padding: 44px 20px 40px; }
+.hero-logo { width: 560px; max-width: 100%; height: auto; display: block; }
+.hero-text { max-width: 620px; color: #8b8b96; font-size: 17px; line-height: 1.6; font-weight: 600; }
+.hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.hero-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border-radius: 10px; font-size: 15px; font-weight: 700; text-decoration: none; transition: background 0.15s; font-family: Arial, sans-serif; }
+.hero-btn svg { width: 16px; height: 16px; }
+.hero-btn-primary { background: #ececf1; color: #131318; }
+.hero-btn-primary:hover { background: #ffffff; }
+.hero-btn-secondary { background: #22222a; color: #fff; border: 1px solid #2c2c34; }
+.hero-btn-secondary:hover { background: #2e2e38; }
+.home-section { border-top: 1px solid #25252d; margin: 0 20px; padding-top: 24px; }
+.home-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0; }
+.home-heading { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #8b8b96; text-transform: uppercase; letter-spacing: 0.6px; }
+.home-heading img { width: 18px; height: 18px; border-radius: 4px; }
+.home-link { display: inline-flex; align-items: center; gap: 6px; color: #8b8b96; font-size: 13px; font-weight: 700; text-decoration: none; transition: color 0.15s; }
+.home-link:hover { color: #fff; }
+.home-link svg { width: 12px; height: 12px; }
+.home-section .player { margin-left: 0; margin-right: 0; }
+.home-empty { text-align: center; padding: 30px; color: #8b8b96; }
+.gm-title { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 26px; margin: 38px 20px 16px; }
+.gm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 230px)); gap: 14px; margin: 0 20px; }
+.gm-card { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 26px 12px 22px; background: #191920; border: 1px solid #25252d; border-radius: 12px; text-decoration: none; color: #fff; transition: transform 0.15s, box-shadow 0.15s, background 0.15s; }
+.gm-card:hover { transform: scale(1.035); background: #272731; box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
+.gm-icon { width: 70px; height: 70px; border-radius: 14px; background: #131318; border: 1px solid #2c2c34; display: flex; align-items: center; justify-content: center; }
+.gm-icon img { width: 40px; height: 40px; image-rendering: pixelated; }
+.gm-name { font-family: 'Minecraft', monospace; font-size: 18px; }
+
+@media (max-width: 700px) {
+  .top-bar-logo { height: 44px; max-width: 46vw; }
+  .top-bar-right { gap: 8px; }
+  .top-bar-right .search-btn { padding: 8px 11px; }
+  .search-label { display: none; }
+  .hero { padding: 30px 14px 28px; gap: 18px; }
+  .hero-text { font-size: 15px; }
+  .hero-btn { padding: 12px 20px; font-size: 14px; }
+  .home-section { margin: 0 12px; }
+  .home-section .player { margin-left: 0; margin-right: 0; }
+  .gm-title { margin: 28px 12px 14px; font-size: 22px; }
+  .gm-grid { grid-template-columns: repeat(2, 1fr); margin: 0 12px; gap: 10px; }
+  .gm-card { padding: 20px 8px 16px; }
+  .gm-icon { width: 58px; height: 58px; }
+  .gm-icon img { width: 34px; height: 34px; }
+  .gm-name { font-size: 15px; }
+}
+
+/* ---------- Home: Tiers and points / Titles ---------- */
+.info-card { margin: 30px 20px 0; padding: 24px 24px 22px; background: #191920; border: 1px solid #25252d; border-radius: 14px; }
+.info-card h3 { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 24px; margin-bottom: 8px; }
+.info-card-desc { color: #8b8b96; font-size: 14px; line-height: 1.55; font-weight: 600; margin-bottom: 18px; }
+.info-card-desc b { color: #fff; }
+.tp-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 13px 16px; border-radius: 10px; margin-top: 8px; border: 1px solid #25252d; background: #16161e; }
+.tp-name { display: flex; align-items: center; gap: 10px; font-family: 'Minecraft', monospace; font-size: 18px; }
+.tp-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.tp-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: #131318; border: 1px solid #2c2c34; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.tp-pill svg { width: 12px; height: 12px; }
+.tp-pill .tp-pts { color: #c9c9d1; font-weight: 700; }
+.ti-row { margin-top: 16px; }
+.ti-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+.ti-name { font-size: 18px; }
+.ti-req { color: #8b8b96; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.ti-track { height: 6px; border-radius: 999px; background: #131318; overflow: hidden; }
+.ti-fill { height: 100%; border-radius: 999px; }
+
+@media (max-width: 700px) {
+  .info-card { margin: 22px 12px 0; padding: 18px 14px 16px; }
+  .info-card h3 { font-size: 20px; }
+  .info-card-desc { font-size: 13px; }
+  .tp-row { padding: 11px 12px; }
+  .tp-name { font-size: 16px; }
+  .tp-pill { padding: 4px 9px; font-size: 11px; gap: 4px; }
+  .ti-name { font-size: 15px; }
+  .ti-req { font-size: 11px; }
+}
 </style>
 </head>
 <body>
 <div class="top-fixed-bar">
-  <div class="top-bar-left">
-    <img class="top-bar-image" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt="Nexo">
-    <div class="top-bar-title">Nexo Tiers</div>
-  </div>
+  <a class="top-bar-left" href="#/home" aria-label="Nexo Tiers home">
+    <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
+  </a>
+  <div class="top-bar-right">
     <a class="discord-btn" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
       <span>Discord</span>
     </a>
-</div>
-
-<div class="container">
-  <div class="tab-bar" id="tabBar"></div>
-  <div class="top-bar">
-    <div class="info-btn-wrapper">
-      <button class="info-btn" id="infoBtn"><span class="info-icon">i</span>Info</button>
-      <div class="info-tooltip" id="infoTooltip">Loading...</div>
-    </div>
     <div class="search-btn-wrapper" id="searchWrapper">
       <button class="search-btn" id="searchBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
-        Search
+        <span class="search-label">Search</span>
       </button>
       <div class="search-panel" id="searchPanel">
         <input type="text" class="search-input" id="searchInput" placeholder="Search player...">
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tab-bar" id="tabBar"></div>
+  <div class="top-bar" id="topBar">
+    <div class="info-btn-wrapper">
+      <button class="info-btn" id="infoBtn"><span class="info-icon">i</span>Info</button>
+      <div class="info-tooltip" id="infoTooltip">Loading...</div>
+    </div>
+  </div>
+
+  <div class="home-view" id="homeView" style="display:none;">
+    <section class="hero">
+      <img class="hero-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
+      <p class="hero-text">Nexo Tiers is a competitive platform for players to compete in realistic kits based on SMPs</p>
+      <div class="hero-buttons">
+        <a class="hero-btn hero-btn-primary" href="#/overall">View rankings <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a class="hero-btn hero-btn-secondary" href="https://discord.gg/Y6x9FzFEaz" target="_blank" rel="noopener">Join Discord</a>
+      </div>
+    </section>
+    <section class="home-section">
+      <div class="home-section-head">
+        <div class="home-heading"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>Top Players</span></div>
+        <a class="home-link" href="#/overall">View full leaderboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+      <div id="topPlayers"><div class="home-empty">Loading...</div></div>
+    </section>
+    <h2 class="gm-title">Gamemodes</h2>
+    <div class="gm-grid" id="gmGrid"></div>
+    <section class="info-card" id="tiersCard"></section>
+    <section class="info-card" id="titlesCard"></section>
   </div>
 
   <div class="overall-headers" id="overallHeaders">
@@ -327,7 +433,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const COLLAPSED_COUNT = 5;
 let allPlayers = [];
 let expanded = false;
-let currentBoard = 'Overall';
+let currentBoard = 'Home';
 let currentProfileName = null;
 
 const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
@@ -418,12 +524,15 @@ const toggleBtn = document.getElementById("toggleBtn");
 const tabBar = document.getElementById("tabBar");
 const infoTooltip = document.getElementById("infoTooltip");
 const overallHeaders = document.getElementById("overallHeaders");
+const homeView = document.getElementById("homeView");
+const topBarEl = document.getElementById("topBar");
+const topPlayersEl = document.getElementById("topPlayers");
 
 // ---------- Routing ----------
 const hist = (m, u) => { try { history[m](null, '', u); } catch (e) {} };
 function parseRoute() {
   const p = window.location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-  let board = 'Overall', profile = null;
+  let board = 'Home', profile = null;
   if (p[0] === 'player' && p[1]) profile = decodeURIComponent(p[1]);
   else if (p[0]) { const k = Object.keys(LEADERBOARDS).find(k => k.toLowerCase() === p[0].toLowerCase()); if (k) board = k; }
   const kit = board === 'NeliSMP' && !profile && p[1] === 'kit';
@@ -443,8 +552,9 @@ function handleRoute() {
   currentBoard = board;
   currentProfileName = profile;
   renderTabBar();
+  applyView();
   overallHeaders.style.display = (currentBoard === 'Overall') ? 'flex' : 'none';
-  if (!profile) document.getElementById("modalOverlay").classList.remove('active');
+  if (!profile) { document.getElementById("modalOverlay").classList.remove('active'); window.scrollTo(0, 0); }
   mcTip.style.display = 'none';
   loadPlayersAndRender().then(() => {
     if (profile) openRouteProfile();
@@ -504,9 +614,8 @@ function renderMiniTierIcons(player) {
 }
 
 const globalMiniTip = document.getElementById("globalMiniTip");
-list.addEventListener("mouseover", (e) => {
-  const wrap = e.target.closest(".mini-tier-wrap");
-  if (!wrap) return;
+const isTouch = () => window.matchMedia("(hover: none)").matches;
+function showMiniTip(wrap) {
   const cT = parseInt(wrap.dataset.currentTier);
   globalMiniTip.innerHTML = isNaN(cT)
     ? `<div class="tip-tier">No Tier</div>`
@@ -515,11 +624,19 @@ list.addEventListener("mouseover", (e) => {
   const rect = wrap.getBoundingClientRect();
   globalMiniTip.style.left = (rect.left + rect.width / 2) + "px";
   globalMiniTip.style.top = (rect.top - 8) + "px";
+}
+const hideMiniTip = () => { globalMiniTip.style.display = "none"; };
+[list, topPlayersEl].forEach(el => {
+  el.addEventListener("mouseover", (e) => {
+    const wrap = e.target.closest(".mini-tier-wrap");
+    if (wrap) showMiniTip(wrap);
+  });
+  el.addEventListener("mouseout", (e) => {
+    if (!e.target.closest(".mini-tier-wrap")?.contains(e.relatedTarget)) hideMiniTip();
+  });
 });
-list.addEventListener("mouseout", (e) => {
-  if (!e.target.closest(".mini-tier-wrap")?.contains(e.relatedTarget)) globalMiniTip.style.display = "none";
-});
-document.addEventListener("scroll", () => { globalMiniTip.style.display = "none"; }, true);
+document.addEventListener("click", (e) => { if (!e.target.closest(".mini-tier-wrap")) hideMiniTip(); });
+document.addEventListener("scroll", hideMiniTip, true);
 
 // Players with equal points share a position (1, 1, 3, ...)
 function assignRanks(sorted) {
@@ -673,47 +790,132 @@ function renderInventory(container) {
 }
 document.addEventListener('click', e => { if (!e.target.closest('.mc-slot')) mcTip.style.display = 'none'; });
 
+function getOverallSorted() {
+  const sorted = [...allPlayers]
+    .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
+    .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
+    .sort((a, b) => b.__points - a.__points);
+  return assignRanks(sorted);
+}
+
+function buildOverallRow(p) {
+  const rank = p.__rank;
+  const div = document.createElement("div");
+  div.className = `player ${rankClass(rank)}`;
+  div.innerHTML = `
+    <div class="rank-flag">
+      <span class="rank-num">${rank}.</span>
+      <div class="avatar"><img src="${avatarUrl(p.name, 38)}" alt="${p.name}" onerror="this.parentElement.innerHTML='?'"></div>
+    </div>
+    <div class="info">
+      <div class="player-name">${p.name}</div>
+      <div class="player-title-row">
+        ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]};${titleFontCSS(p.__title)}">${p.__title}</span></div>` : ''}
+        <span class="player-points">(${p.__points} points)</span>
+      </div>
+    </div>
+    <div class="elo-wrap"><div class="mini-tiers-row">${renderMiniTierIcons(p)}</div></div>`;
+  div.addEventListener("click", (e) => {
+    const wrap = e.target.closest(".mini-tier-wrap");
+    if (wrap && isTouch()) { showMiniTip(wrap); return; }
+    openFromList(p);
+  });
+  return div;
+}
+
+function applyView() {
+  const home = currentBoard === 'Home';
+  homeView.style.display = home ? 'block' : 'none';
+  tabBar.style.display = home ? 'none' : '';
+  topBarEl.style.display = home ? 'none' : '';
+  list.style.display = home ? 'none' : '';
+  if (home) {
+    overallHeaders.style.display = 'none';
+    toggleBtn.style.display = 'none';
+    infoTooltip.classList.remove('active');
+  }
+}
+
+function renderHome() {
+  const sorted = getOverallSorted();
+  topPlayersEl.innerHTML = "";
+  if (sorted.length === 0) {
+    topPlayersEl.innerHTML = '<div class="home-empty">No players on the leaderboard yet</div>';
+    return;
+  }
+  sorted.slice(0, 3).forEach(p => topPlayersEl.appendChild(buildOverallRow(p)));
+}
+
+function renderGamemodes() {
+  document.getElementById("gmGrid").innerHTML = SUB_BOARDS.map(key => {
+    const b = LEADERBOARDS[key];
+    return `<a class="gm-card" href="#/${key.toLowerCase()}"><div class="gm-icon"><img src="${b.icon}" alt="${b.label}"></div><span class="gm-name">${b.label}</span></a>`;
+  }).join('');
+}
+
+function hexA(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+}
+
+function renderInfoSections() {
+  const SVG = pts => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${pts}</svg>`;
+  const ICON_HT = SVG('<polyline points="6 11 12 5 18 11"/><polyline points="6 18 12 12 18 18"/>');
+  const ICON_LT = SVG('<polyline points="6 15 12 9 18 15"/>');
+
+  let tiers = `<h3>Tiers and points</h3>
+    <div class="info-card-desc">Each gamemode ranks players in five tiers, split into <b>High (HT)</b> and <b>Low (LT)</b>. Your tiers earn points, and points decide your place on the overall leaderboard.</div>`;
+  for (let t = 1; t <= 5; t++) {
+    const ht = TIER_COLORS[tierKey(t, true)], lt = TIER_COLORS[tierKey(t, false)], light = TIER_LIGHT_COLORS[t];
+    const bg = t <= 3 ? `background:${hexA(ht, 0.2)};border-color:${hexA(ht, 0.35)};` : '';
+    tiers += `<div class="tp-row" style="${bg}">
+      <div class="tp-name" style="color:${ht}"><span>Tier ${t}</span></div>
+      <div class="tp-pills">
+        <span class="tp-pill" style="background:${light};color:#1a1a1a;border-color:${light};">${ICON_HT}HT${t}<span class="tp-pts" style="color:#1a1a1a;">&middot; ${TIER_POINTS[tierKey(t, true)]} pts</span></span>
+        <span class="tp-pill" style="background:transparent;color:${lt};border-color:${lt};">${ICON_LT}LT${t}<span class="tp-pts" style="color:${lt};">&middot; ${TIER_POINTS[tierKey(t, false)]} pts</span></span>
+      </div>
+    </div>`;
+  }
+  document.getElementById("tiersCard").innerHTML = tiers;
+
+  let titles = `<h3>Titles</h3>
+    <div class="info-card-desc">Your title follows your total points across every gamemode.</div>`;
+  Object.keys(TITLE_REQUIREMENTS).forEach(name => {
+    const isRookie = name === 'Rookie';
+    const width = isRookie ? 4 : Math.max(4, Math.round(TITLE_MIN[name] / TITLE_MIN.Legend * 100));
+    const req = isRookie ? `Under ${TITLE_MIN.Novice} points` : `${TITLE_MIN[name]}+ points`;
+    titles += `<div class="ti-row">
+      <div class="ti-head">
+        <span class="ti-name title-grad" style="background-image:${TITLE_COLORS[name]};${titleFontCSS(name)}">${name}</span>
+        <span class="ti-req">${req}</span>
+      </div>
+      <div class="ti-track"><div class="ti-fill" style="width:${width}%;background:${TITLE_COLORS[name]}"></div></div>
+    </div>`;
+  });
+  document.getElementById("titlesCard").innerHTML = titles;
+}
+
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
 
 function render() {
+  applyView();
+  if (currentBoard === 'Home') { renderHome(); return; }
   const isOverall = currentBoard === "Overall";
+  const prevScroll = list.querySelector('.tier-columns')?.scrollLeft || 0;
   list.innerHTML = "";
   overallHeaders.style.display = isOverall ? 'flex' : 'none';
 
   renderInfoTooltip();
 
   if (isOverall) {
-    const sorted = [...allPlayers]
-      .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
-      .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
-      .sort((a, b) => b.__points - a.__points);
-    assignRanks(sorted);
+    const sorted = getOverallSorted();
 
     if (sorted.length === 0) {
       list.innerHTML = `<div style="text-align:center;padding:30px;color:#8b8b96;">No players on this leaderboard yet</div>`;
       toggleBtn.style.display = "none";
       return;
     }
-    (expanded ? sorted : sorted.slice(0, COLLAPSED_COUNT)).forEach((p, i) => {
-      const rank = p.__rank;
-      const div = document.createElement("div");
-      div.className = `player ${rankClass(rank)}`;
-      div.innerHTML = `
-        <div class="rank-flag">
-          <span class="rank-num">${rank}.</span>
-          <div class="avatar"><img src="${avatarUrl(p.name, 38)}" alt="${p.name}" onerror="this.parentElement.innerHTML='?'"></div>
-        </div>
-        <div class="info">
-          <div class="player-name">${p.name}</div>
-          <div class="player-title-row">
-            ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]};${titleFontCSS(p.__title)}">${p.__title}</span></div>` : ''}
-            <span class="player-points">(${p.__points} points)</span>
-          </div>
-        </div>
-        <div class="elo-wrap"><div class="mini-tiers-row">${renderMiniTierIcons(p)}</div></div>`;
-      div.addEventListener("click", () => openFromList(p));
-      list.appendChild(div);
-    });
+    (expanded ? sorted : sorted.slice(0, COLLAPSED_COUNT)).forEach(p => list.appendChild(buildOverallRow(p)));
     toggleBtn.style.display = sorted.length > COLLAPSED_COUNT ? "block" : "none";
     toggleBtn.textContent = expanded ? "Show less" : `Show all (${sorted.length})`;
   } else {
@@ -753,6 +955,7 @@ function render() {
       columnsDiv.appendChild(col);
     }
     list.appendChild(columnsDiv);
+    columnsDiv.scrollLeft = prevScroll;
     toggleBtn.style.display = "none";
   }
 }
@@ -836,6 +1039,8 @@ function renderProfileTiers(player) {
 }
 
 function openProfile(player) {
+  globalMiniTip.style.display = "none";
+  mcTip.style.display = "none";
   document.getElementById("modalAvatar").innerHTML = `<img src="${avatarUrl(player.name, 110)}" alt="${player.name}" onerror="this.parentElement.innerHTML='?'">`;
   document.getElementById("modalName").textContent = player.name;
   const role = getRole(player.name);
@@ -934,7 +1139,8 @@ function mapPlayer(row) {
   return o;
 }
 
-async function loadPlayersAndRender() {
+let lastDataSig = '';
+async function loadPlayersAndRender(force = true) {
   const cols = "id,player,nelismp_tier,nelismp_peaktier,lowblockranked_tier,lowblockranked_peaktier";
   let rows;
   try {
@@ -949,6 +1155,9 @@ async function loadPlayersAndRender() {
     list.innerHTML = `<div style="padding:30px;text-align:center;color:#ff6b6b;">Error loading data<br><small style="color:#8b8b96">${err.message}</small></div>`;
     return;
   }
+  const sig = JSON.stringify(rows);
+  if (!force && sig === lastDataSig) return;
+  lastDataSig = sig;
   allPlayers = rows.filter(r => r.player).map(mapPlayer);
   recomputePlus();
   render();
@@ -957,8 +1166,10 @@ async function loadPlayersAndRender() {
 toggleBtn.addEventListener("click", () => { expanded = !expanded; render(); });
 
 // ---------- Initial load ----------
+renderGamemodes();
+renderInfoSections();
 handleRoute();
-setInterval(loadPlayersAndRender, 5000);
+setInterval(() => loadPlayersAndRender(false), 5000);
 </script>
 </body>
 </html>
