@@ -433,10 +433,6 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 /* The hero glow was clipped by the hero's own box, leaving a hard edge under the top bar */
 .hero { background: none; }
 
-/* Smooth transition: the panel fades in from transparent instead of starting with a hard edge */
-.container:not(.is-home-view)::before { background: linear-gradient(180deg, rgba(19,19,24,0) 0, rgba(19,19,24,0.7) 220px, #131318 480px); }
-.tab-button.active { background: transparent; }
-
 /* ---------- Player skins (overall rows + profile) ---------- */
 .rank-flag.has-skin { align-items: stretch; gap: 6px; padding: 0 34px 0 20px; min-width: 190px; }
 .rank-flag.has-skin .rank-num { align-self: center; }
