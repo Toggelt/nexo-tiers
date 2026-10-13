@@ -400,12 +400,13 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .rank-1 .rank-flag::before, .rank-2 .rank-flag::before, .rank-3 .rank-flag::before { animation: none; display: none; }
 }
 
-/* Glow below the profile card (white by default, top 3 colours for top 3 players) */
-.modal-box { box-shadow: 0 0 42px 2px var(--glow, rgba(255,255,255,0.3)); animation: glowWave 9s ease-in-out infinite; }
+/* Profile glow: colour = title colour, size grows with the title (--gs). Rookie / Novice have none. */
+.modal-box { box-shadow: 0 0 calc(var(--gs, 30px)) calc(var(--gs, 30px) * 0.06) var(--glow, transparent); animation: glowWave 16s ease-in-out infinite; }
+.modal-box.no-glow { box-shadow: none; animation: none; }
 @keyframes glowWave {
-  0%, 100% { box-shadow: 0 0 42px 2px var(--glow, rgba(255,255,255,0.3)); }
-  33% { box-shadow: 5px 3px 52px 5px var(--glow, rgba(255,255,255,0.3)); }
-  66% { box-shadow: -5px -3px 48px 3px var(--glow, rgba(255,255,255,0.3)); }
+  0%, 100% { box-shadow: 0 0 calc(var(--gs) * 1) calc(var(--gs) * 0.06) var(--glow); }
+  33% { box-shadow: 3px 2px calc(var(--gs) * 1.12) calc(var(--gs) * 0.09) var(--glow); }
+  66% { box-shadow: -3px -2px calc(var(--gs) * 1.06) calc(var(--gs) * 0.07) var(--glow); }
 }
 @media (prefers-reduced-motion: reduce) { .modal-box { animation: none; } }
 .tier-player .tier-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 10px; }
@@ -437,13 +438,13 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .rank-flag.has-skin { align-items: stretch; gap: 6px; padding: 0 34px 0 20px; min-width: 190px; }
 .rank-flag.has-skin .rank-num { align-self: center; }
 .skin-wrap { position: relative; z-index: 1; flex-shrink: 0; align-self: stretch; width: 96px; min-height: 99px; }
-.skin-wrap img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; max-width: none; transform: translateX(-50%); image-rendering: pixelated; }
-.modal-avatar.skin { width: 100%; height: 180px; background: none; border: none; box-shadow: none; border-radius: 0; overflow: visible; margin: 6px 0 14px; }
-.modal-avatar.skin img { display: block; height: 100%; width: auto; margin: 0 auto; image-rendering: pixelated; }
+.skin-wrap img { position: absolute; left: 50%; bottom: -10%; height: 108%; width: auto; max-width: none; transform: translateX(-50%); image-rendering: auto; }
+.modal-avatar.skin { position: relative; width: 190px; height: 190px; background: #1d2740; border: 4px solid var(--ring, #9a9aa5); box-shadow: none; border-radius: 50%; overflow: hidden; margin: 6px auto 14px; }
+.modal-avatar.skin img { position: absolute; left: 50%; bottom: -8%; height: 108%; width: auto; max-width: none; transform: translateX(-50%); image-rendering: auto; }
 @media (max-width: 700px) {
   .rank-flag.has-skin { min-width: 138px; padding: 0 24px 0 12px; gap: 4px; }
   .skin-wrap { width: 64px; min-height: 72px; }
-  .modal-avatar.skin { height: 150px; }
+  .modal-avatar.skin { width: 150px; height: 150px; }
 }
 </style>
 </head>
@@ -615,6 +616,9 @@ const TITLE_COLORS = {
   Novice: solidGrad("#c9a7f5"),
   Rookie: solidGrad("#9a9aa5")
 };
+// Solid colour per title (profile glow + avatar ring) and glow size in px (0 = no glow)
+const TITLE_SOLID = { Legend: "#8a93d6", Grandmaster: "#E8BA3A", Master: "#D5B355", Elite: "#FF5555", Expert: "#A744D9", Novice: "#c9a7f5", Rookie: "#9a9aa5" };
+const TITLE_GLOW_SIZE = { Legend: 80, Grandmaster: 66, Master: 54, Elite: 42, Expert: 30, Novice: 0, Rookie: 0 };
 const TITLE_REQUIREMENTS = {};
 Object.keys(TITLE_BASE).forEach(k => { TITLE_REQUIREMENTS[k] = `Get ${TITLE_MIN[k]}+ points`; });
 TITLE_REQUIREMENTS.Rookie = `Below ${TITLE_MIN.Novice} points`;
@@ -1126,8 +1130,12 @@ function getRole(name) {
 function rankClass(rank) { return rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : ""; }
 function avatarUrl(name, size) { return `https://mc-heads.net/avatar/${encodeURIComponent(name)}/${size}`; }
 // Upper-body skin render (used in the overall rows and the profile). Falls back to the face if it fails to load.
-function skinUrl(name, size) { return `https://minotar.net/armor/bust/${encodeURIComponent(name)}/${size}.png`; }
-function skinImg(name, size) { return `<img src="${skinUrl(name, size)}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='${avatarUrl(name, 96)}'">`; }
+function skinUrl(name) { return `https://nmsr.nickac.dev/bust/${encodeURIComponent(name)}?yaw=-35&pitch=12`; }
+function skinImg(name, size) {
+  const fb1 = `https://minotar.net/armor/bust/${encodeURIComponent(name)}/${size}.png`;
+  const fb2 = avatarUrl(name, 96);
+  return `<img src="${skinUrl(name)}" alt="${name}" loading="lazy" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${fb1}'}else{this.onerror=null;this.src='${fb2}'}">`;
+}
 
 // ---------- Profile modal ----------
 function renderProfileTiers(player) {
@@ -1187,8 +1195,12 @@ function openProfile(player) {
     <div class="rank-flag"><span class="rank-num">${rank}.</span></div>
     <div class="pos-info"><span class="pos-overall">Overall</span><span class="pos-points">(${totalPoints} Points)</span></div>`;
   renderProfileTiers(player);
-  const RANK_GLOW = { 1: 'rgba(244,199,68,0.5)', 2: 'rgba(214,217,221,0.45)', 3: 'rgba(217,139,69,0.5)' };
-  document.querySelector(".modal-box").style.setProperty("--glow", RANK_GLOW[rank] || "rgba(255,255,255,0.3)");
+  const box = document.querySelector(".modal-box");
+  const glowSize = TITLE_GLOW_SIZE[title];
+  box.classList.toggle("no-glow", !glowSize);
+  box.style.setProperty("--glow", hexA(TITLE_SOLID[title] || "#9a9aa5", 0.55));
+  box.style.setProperty("--gs", (glowSize || 0) + "px");
+  modalAvatar.style.setProperty("--ring", TITLE_SOLID[title] || "#9a9aa5");
   document.getElementById("modalOverlay").classList.add("active");
 }
 
