@@ -96,7 +96,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-columns { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: flex-start; margin: 8px 20px; overflow-x: auto; padding-bottom: 8px; }
 .tier-column:first-child { margin-left: auto; }
 .tier-column:last-child { margin-right: auto; }
-.tier-column { flex: 0 0 200px; min-width: 160px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
+.tier-column { flex: 0 0 230px; min-width: 230px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
 .tier-column-1 { background: #2a2a1a; } .tier-column-2 { background: #2a2a30; } .tier-column-3 { background: #2a221a; } .tier-column-4 { background: #22222a; } .tier-column-5 { background: #22222a; }
 .tier-header { text-align: center; font-size: 18px; font-weight: 800; padding: 10px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
 .tier-players { padding: 6px 4px; display: flex; flex-direction: column; gap: 3px; }
@@ -106,14 +106,14 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-player.plus:hover { background: #3a3a4a; }
 .tier-player .tier-avatar { width: 28px; height: 28px; border-radius: 5px; overflow: hidden; flex-shrink: 0; }
 .tier-player .tier-avatar img { width: 100%; height: 100%; }
-.tier-player .tier-name { flex: 1; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tier-player .tier-name { flex: 1; font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tier-player .tier-badge { font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 12px; background: #2a2a36; color: #a9b6ff; flex-shrink: 0; }
 .tier-player .tier-badge.plus { background: #1a3a5a; color: #6bb6ff; border: 1px solid #4a8af4; }
 .tier-player .tier-badge.lt { background: transparent; }
 
-.rank-1 .rank-flag { background: linear-gradient(100deg, #f4c744, #c99a1e); } .rank-1 .rank-num { color: #3a2c00; }
-.rank-2 .rank-flag { background: linear-gradient(100deg, #d6d9dd, #9ea3aa); } .rank-2 .rank-num { color: #2b2e33; }
-.rank-3 .rank-flag { background: linear-gradient(100deg, #d98b45, #a85f24); } .rank-3 .rank-num { color: #3a2000; }
+.rank-1 .rank-flag { background: #f4c744; } .rank-1 .rank-num { color: #3a2c00; }
+.rank-2 .rank-flag { background: #d6d9dd; } .rank-2 .rank-num { color: #2b2e33; }
+.rank-3 .rank-flag { background: #d98b45; } .rank-3 .rank-num { color: #3a2000; }
 
 .toggle-btn { display: block; width: calc(100% - 40px); margin: 10px 20px; padding: 10px; background: #22222a; color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; }
 .toggle-btn:hover { background: #2e2e38; }
@@ -381,6 +381,27 @@ body { background: radial-gradient(900px 420px at 50% 0, #17172b 0%, rgba(11,11,
   .container { border-left: none; border-right: none; box-shadow: none; }
   .hero { background: radial-gradient(360px 180px at 50% 30%, rgba(100,104,171,0.16), rgba(100,104,171,0) 70%); }
 }
+
+/* ---------- Round 3 tweaks ---------- */
+/* Page gradient reaches the full width and sits behind the top bar too */
+body { background: radial-gradient(ellipse 110% 560px at 50% 0, #1a1a31 0%, rgba(11,11,14,0) 100%) no-repeat fixed, #0b0b0e; }
+.top-fixed-bar { background: radial-gradient(ellipse 110% 560px at 50% 0, #1a1a31 0%, rgba(11,11,14,0) 100%) no-repeat fixed, #0b0b0e; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: none; }
+
+/* Selected tab matches the container background */
+.tab-button.active { background: #16161e; box-shadow: none; }
+
+/* Ranking numbers: bold italic sans-serif */
+.rank-num { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif !important; font-weight: 800; font-style: italic; }
+
+/* Top 3: moving shine across the static colour */
+.rank-1 .rank-flag::before, .rank-2 .rank-flag::before, .rank-3 .rank-flag::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 100%; background: linear-gradient(105deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 65%); transform: translateX(-130%); animation: rankShine 3s ease-in-out infinite; pointer-events: none; }
+@keyframes rankShine { 0% { transform: translateX(-130%); } 45% { transform: translateX(130%); } 100% { transform: translateX(130%); } }
+@media (prefers-reduced-motion: reduce) {
+  .rank-1 .rank-flag::before, .rank-2 .rank-flag::before, .rank-3 .rank-flag::before { animation: none; display: none; }
+}
+
+/* Glow below the profile card (white by default, top 3 colours for top 3 players) */
+.modal-box { box-shadow: 0 34px 80px -16px var(--glow, rgba(255,255,255,0.4)), 0 14px 34px rgba(0,0,0,0.55); }
 </style>
 </head>
 <body>
@@ -1111,6 +1132,8 @@ function openProfile(player) {
     <div class="rank-flag"><span class="rank-num">${rank}.</span></div>
     <div class="pos-info"><span class="pos-overall">Overall</span><span class="pos-points">(${totalPoints} Points)</span></div>`;
   renderProfileTiers(player);
+  const RANK_GLOW = { 1: 'rgba(244,199,68,0.65)', 2: 'rgba(214,217,221,0.6)', 3: 'rgba(217,139,69,0.65)' };
+  document.querySelector(".modal-box").style.setProperty("--glow", RANK_GLOW[rank] || "rgba(255,255,255,0.4)");
   document.getElementById("modalOverlay").classList.add("active");
 }
 
