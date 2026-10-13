@@ -400,14 +400,31 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .rank-1 .rank-flag::before, .rank-2 .rank-flag::before, .rank-3 .rank-flag::before { animation: none; display: none; }
 }
 
-/* Profile glow: colour = title colour, size grows with the title (--gs). Rookie / Novice have none. */
-.modal-box { box-shadow: 0 0 calc(var(--gs, 30px)) calc(var(--gs, 30px) * 0.06) var(--glow, transparent); animation: glowWave 16s ease-in-out infinite; }
-.modal-box.no-glow { box-shadow: none; animation: none; }
-@keyframes glowWave {
-  0%, 100% { box-shadow: 0 0 calc(var(--gs) * 1) calc(var(--gs) * 0.06) var(--glow); }
-  33% { box-shadow: 3px 2px calc(var(--gs) * 1.12) calc(var(--gs) * 0.09) var(--glow); }
-  66% { box-shadow: -3px -2px calc(var(--gs) * 1.06) calc(var(--gs) * 0.07) var(--glow); }
+/* Overall rows grow in from nothing, staggered down the list */
+.player.pop { animation: playerPop 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+@keyframes playerPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .player.pop { animation: none; } }
+
+/* Profile glow: colour = title colour, size grows with the title (--gs). Rookie / Novice have none.
+   Four side glows push out and pull back with staggered timing, so a slow wave travels around the box. */
+@property --w1 { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --w2 { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --w3 { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --w4 { syntax: '<number>'; inherits: true; initial-value: 0; }
+.modal-box {
+  --gs: 30px; --glow: transparent;
+  box-shadow:
+    0 calc(var(--gs) * -0.4 * var(--w1)) var(--gs) 0 var(--glow),
+    calc(var(--gs) * 0.4 * var(--w2)) 0 var(--gs) 0 var(--glow),
+    0 calc(var(--gs) * 0.4 * var(--w3)) var(--gs) 0 var(--glow),
+    calc(var(--gs) * -0.4 * var(--w4)) 0 var(--gs) 0 var(--glow);
+  animation: glowW1 7s ease-in-out infinite alternate, glowW2 7s ease-in-out -3.5s infinite alternate, glowW3 7s ease-in-out -7s infinite alternate, glowW4 7s ease-in-out -10.5s infinite alternate;
 }
+.modal-box.no-glow { box-shadow: none; animation: none; }
+@keyframes glowW1 { from { --w1: 0; } to { --w1: 1; } }
+@keyframes glowW2 { from { --w2: 0; } to { --w2: 1; } }
+@keyframes glowW3 { from { --w3: 0; } to { --w3: 1; } }
+@keyframes glowW4 { from { --w4: 0; } to { --w4: 1; } }
 @media (prefers-reduced-motion: reduce) { .modal-box { animation: none; } }
 .tier-player .tier-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 10px; }
 .tier-player .tier-badge svg { width: 13px; height: 13px; display: block; }
@@ -439,7 +456,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .rank-flag.has-skin .rank-num { align-self: center; }
 .skin-wrap { position: relative; z-index: 1; flex-shrink: 0; align-self: stretch; width: 96px; min-height: 99px; }
 .skin-wrap img { position: absolute; left: 50%; bottom: -10%; height: 108%; width: auto; max-width: none; transform: translateX(-50%); image-rendering: auto; }
-.modal-avatar.skin { position: relative; width: 190px; height: 190px; background: #1d2740; border: 4px solid var(--ring, #9a9aa5); box-shadow: none; border-radius: 50%; overflow: hidden; margin: 6px auto 14px; }
+.modal-avatar.skin { position: relative; width: 190px; height: 190px; background: #1d2740; border: 2px solid var(--ring, #9a9aa5); box-shadow: none; border-radius: 50%; overflow: hidden; margin: 6px auto 14px; }
 .modal-avatar.skin img { position: absolute; left: 50%; bottom: -8%; height: 108%; width: auto; max-width: none; transform: translateX(-50%); image-rendering: auto; }
 @media (max-width: 700px) {
   .rank-flag.has-skin { min-width: 138px; padding: 0 24px 0 12px; gap: 4px; }
@@ -509,7 +526,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
     <div class="header-tiers">Tiers</div>
   </div>
   <div id="list">Loading...</div>
-  <button id="toggleBtn" class="toggle-btn" style="display:none;">Show all</button>
+  <button id="toggleBtn" class="toggle-btn" style="display:none;">Show more</button>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
@@ -535,9 +552,10 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 const SUPABASE_URL = "https://dazigsqkyuejrwcbumtx.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhemlnc3FreXVlanJ3Y2J1bXR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNTkyNTQsImV4cCI6MjEwNjkzNTI1NH0.fD-amuhdDveY9TV2Uwpq6dZLjt_Yd8WsORqOlz4ulLw";
 
-const COLLAPSED_COUNT = 5;
+const PAGE_SIZE = 20;
 let allPlayers = [];
-let expanded = false;
+let visibleCount = PAGE_SIZE;
+let animatedUpTo = 0, lastAnimBoard = null;
 let currentBoard = 'Home';
 let currentProfileName = null;
 
@@ -1030,10 +1048,18 @@ function render() {
       toggleBtn.style.display = "none";
       return;
     }
-    (expanded ? sorted : sorted.slice(0, COLLAPSED_COUNT)).forEach(p => list.appendChild(buildOverallRow(p)));
-    toggleBtn.style.display = sorted.length > COLLAPSED_COUNT ? "block" : "none";
-    toggleBtn.textContent = expanded ? "Show less" : `Show all (${sorted.length})`;
+    if (lastAnimBoard !== 'Overall') animatedUpTo = 0;
+    lastAnimBoard = 'Overall';
+    sorted.slice(0, visibleCount).forEach((p, i) => {
+      const row = buildOverallRow(p);
+      if (i >= animatedUpTo) { row.classList.add('pop'); row.style.animationDelay = ((i - animatedUpTo) * 70) + 'ms'; }
+      list.appendChild(row);
+    });
+    animatedUpTo = Math.min(sorted.length, visibleCount);
+    toggleBtn.style.display = sorted.length > visibleCount ? "block" : "none";
+    toggleBtn.textContent = "Show more";
   } else {
+    lastAnimBoard = currentBoard;
     const mode = currentBoard;
     const tierGroups = { 1: [], 2: [], 3: [], 4: [], 5: [] };
     allPlayers.forEach(p => { const t = p[`${mode}_tier`]; if (t >= 1 && t <= 5) tierGroups[t].push(p); });
@@ -1130,7 +1156,7 @@ function getRole(name) {
 function rankClass(rank) { return rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : ""; }
 function avatarUrl(name, size) { return `https://mc-heads.net/avatar/${encodeURIComponent(name)}/${size}`; }
 // Upper-body skin render (used in the overall rows and the profile). Falls back to the face if it fails to load.
-function skinUrl(name) { return `https://nmsr.nickac.dev/bust/${encodeURIComponent(name)}?yaw=-35&pitch=12`; }
+function skinUrl(name) { return `https://nmsr.nickac.dev/bust/${encodeURIComponent(name)}?yaw=18&pitch=12`; }
 function skinImg(name, size) {
   const fb1 = `https://minotar.net/armor/bust/${encodeURIComponent(name)}/${size}.png`;
   const fb2 = avatarUrl(name, 96);
@@ -1198,7 +1224,7 @@ function openProfile(player) {
   const box = document.querySelector(".modal-box");
   const glowSize = TITLE_GLOW_SIZE[title];
   box.classList.toggle("no-glow", !glowSize);
-  box.style.setProperty("--glow", hexA(TITLE_SOLID[title] || "#9a9aa5", 0.55));
+  box.style.setProperty("--glow", hexA(TITLE_SOLID[title] || "#9a9aa5", 0.3));
   box.style.setProperty("--gs", (glowSize || 0) + "px");
   modalAvatar.style.setProperty("--ring", TITLE_SOLID[title] || "#9a9aa5");
   document.getElementById("modalOverlay").classList.add("active");
@@ -1294,7 +1320,7 @@ async function loadPlayersAndRender(force = true) {
   render();
 }
 
-toggleBtn.addEventListener("click", () => { expanded = !expanded; render(); });
+toggleBtn.addEventListener("click", () => { visibleCount += PAGE_SIZE; render(); });
 
 // ---------- Initial load ----------
 renderGamemodes();
