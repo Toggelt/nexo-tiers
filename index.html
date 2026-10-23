@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nexo Tiers</title>
 <link rel="preload" href="https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf" as="font" type="font/otf" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&display=swap">
 <link rel="icon" type="image/x-icon" href="https://github.com/Toggelt/nexo-tiers/blob/main/assets/favicon.ico?raw=true">
 <style>
 @font-face { font-family: 'Minecraft'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
@@ -98,7 +100,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-column:last-child { margin-right: auto; }
 .tier-column { flex: 0 0 230px; min-width: 230px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
 .tier-column-1 { background: #2a2a1a; } .tier-column-2 { background: #2a2a30; } .tier-column-3 { background: #2a221a; } .tier-column-4 { background: #22222a; } .tier-column-5 { background: #22222a; }
-.tier-header { text-align: center; font-size: 18px; font-weight: 800; padding: 10px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+.tier-header { text-align: center; font-family: 'Minecraft', monospace; font-size: 18px; font-weight: normal; padding: 10px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
 .tier-players { padding: 6px 4px; display: flex; flex-direction: column; gap: 3px; }
 .tier-player { display: flex; align-items: center; gap: 8px; background: #16161e; border-radius: 6px; padding: 4px 8px; transition: background 0.2s; cursor: pointer; border: 1px solid transparent; }
 .tier-player:hover { background: #2a2a36; }
@@ -647,6 +649,75 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .top-bar-right { gap: 6px; }
   .acc-box { padding: 24px 16px 18px; }
 }
+/* ---------- Evaluation queues ---------- */
+.q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.q-box { background: #1c1c22; border: 1px solid #2c2c34; border-radius: 12px; padding: 12px; opacity: 0.88; transition: background 0.2s, border-color 0.2s; }
+.q-box.open { background: #12331f; border-color: #2e7d32; opacity: 1; box-shadow: inset 0 0 0 1px rgba(46,125,50,0.35); }
+.q-top { display: flex; align-items: center; gap: 10px; }
+.q-top img { width: 34px; height: 34px; image-rendering: pixelated; }
+.q-info { flex: 1; min-width: 0; }
+.q-info b { display: block; font-size: 14px; }
+.q-info small { display: block; color: #8b8b96; font-size: 12px; margin-top: 2px; }
+.q-box.open .q-info small { color: #8fe3a9; }
+.q-star { background: none; border: none; color: #8b8b96; font-size: 22px; cursor: pointer; padding: 0 2px; line-height: 1; }
+.q-star:hover { color: #fff; } .q-star.on { color: #f5c542; }
+.q-act { margin-top: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.q-btn { background: #ececf1; color: #131318; border: none; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Arial, sans-serif; }
+.q-btn:hover { background: #fff; } .q-btn:disabled { opacity: 0.55; cursor: default; }
+.q-btn.grey { background: #34343e; color: #fff; } .q-btn.grey:hover { background: #3e3e4a; }
+.q-pos { font-size: 12px; color: #c9c9d1; }
+.q-big { font-size: 20px; font-weight: 700; line-height: 1.4; margin: 6px 0 16px; }
+.q-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.q-confirm { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 1200; width: 340px; max-width: calc(100vw - 24px); box-sizing: border-box; background: #1c1c22; border: 1px solid #6b4a1e; border-radius: 12px; padding: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); }
+.q-confirm b { display: block; font-size: 14px; } .q-confirm small { display: block; color: #f0c98a; font-size: 12px; margin: 4px 0 10px; }
+.q-confirm-btns { display: flex; gap: 8px; }
+@media (max-width: 560px) { .q-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Round: wider layout, 80px rows, Geist tabs, tooltips, kit sprites ---------- */
+@media (min-width: 701px) {
+  .container { width: calc(100% - 12px); max-width: none; }
+  .top-fixed-bar { padding: 0 14px; }
+  .tier-columns { margin: 8px 6px; gap: 6px; }
+  .tier-column { flex: 1 1 0; min-width: 190px; }
+  .home-section { margin: 0 28px; }
+
+  .player { min-height: 80px; height: 80px; margin: 8px 28px; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
+  .player:hover { transform: translateX(-16px); box-shadow: 0 2px 10px rgba(0,0,0,0.25); background: #272731; }
+  .player:active { transform: translateX(-16px) scale(0.99); }
+  .overall-headers { margin: 10px 28px 0; }
+  .rank-flag.has-skin { min-width: 172px; padding: 0 30px 0 16px; }
+  .skin-wrap { width: 80px; min-height: 80px; }
+  .rank-num { font-size: 26px; width: 30px; }
+  .info { gap: 5px; padding: 0 16px; }
+  .player-name { font-size: 22px; }
+  .player-title-badge { height: 26px; padding: 2px 12px; }
+  .player-title-text { font-size: 14px; }
+  .player-points { font-size: 14px; }
+  .elo-wrap { padding: 0 18px; }
+  .tab-button img { width: 32px !important; height: 32px !important; }
+}
+
+/* Tabs: Geist, fixed 112px buttons (like the reference) */
+.tab-bar { justify-content: flex-start; overflow-x: auto; overflow-y: hidden; }
+.tab-button { flex: 0 0 112px; width: 112px; margin-right: 4px; }
+.tab-button, .tab-label { font-family: 'Geist', Arial, sans-serif; }
+.tab-label { font-size: 16px; font-weight: 700; letter-spacing: 0; }
+
+/* Overall tier slots: centred text, column-coloured background */
+.mini-tier-circle { width: 38px; height: 38px; }
+.mini-tier-circle img { width: 32px; height: 32px; }
+.mini-tier-label { display: flex; align-items: center; justify-content: center; width: 40px; height: 20px; padding: 0; line-height: 1; letter-spacing: 0; text-align: center; }
+
+/* Tooltip pop-in like the reference (fade + zoom 95% + slide up 8px, 150ms), with arrow */
+@keyframes tipIn { from { opacity: 0; scale: 0.95; translate: 0 8px; } to { opacity: 1; scale: 1; translate: 0 0; } }
+.global-mini-tip, .tier-elo-tip { transform-origin: 50% 100%; animation: tipIn 0.15s ease; }
+.global-mini-tip::after, .tier-elo-tip::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 10px; height: 10px; background: #0e0e12; border: 1px solid #2c2c34; border-top: none; border-left: none; transform: translateX(-50%) rotate(45deg); border-radius: 0 0 3px 0; }
+@media (prefers-reduced-motion: reduce) { .global-mini-tip, .tier-elo-tip { animation: none; } }
+
+/* Kit sprites: icon box snapped to whole multiples of 16px so pixels stay even; glint mask is a hi-res copy */
+.mc-ibox { position: absolute; left: 10%; top: 10%; width: 80%; height: 80%; pointer-events: none; }
+.mc-ibox img.mc-icon { width: 100%; height: 100%; display: block; image-rendering: pixelated; object-fit: fill; }
+.mc-ibox .mc-glint { inset: 0; }
 </style>
 </head>
 <body>
@@ -761,16 +832,17 @@ let currentBoard = 'Home';
 let currentProfileName = null;
 
 const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
-const LOWBLOCK_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
+const SWORD_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
+const TRIATHLON_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/triathlon_sprite.png?raw=true";
 const OVERALL_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true";
 const imgStyle = b => b.key === "Overall" ? "image-rendering:auto;border-radius:6px;" : "";
 
 const LEADERBOARDS = {
   Overall: { key: "Overall", label: "Overall", title: "Overall Leaderboard", icon: OVERALL_ICON_URL },
   NeliSMP: { key: "NeliSMP", label: "NeliSMP", title: "NeliSMP Leaderboard", icon: NELISMP_ICON_URL, col: "nelismp" },
-  Lowblock: { key: "Lowblock", label: "Lowblock", title: "Lowblock Leaderboard", icon: LOWBLOCK_ICON_URL, col: "lowblockranked" }
+  Triathlon: { key: "Triathlon", label: "Triathlon", title: "Triathlon Leaderboard", icon: TRIATHLON_ICON_URL, col: "triathlon" }
 };
-const SUB_BOARDS = ["NeliSMP", "Lowblock"];
+const SUB_BOARDS = ["NeliSMP", "Triathlon"];
 const NUM_MODES = SUB_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
@@ -862,7 +934,7 @@ function parseRoute() {
   const p = window.location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   let board = 'Home', profile = null;
   if (p[0] === 'player' && p[1]) profile = decodeURIComponent(p[1]);
-  else if (p[0]) { const k = Object.keys(LEADERBOARDS).find(k => k.toLowerCase() === p[0].toLowerCase()); if (k) board = k; }
+  else if (p[0]) { const seg = p[0].toLowerCase() === 'lowblock' ? 'triathlon' : p[0].toLowerCase(); const k = Object.keys(LEADERBOARDS).find(k => k.toLowerCase() === seg); if (k) board = k; }
   const kit = board === 'NeliSMP' && !profile && p[1] === 'kit';
   return { board, profile, kit };
 }
@@ -920,6 +992,7 @@ function tierEntries(player) {
   return entries.sort((a, b) => TIER_ORDER[k(a)] - TIER_ORDER[k(b)]);
 }
 
+const TIER_COL_BG = { 1: '#2a2a1a', 2: '#2a2a30', 3: '#2a221a', 4: '#22222a', 5: '#22222a' };
 function renderMiniTierIcons(player) {
   let html = "";
   tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
@@ -928,7 +1001,7 @@ function renderMiniTierIcons(player) {
       html += `
         <div class="mini-tier-wrap" data-mode="${mode}" data-current-tier="${tier}" data-current-plus="${plus ? '1' : '0'}" data-peak-tier="${peakTier ?? ''}" data-peak-plus="${peakPlus ? '1' : '0'}">
           <div class="mini-tier-circle" style="border-color:${color}"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="mini-tier-label" style="border-color:${color}; color:${color};">${shortTierLabel(tier, plus)}</div>
+          <div class="mini-tier-label" style="border-color:${color}; color:${color}; background:${TIER_COL_BG[tier]};">${shortTierLabel(tier, plus)}</div>
         </div>`;
     } else {
       html += `
@@ -943,7 +1016,10 @@ function renderMiniTierIcons(player) {
 
 const globalMiniTip = document.getElementById("globalMiniTip");
 const isTouch = () => window.matchMedia("(hover: none)").matches;
+let lastTipWrap = null;
 function showMiniTip(wrap) {
+  if (lastTipWrap !== wrap || globalMiniTip.style.display !== "block") { globalMiniTip.style.animation = "none"; void globalMiniTip.offsetWidth; globalMiniTip.style.animation = ""; }
+  lastTipWrap = wrap;
   const cT = parseInt(wrap.dataset.currentTier);
   globalMiniTip.innerHTML = isNaN(cT)
     ? `<div class="tip-tier">No Tier</div>`
@@ -953,7 +1029,7 @@ function showMiniTip(wrap) {
   globalMiniTip.style.left = (rect.left + rect.width / 2) + "px";
   globalMiniTip.style.top = (rect.top - 8) + "px";
 }
-const hideMiniTip = () => { globalMiniTip.style.display = "none"; };
+const hideMiniTip = () => { globalMiniTip.style.display = "none"; lastTipWrap = null; };
 [list, topPlayersEl].forEach(el => {
   el.addEventListener("mouseover", (e) => {
     const wrap = e.target.closest(".mini-tier-wrap");
@@ -976,7 +1052,7 @@ function assignRanks(sorted) {
 // ---------- Minecraft-style kit inventory ----------
 const ICONS = {"helmet": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAtklEQVR4nO2SPwuCQADFf4W0ROG5OGrkYtD3/wIN0Sp4S5IHggaB/2hpsUlB76TWoDf+eO/du+Pg57UwwcDzOxO/qlTzW6bw3vNYrbcjXmQprhDdvSxHJdZcONyF5I+cqq0AcITT20Yly+mC/mR5k0P49WymJYO0AgAZR8g4wt7YACRKkShlspoLANqmHha0TT1n0x8RIDwckXHE5XwasSJLPy/o7/st1xR4fucKof0DVwgj/wveTDZHT6ahXGYAAAAASUVORK5CYII=", "chestplate": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABU0lEQVR4nMWST2vCQBDFf5pSkhZLpBIVYlqhRBQs/QIePIo3D37uQqGFINgGwT+0ZqtoFkHTQ5slGouXQue0M7PvzXsz8N8RAbi7uY0OG4O310wy/+3PWZzUG002qwUilHzMpkenXVtFTEPn/PKKl+cnALJxMwZbBQuAml1RE+O3VbAQoWSzWihSRSBCyU6u2awW1BtNtppGza5ENbsSbTVNKdzJNSKUaQK36tJudRChxMyZ9Lp9tprGVtPodfuYORMRStqtDm7VTZu4XHzi2DZZ/QLT0LFKDuVCGYDx+5jZxFcq/dEIgGkQfJuYcDx6aN5jlRzEUqgpYimwSg5MfB4HHtMgUBtSW0h6IYYeblVVCgC8oXd0MykC09AVIAmK6ycJRCgxDX1PQdKDkwQ7uWYu13u12cRnHsxPK/gxRx1QPPHQ+SRmL4mjmM+n7v4Y+E/ii6qjqZr8JWslAAAAAElFTkSuQmCC", "leggings": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nMWSvQrCMBSFP8VVxeJgoWgH30EcfP+1tC8gUohC6U9Cly51ijT1Bu3UMx5yvpx7E5hbi7FxPsW977DRDa+qcjKrcfh6uRHuQwBUoQCoTQ3AM78D9EOIA7BShfqEhgp2AY88d7ylBLDhrtV0rfZN5G9gw0mWAnCMIg5R/B/A3p5k6XBhvQ8gjjCuvd5sfUVlwBR9AaSlGd14lyk2KKtSPCz5DsDoZlIYhFcYf5Rf/vx6Az++VNQlFydiAAAAAElFTkSuQmCC", "boots": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAyUlEQVR4nN2PMQvCMBCFv6iFaGl3CSEoGFJHAvFHhBQispaCrZEU/gtJ8hdEG4N46WJtddhYnkFhzeoMmQvKHk8emtxKz4mp1R55CGcdrfO5E3HyIoIMd+oDI+Cs1oEaqjTXV7FjEsnLEJVvX3d3x6CKI7OACTlC7oFQd3jt/6C4oHtaEAAAAABJRU5ErkJggg==", "totem": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABa0lEQVR4nKWTMUhCURSGP6O2Fw65vaFHIS0u4daShGCJNDkELjpE0GJLU4tE7kljgzYIDY6RudiDoJYnTQ0PMV0ub+g5pG4GryG8pF6j6Gznv/+557h8fvjuvffe/nc/Z3FSbzTZrBaIUPIxmx6ddm0VMQ2d88srXp6fAMjGzRhsFSwAanZFTYzfVsFChJLNaqFIFYEIJTu5ZrNaUG802WoaNbsS1exKtNU0pXAn14hQpgncqku71UGEEjNn0uv22WoaW02j1+1j5kxEKGm3OrhVN23icvGJY9tk9QtMQ8cqOZQLZQDG72NmE1+p9EcjAKZB8G1iwvHooXmPVXIQS6GmiKXAKjkw8XkceEyDQG1IbSHphRh6uFVXKQDwht7RzaQITENXgCQorp8kEKHENPQ9BUkPThLs5Jq5XO/VZhOfeTA/reDHHHVA8cRD55OYvSSOYj6fuvtj4D+JL6qOpmvylayUAAAAAElFTkSuQmCC", "trident": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvUlEQVR4nNXSMQqCcBTH8a/RCRyEcA2EBgm3TuDqEjR5gb9nafNPSwepC9QkTvKgDqBd4jXZUEmmEPTWx+f3eI8HvyhrraqqjsIiogAi0j+sC1tr+wcMxgDGGA3TRJ9x7zXCNNHNfqthmrxgY4wCTD6F1NcLrj9jdz4iIhoEAVmWkee5A+B0QS9e6SJaUhUlAOt59Oi1uDMgTBN1/RlVUXI7nDqHvK12by9eff84/4mdUQcDpnXTUDfNIAxwByy8puaLugTUAAAAAElFTkSuQmCC", "bucket": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMUlEQVR4nK2TP0vDQBjGfxGxqGDOCBGEwhUKxdKhS8ZO+Qp18hP0w2R2zJCxfoVM3XrLTYZKxC1uZyuI1KVOLflzKlKf6Tie9/fyvHfws+fIcl0GQbCx3SulGv5D22AYhgBIKev+TR20OwRBsAnDkGk25vS4hX/ps1yuAPhcrwF4/1hzc39Pmqa7LAdl/DQb05FtBn2Jf3GCEC4Ag77kqNWiI9tMs/H3EbxiwqqA56s7zsUZQrgI4fL49MLr8g3n4Rbvpw6SJEFrTRRNoIBVKacHjEYjut0ucRzbAQDD4ZAkSQDQWgNgjCHP87qVRgdb9Xo9qxnA86ohKoDtxr+oApjP578OGGPsAKWUM5vNAFgsFtbhbYHlh9TooB6jvrGuCkAp5URR1IDkeW7dDv/wmfbWF4A59PYzm6fLBwAAAABJRU5ErkJggg==", "elytra": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4nMWRsW6EMBBEHxfSrSVXFKFG4gP4C5SvPfkH0uIm5Skd0sWSm1wEoYkQKXK2MEeU8qZCMzuzOwbujWxLtG27hG/vPQBFUUTdGJN48q2xrmtEKqw9JsameWYc3wCWdVAezMGodRm3d12XBV3rEq1LRKoYZIzJDmGDSIVSI/N8+rPvPJ9QakSkivViBaVGAIZBgPON+XI5A4JSY5wFiBc4565m+Pz4ugkI3DAIzrnIxwtW3YCn3QpBF6mAl/QC719/e37vm9eatce0gjEm6/ueaZoAeHh8T4ze+8hN05T8ocN6KCAErbHHweoNrolL04C1Nm74T8vZYDuwDdk94674ATPojAFvOx16AAAAAElFTkSuQmCC", "mace": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB+0lEQVR4nI3TQUiTYRzH8c9jE8tcaS4nxetg6XKLHYRBaZcxDwuJmEYOxC7JAt3wEgQeOnno2iENgqGFO1htdAkZxvAQhRFE7rDmlmQDQcxtLgqHxdPBfHPuFfa/vc/zfv48z+95HqigXO4+6XL3Sa053WFopMOMQV/Lm2MW6R0YxGLvBJCxaETcGByWmxvrxKIRodngIH49Pw/AvfsTpFMJmUwskc9lAajSwnVHq0twMrFEJpNhOf6OJy9i5HNZvq0khGYDgA8nLqh4c2Oda739KIqCxd7J+Jifi11OWsxWCSAOC621rZ2mZqM61t3Tz/iYX/1uPG1k8e1CeYgjHWYmoxEBu6k3NRtRFEXF6VSC+oZT6v+aK/Bfv81E+DEtZqu80tNLOvW5BBsMRtKpBE79r/JTCNx9ztnGWjz1NmkzOZiZ9qnoIH76abV0C95AkIa6ahaXU9JmcjC7ENpN+19g+3FhewfYd5G8gSDHa/TEV79Kn6uL0eAUN7vdIl5TIDwXEpitMp/Lqvhlcu1/A28gSM0RHdn8mooHnG7xfWuH8FwIz/kzwJYAKGyj4pLyDD2Qr0Lv5TnXsLx15xneQFAr37LS7T0Sm8nBaHCKy/ZL4mfxB7MPhypqUAXQ2tbOzLSPL7FHovjnd8UYQOxdSYCrJ4ti8uNKxRjgL1fhzrJHZKP6AAAAAElFTkSuQmCC", "sword": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABK0lEQVR4nJ2QTUsCURiFnwkjoQ/F0XERQ6ghuJD8ASIuwoVLf1fblm3atQvCFq4iQgqDQgYGgwnEhaYhTrQIgrkt5A5N4+jkWV1e3ufc8x6FNVQvVIV8b6wDlxs1yo0avWH3fwYSHr+P3VloAwl3Hu7RkhpnpydYs6mihIXzlRJ965WDXJari3Os2VQBWGlQL1SFWtT5nNrsJGK0W00X9hjIZq/NG89sa3+P/qCHnkpjGIYHhj8dqEXdNQoD+06Qt77cPrOpOgwmb0thXwKpfKUUCvYlkClkad3Hu6WwL8FRJiu07Q/arSbO14xYOkUunhBBMEDkN3x8mOGy8zT/1TAEMDcBEZREka3b8W9GpumLLBMEGUQARs4Q25wsXFrVgaJFk2I36oRaXqQfQsCZTkyUro8AAAAASUVORK5CYII=", "axe": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA8klEQVR4nGNgoAfw0nT476Xp8B+bHAsxmm2C3CCcdQz/t10/wEi0ATDNJw/ugIowYahhxBBB0qxmZ8Bw/+o5uBiflDwD872rDAvOnIPrwzQSCm4+v4TC55OSZ/j07CHD4TsPiHMBAwMDg7KA0H8GBgYGKzdvhk/PHjI8fv2SQVZUnOHKlSsMdz+8Y8TrAgYGBoa7H94x8ggKMDDfu8pw5coVBllRcXzKMYG+otL/Ylfn/zCXKAsIwdlEaU4wMSJeA7pmZwdnojRjBKK+otJ/HglJhhfXr8MDCh9ACUR9RaX/IvKKRGvGsBk5wEgGJIUwNQEA6mBZrw/x9JUAAAAASUVORK5CYII=", "ender_pearl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABQklEQVR4nMWSMUvDQBiGnxpDl0oITUE7tQrVse0Sl24uRdwUioKIi0ux/oT8FHH2bxSaxbp6tKUg6JBKGqo4hBAHydmQs5PgCwe5u+99v+f7Dv5bubXLgl2Pk+9391FZu77KuHfZASDwZrxCrArKBBTserxs9MQYgK2jAwAm/jyOxFSGrKnMgTejc3ZKvt0i9ANCP8ATYzwxZvv8GK1WkaMpR7i6ueb2aYjoOpm7hCiRRFnunm+3EF2H6M2XhVrRRLdMAHTTYDEYEolpThJ8+nPZIXQfVGAAlO1miiL1BoE3+9WYyChZqb0MiMQ0N7m7p1Tb+ca0TLTiz9Itk6rTA5D4GYJEumnIkGRVnR4Xuw1GfTdVm/m7tFol3jw55OP5hdAPKNtNiT3qu6nuyoAkBGBjvyHPFoOhHHUlgSpIZfwzfQHDPYKsmtsEowAAAABJRU5ErkJggg==", "breeze_rod": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvElEQVR4nGNgoDcIz5n73y6u/T+Mz0Sq5jhLXQYbFVsG/aD6/yQZEJ4z93+Gsw7D0bu/GI7cOcxwcV0jI9EGwDRfu8fFcOTOYYZDiyoZYXKM+DQiOxtmM7Jmgi4gpBmvAeh+xqYZr83715/8X9V05D8stHEBDFORnb31wm54aOMCKF5AdjYxmsl2NoYL7OLa/8dZ6jLsvvwbJZEQbYCehArDgxecpIc2AwMDCwMDA8PhO1cYLr24Q7JmqgAAVa57xF8qMisAAAAASUVORK5CYII=", "cobweb": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAt0lEQVR4nIVTsRHEIAyzf4g0v/8mqVNkghSkcJbQV+KEMXk3ISBZOoFtP07YSwFYnnduBdqPEy0CANAikIUmDkEABrACuV66ahGTSlbOmMm2qpBMEr+lA1WqgFl5csINNmJ42khJXZBpa+JaVS5lkwqgzSii1zsErD8K+idQWqtCzG+AmA8B7u7c/G6bmZndzzO4AwB3dzOz6w6bitZ1XT2kcn6y3Zx+no0lORNWip2zGue3MVaRHxHYfNiNnY/1AAAAAElFTkSuQmCC", "golden_apple": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABMklEQVR4nL2SsUvDQBTGv x6FtCKUGHAvOOTWrEKmunWSzE6ls0uG+ge4+B84Zi4OpWOntpmErhFCyeYgkhAIsYGS55RrL7nior7l7l3e73vf7dnwH+GajE59Yz/Bs5FO0V77m+4A0DrVFQBW6xTRXkO/XQAAnt5KZb0Ehp5BJb1T6BnkXHVpNtLp8/WGQs8g12RUd9Q6hrnN0BsOcH52jY7miKJdMUWW+0jnCzw/JpKbtspJlvvIcl86Y9sYveEAYxxEAMUU2DZurNUeAHRuIfo4TEUIrNYpACAJNgJI5wskwUacq0J5heNinVtSXheSxuKajMYPuhKs8sl9jmn8JbiGg2BZgttMwDq3ROdgWTbcNn4M56JLd7cdcJsJoNp7Lzupu1KgEulfFiKvXr0O/0p8Ax48kA5GNLmUAAAAAElFTkSuQmCC", "wind_charge": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOUlEQVR4nN2ST0rDQBTGfw3dpA1lIq1IwF1FqLr2AAUFdx7AC4hHcOkRxAt4AOuyha5EtNhdV/0DCkIobWhGTTIbcVyEhP5JD6BvM/PefO9733wz8Ocjt+7g5rap5/Pzs+NM7EqxN9R6qwye5wIgpY+UktdxmEliLBcenluMPSiXHcyigxA2QggqJYOpr3VvqBeU5ZNNu6P100uDSskgj8to5KcgIWyq1T1CBffNBpkEmxvxahVMpPQRwgZiJaGCbveRIFLpsPphLrfgwZurddGMgfFUkU6RUhJEiunnDyf1I75CONhZIpg3MFSgQjc1MIgU+7UaZtFZaF4hALi6vtO72xZWwUyVCGHzjcNkBon0tQTtjtb9QYtKycAqmOm9++8BlxenK/jMz5E81WQG/UGL2UeU2fxP4hd4T4N+j1+kdgAAAABJRU5ErkJggg==", "strength_potion": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVR4nGP8//8/AyWAiSLdpBpwLc/j/7U8DxQnE20ATOPVGzdRxFmI0Rw38ch/6+PHGYQEhTAl////jxdvufD2P4w9w4Tv/wwTvv/I8kRr3nLhLYZmvAZcffb9Py7DkDHWMLj2/Md/rUecDFtfvf3/fKUwAwMDA8OJywwMDC1v/3vrCzEiq8WIhWvPf/zvS+Nk2MrxlsH7hzCDthIDg7YSA4OFLgPD+hphhriJRwhHo4Uugv30NYSGGYIOMAy4/+obAwMDA4PQaWGG45cZGF69g4gfE7nIwMNFhAEMDBD/Xr0HYQvxI9h7ThJhgLe+EOMvl8NwQ758Y2D4aHaR4fpcfYZfLocZFuXboAQiI67ciB5YDAwMGJrxGkAsAAAOFea9HMpdzQAAAABJRU5ErkJggg==", "shield": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA40lEQVR4nJWTQQrCMBBFf6UNNoigO7vxGN7Gne4Ud57BnehOL+F1vEBdKlKSkhbqIqSN00Tih0CSSd58JpMIRNvdvqF7tk7HQ2SvY3pACoHX/YaEMVRKYTLmKMoalVIAgNV601wv5xYyoICU83aeMAYA7WUadwJ4qg+Mhtrc8y2+gCbuBVApVf+MewFF2V00EOPqLwdGph5BAJPRLh51FeTAzkphQQAfLAjgyugqYn8HAGNx7/kqpVAAmIY6CFUPIGTXeS4XdtzrwNV9vo50/sb5YglA/4tZluGR5xBSQAo9bH0ANAtcnYrzIpcAAAAASUVORK5CYII=", "xp_bottle": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABOklEQVR4nKWTMUsDQRCFv6iFaGl3CSEoGFJHAvFHhBQispaCrZEU/gtJ8hdEG4N46WJtddhYnkUI4gULLS9gCp9FvCPxNofowDDs7NvlzbyZjCT+Yytpl2Paehl5AGw7lxkrSJLVQ7VUr6JSFtWryA+MbLiMrYQxbR3uNuKz/zyNt55JMFmysYpo/8oWleAHRqUsegxMaglWBgA5p0IxD69/YRA1sB8YNd2yrlNYpD721NGBu6+mW1Z/wSdzJYxpayfX4Lhr2HAqnPfuGQxDAra4e/A57RrO9q54Gh3G0iUGqZiHZeADGAxD3oJ3ALKFaS6SNLI5BrPy3fQu5oC12hGflh6mjvJmYT2Oq0yY2EA2/WcVaLpleeqo/z0XP5u4cIjqVeJdiDxUKyGjdReAuNM5pxLn1jhJbOQXImhLhM8jq3oAAAAASUVORK5CYII="};
 
-// Kit item images hosted in the GitHub repo (trident + netherite sword reuse the NeliSMP / Lowblock gamemode icons)
+// Kit item images hosted in the GitHub repo (the trident item reuses the NeliSMP gamemode icon)
 const KIT_ICON_BASE = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/";
 const KIT_ICON_FILES = {
   breeze_rod: "Invicon_Breeze_Rod.png", totem: "Invicon_Totem_of_Undying.png", xp_bottle: "Invicon_Bottle_o'_Enchanting.gif",
@@ -988,7 +1064,7 @@ const KIT_ICON_FILES = {
 };
 Object.keys(KIT_ICON_FILES).forEach(k => { ICONS[k] = KIT_ICON_BASE + encodeURIComponent(KIT_ICON_FILES[k]).replace(/'/g, "%27").replace(/\(/g, "%28").replace(/\)/g, "%29") + "?raw=true"; });
 ICONS.trident = NELISMP_ICON_URL;   // the NeliSMP gamemode icon is the trident
-ICONS.sword = LOWBLOCK_ICON_URL;    // the Lowblock gamemode icon is the netherite sword
+ICONS.sword = SWORD_ICON_URL;       // netherite sword item
 
 // EDIT THE KIT HERE.
 //  slot:  2-5 = armour (helmet, chestplate, leggings, boots), 6 = offhand, 9-35 = main inventory, 36-44 = hotbar
@@ -1098,6 +1174,51 @@ function moveMcTip(e) {
   mcTip.style.top = y + 'px';
 }
 
+// 16px sprites only look clean at whole-number scales, so the icon box snaps to a multiple of 16px
+function snapKitIcons(root) {
+  root.querySelectorAll('.mc-slot').forEach(slot => {
+    const box = slot.querySelector('.mc-ibox'), inner = slot.clientWidth;
+    if (!box || inner <= 0) return;
+    const n = Math.max(16, Math.floor((inner - 2) / 16) * 16), off = Math.floor((inner - n) / 2);
+    Object.assign(box.style, { width: n + 'px', height: n + 'px', left: off + 'px', top: off + 'px' });
+  });
+}
+// hi-res nearest-neighbour copy of a sprite, used as the glint mask so its edges stay sharp
+const upCache = {};
+function upscaleSprite(src, f = 16) {
+  return upCache[src] || (upCache[src] = new Promise(res => {
+    const im = new Image(); im.crossOrigin = 'anonymous';
+    im.onload = () => {
+      try {
+        const c = document.createElement('canvas'); c.width = im.naturalWidth * f; c.height = im.naturalHeight * f;
+        const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(im, 0, 0, c.width, c.height);
+        res(c.toDataURL());
+      } catch (e) { res(src); }
+    };
+    im.onerror = () => res(src); im.src = src;
+  }));
+}
+// Sprites are redrawn onto a canvas at a whole-number scale (nearest neighbour) and nearly transparent edge pixels are dropped, which removes the faint fringes
+const cleanCache = {};
+function cleanSprite(src, f = 8) {
+  return cleanCache[src] || (cleanCache[src] = new Promise(res => {
+    const im = new Image(); im.crossOrigin = 'anonymous';
+    im.onload = () => {
+      try {
+        const w = im.naturalWidth, h = im.naturalHeight;
+        const a = document.createElement('canvas'); a.width = w; a.height = h;
+        const ax = a.getContext('2d', { willReadFrequently: true }); ax.imageSmoothingEnabled = false; ax.drawImage(im, 0, 0);
+        const d = ax.getImageData(0, 0, w, h), p = d.data;
+        for (let i = 0; i < p.length; i += 4) { if (p[i + 3] < 40) { p[i] = p[i + 1] = p[i + 2] = p[i + 3] = 0; } }
+        ax.putImageData(d, 0, 0);
+        const c = document.createElement('canvas'); c.width = w * f; c.height = h * f;
+        const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(a, 0, 0, c.width, c.height);
+        res(c.toDataURL());
+      } catch (e) { res(src); }
+    };
+    im.onerror = () => res(src); im.src = src;
+  }));
+}
 function renderInventory(container) {
   const bySlot = {};
   KIT_ITEMS.forEach(it => { bySlot[it.slot] = it; });
@@ -1105,8 +1226,8 @@ function renderInventory(container) {
     const it = bySlot[i];
     if (!it) return `<div class="mc-slot" data-slot="${i}" style="${style}"></div>`;
     const src = ICONS[it.icon];
-    const glint = (isEnchanted(it) || it.glint) ? `<div class="mc-glint" style="-webkit-mask-image:url(${src});mask-image:url(${src})"></div>` : '';
-    return `<div class="mc-slot" data-slot="${i}" style="${style}"><img class="mc-icon" src="${src}" alt="">${glint}${it.count > 1 ? `<span class="mc-count">${it.count}</span>` : ''}</div>`;
+    const glint = (isEnchanted(it) || it.glint) ? `<div class="mc-glint" data-src="${src}"></div>` : '';
+    return `<div class="mc-slot" data-slot="${i}" style="${style}"><div class="mc-ibox"><img class="mc-icon" src="${src}" alt="">${glint}</div>${it.count > 1 ? `<span class="mc-count">${it.count}</span>` : ''}</div>`;
   };
   const rowHtml = (from, to) => { let h = ''; for (let i = from; i < to; i++) h += slotHtml(i); return h; };
   container.innerHTML = `<div class="mc-inv">
@@ -1121,6 +1242,18 @@ function renderInventory(container) {
     <div class="mc-row">${rowHtml(9, 36)}</div>
     <div class="mc-row mc-hotbar">${rowHtml(36, 45)}</div>
   </div>`;
+  container.querySelectorAll('.mc-glint[data-src]').forEach(async g => {
+    const u = await upscaleSprite(g.dataset.src);
+    g.style.webkitMaskImage = g.style.maskImage = `url("${u}")`;
+  });
+  container.querySelectorAll('img.mc-icon').forEach(async im => {
+    const orig = im.getAttribute('src');
+    if (/\.gif(\?|$)/i.test(orig)) return;
+    im.src = await cleanSprite(orig);
+  });
+  snapKitIcons(container);
+  const invEl = container.querySelector('.mc-inv');
+  if (invEl && window.ResizeObserver) new ResizeObserver(() => snapKitIcons(container)).observe(invEl);
   container.querySelectorAll('.mc-slot').forEach(el => {
     const it = bySlot[+el.dataset.slot];
     if (!it) return;
@@ -1335,7 +1468,7 @@ function render() {
 // ---------- Info tooltip ----------
 let infoTab = 'titles';
 let infoSig = '';
-const boardHasKit = () => currentBoard === 'NeliSMP' || currentBoard === 'Lowblock';
+const boardHasKit = () => currentBoard === 'NeliSMP' || currentBoard === 'Triathlon';
 function renderInfoTooltip() {
   const kitAvail = boardHasKit();
   if (infoTab === 'kit' && !kitAvail) infoTab = 'titles';
@@ -1528,8 +1661,6 @@ function mapPlayer(row) {
 
 let lastDataSig = '';
 async function loadPlayersAndRender(force = true) {
-  const baseCols = "id,player,nelismp_tier,nelismp_peaktier,lowblockranked_tier,lowblockranked_peaktier";
-  const roleCols = baseCols + ",tierlist_regulator,nelismp_tester,lowblockranked_tester";
   let rows;
   try {
     const get = async cols => {
@@ -1540,8 +1671,13 @@ async function loadPlayersAndRender(force = true) {
       if (!res.ok) throw new Error((body.code || res.status) + " " + (body.message || ""));
       return body;
     };
-    // falls back to the old columns until the new ones exist in Supabase
-    try { rows = await get(roleCols); } catch (e) { rows = await get(baseCols); }
+    // falls back to the old column names until supabase_triathlon.sql has been run
+    let lastErr = null;
+    for (const [c, roles] of [['triathlon', true], ['triathlon', false], ['lowblockranked', true], ['lowblockranked', false]]) {
+      const cols = `id,player,nelismp_tier,nelismp_peaktier,${c}_tier,${c}_peaktier` + (roles ? `,tierlist_regulator,nelismp_tester,${c}_tester` : '');
+      try { rows = await get(cols); LEADERBOARDS.Triathlon.col = c; break; } catch (e) { lastErr = e; }
+    }
+    if (!rows) throw lastErr;
   } catch (err) {
     console.error(err);
     list.innerHTML = `<div style="padding:30px;text-align:center;color:#ff6b6b;">Error loading data<br><small style="color:#8b8b96">${err.message}</small></div>`;
@@ -1582,7 +1718,7 @@ const accDay = iso => new Date(iso).toLocaleDateString([], { day: 'numeric', mon
 function accMsg(text, cls = '') { const m = accEl('aMsg'); if (m) { m.textContent = text; m.className = 'acc-msg ' + cls; } }
 function accToast(text) { const t = document.createElement('div'); t.className = 'acc-toast'; t.textContent = text; accEl('accToasts').appendChild(t); setTimeout(() => t.remove(), 7000); }
 function accStopTimers() { clearInterval(accCodeTimer); accCodeTimer = null; }
-function accOpen(html, wide = false) { closeKitPop(); const b = accEl('accBody'); b.innerHTML = html; accEl('accModal').firstElementChild.classList.toggle('wide', wide); accEl('accModal').firstElementChild.scrollTop = 0; accEl('accModal').classList.add('open'); closeDrops(); }
+function accOpen(html, wide = false) { closeKitPop(); const b = accEl('accBody'); delete b.dataset.q; b.innerHTML = html; accEl('accModal').firstElementChild.classList.toggle('wide', wide); accEl('accModal').firstElementChild.scrollTop = 0; accEl('accModal').classList.add('open'); closeDrops(); }
 function accClose() { accEl('accModal').classList.remove('open'); accStopTimers(); closeKitPop(); }
 function closeDrops() { accEl('accMenu').classList.remove('open'); accEl('accPanel').classList.remove('open'); }
 function onEnter(ids, fn) { ids.forEach(i => accEl(i)?.addEventListener('keydown', e => { if (e.key === 'Enter') fn(); })); }
@@ -1849,7 +1985,7 @@ function accPendingHtml(mine) {
     const opp = accOppNames(r.opponents);
     return `<div class="acc-req"><img class="ico" src="${LEADERBOARDS[r.kit]?.icon || ''}" alt="">
       <div class="who"><b>${accEsc(r.test_type || 'Test')}</b><small>${accEsc(r.kit)} · ${accEsc(accFmt(r.requested_at))}</small>${opp.length ? `<small>Opponents: ${accEsc(opp.join(', '))}</small>` : ''}</div>
-      <div class="btns"><button class="bad" type="button" data-cancel="${r.id}">Cancel</button></div></div>`;
+      ${r.opponents?.meta?.queue ? '<div class="btns"><small style="color:#8b8b96">In progress</small></div>' : `<div class="btns"><button class="bad" type="button" data-cancel="${r.id}">Cancel</button></div>`}</div>`;
   }).join('');
 }
 
@@ -1858,17 +1994,20 @@ async function accViewTests() {
   if (accSession && !accProfile) await accRefreshProfile();
   if (!accProfile) return accViewLogin();
   const name = accProfile.mc_username;
-  const hist = await accLoadHistory();
-  accOpen(`<h2>Tier tests</h2>
+  const [hist, , mine0] = await Promise.all([accLoadHistory(), accQueuePoll(), accLoadMine()]);
+  SUB_BOARDS.forEach(k => { const st0 = accKitState(k, hist, name), i0 = accTestInfo(k, name, st0); accQElig[k] = i0.mode === 'eval' && !st0.cooldownUntil && !(mine0 || []).some(r => r.kit === k && r.status === 'pending'); });
+  accOpen(`<h2>Tier tests</h2>${accQBannerHtml()}
     <div class="tt-kits">${SUB_BOARDS.map(k => {
       const st = accKitState(k, hist, name), info = accTestInfo(k, name, st);
       const sub = info.mode === 'top' ? 'Top tier reached' : st.cooldownUntil ? 'Available ' + accDay(st.cooldownUntil) : info.type;
       return `<div class="tt-kit" data-kit="${k}"><button class="tt-i" type="button" data-info="${k}" aria-label="${accEsc(k)} kit">i</button>
         <img src="${LEADERBOARDS[k].icon}" alt=""><b>${accEsc(LEADERBOARDS[k].label)}</b><small>${accEsc(sub)}</small></div>`;
     }).join('')}</div>
+    <h3 class="tt-h">Queues</h3><div id="qBoxes"></div>
     <h3 class="tt-h">Pending Tests</h3><div id="ttPending"><div class="acc-none">Loading...</div></div>`, true);
   accEl('accBody').querySelectorAll('.tt-kit').forEach(c => c.onclick = () => accViewSchedule(c.dataset.kit));
   accEl('accBody').querySelectorAll('.tt-i').forEach(b => b.onclick = e => { e.stopPropagation(); openKitPop(b.dataset.info); });
+  accRenderQueueBoxes(SUB_BOARDS); accBindBanner();
   const renderPending = async () => {
     const [mine] = await Promise.all([accLoadMine(), accPollMatches(), (accTesterKits().length || accIsRegulator()) ? accPollRequests() : null]);
     const box = accEl('ttPending'); if (!box) return;
@@ -1911,11 +2050,12 @@ async function accViewSchedule(kit) {
   accEl('accBody').innerHTML = `<button class="tt-back" id="ttBack" type="button">&lsaquo; Tier tests</button>
     <div class="tt-head"><img src="${board.icon}" alt=""><div><h2>${accEsc(board.label)}</h2><div class="tt-type">${accEsc(info.type || 'Tier test')}</div></div></div>
     ${note}${planHtml}
-    ${blocked ? '' : `<div class="acc-label">Pick a date and time (your local time)</div>
+    ${info.mode === 'eval' ? '<div class="acc-label">Evaluation queue</div><div id="qBoxes"></div>' : blocked ? '' : `<div class="acc-label">Pick a date and time (your local time)</div>
       <div class="tt-when"><input class="acc-in" id="tDate" type="date" min="${today}" max="${max}"><input class="acc-in" id="tTime" type="time"></div>
       <div class="acc-msg" id="aMsg"></div><button class="acc-go" id="aGo" type="button">Schedule test</button>`}
     ${info.mode === 'top' ? '' : accRulesHtml(kit, info)}`;
   accEl('ttBack').onclick = accViewTests;
+  if (info.mode === 'eval') { accQElig[kit] = !blocked; accQueuePoll(); accRenderQueueBoxes([kit]); return; }
   if (blocked) return;
   accEl('aGo').onclick = async () => {
     const d = accEl('tDate').value, t = accEl('tTime').value;
@@ -1947,8 +2087,9 @@ function accUpdateUI() {
   accEl('accBtn').querySelector('span').textContent = accProfile ? accProfile.mc_username : 'Log in';
   const active = accTesterKits().length > 0 || accIsRegulator();
   accEl('accBell').style.display = accProfile ? 'inline-flex' : 'none';
-  if (accProfile && !accNotifTimer) { accPollAll(); accNotifTimer = setInterval(accPollAll, 15000); }
+  if (accProfile && !accNotifTimer) { accPollAll(); accNotifTimer = setInterval(accPollAll, 8000); }
   if (!accProfile && accNotifTimer) { clearInterval(accNotifTimer); accNotifTimer = null; accNotifs = []; accNotifSeen = null; accMatches = []; accRenderBell(); }
+  if (accProfile) accQStart(); else accQStop();
   const sig = `${accProfile ? accProfile.mc_username : ''}|${accTesterKits().join()}|${accIsRegulator()}`;
   if (sig === accRoleSig) return;
   accRoleSig = sig;
@@ -2071,7 +2212,7 @@ function accViewScore(m) {
 function accQueueHtml() {
   const kits = accTesterKits(), reg = accIsRegulator();
   if (!kits.length && !reg) return '';
-  const rows = accPending.map(r => {
+  const rows = accPending.filter(r => !r.opponents?.meta?.queue || r.opponents.meta.tester === accProfile.mc_username).map(r => {
     const opp = accOppNames(r.opponents), mine = accIsMe(r.mc_username);
     const canResolve = kits.includes(r.kit) && !mine, canAssign = reg && !mine && r.test_type !== 'Evaluation Test';
     return `<div class="acc-req"><img class="ico" src="${LEADERBOARDS[r.kit]?.icon || ''}" alt="">
@@ -2246,6 +2387,144 @@ async function accViewResolve(id) {
   let reported = [];
   try { const { data } = await sb.from('test_matches').select('testee_name,opponent_name,score_testee,score_opponent').eq('request_id', String(req.id)).eq('status', 'completed'); reported = data || []; } catch (e) {}
   draw();
+}
+
+// ================= Evaluation queues =================
+let accQ = null, accQAt = 0, accQTimer = null, accQTick = null, accQKey = null, accQPhase = null, accQN = 0, accQBoxKits = null, accQErr = false;
+const accQElig = {}, accQConfirmShown = {};
+const QUEUE_ASSIGN_SECS = 30, QUEUE_WARN_SECS = 8 * 60, QUEUE_EXPIRE_SECS = 10 * 60;
+const Q_MSG = { closed: 'This queue is closed.', has_pending: 'You already have a pending test for this gamemode.', already: 'You are already in this queue.', tester: 'You are a tester for this gamemode.', not_eligible: 'Queues are only for evaluation tests.', no_profile: 'Log in first.', forbidden: 'You are not a tester for this gamemode.', busy: 'You cannot close the queue while testing someone.' };
+
+async function accQueuePoll() {
+  if (!sb || !accSession || !accProfile) return;
+  const { data, error } = await sb.rpc('queue_status');
+  if (error || !data) { accQErr = true; if (!accQ) accQ = { kits: {}, favs: [], tester_open: {}, mine: [], testing: [] }; if (accEl('qBoxes') && accQBoxKits) accRenderQueueBoxes(accQBoxKits); return; }
+  accQErr = false; accQ = data; accQAt = Date.now();
+  if (accEl('qBoxes') && accQBoxKits) accRenderQueueBoxes(accQBoxKits);
+  if (++accQN % 2 === 0) accPollNotifs();
+}
+const accQMine = k => (accQ?.mine || []).find(x => x.kit === k);
+function accQBoxHtml(k) {
+  const info = accQ?.kits?.[k] || { testers: 0, waiting: 0 }, open = info.testers > 0;
+  const fav = (accQ?.favs || []).includes(k), mine = accQMine(k), myT = accQ?.tester_open?.[k], isT = accTesterKits().includes(k);
+  const status = open ? `Open · ${info.testers} tester${info.testers === 1 ? '' : 's'} · ${info.waiting} waiting` : 'Closed';
+  let act = '';
+  if (isT) act = myT ? `<button class="q-btn grey" type="button" data-q="close" data-k="${k}">Close queue</button><span class="q-pos">You have this queue open</span>` : `<button class="q-btn" type="button" data-q="open" data-k="${k}">Open queue</button>`;
+  else if (mine && mine.status === 'waiting') act = `<span class="q-pos">In queue · #${mine.position}</span><button class="q-btn grey" type="button" data-q="leave" data-k="${k}">Leave</button>`;
+  else if (mine) act = '<span class="q-pos">Your evaluation is in progress</span>';
+  else if (open && accQElig[k]) act = `<button class="q-btn" type="button" data-q="join" data-k="${k}">Join queue</button>`;
+  else if (open) act = '<span class="q-pos">Evaluation queue only</span>';
+  return `<div class="q-box ${open ? 'open' : ''}"><div class="q-top"><img src="${LEADERBOARDS[k].icon}" alt="">
+    <div class="q-info"><b>${accEsc(LEADERBOARDS[k].label)}</b><small>${status}</small></div>
+    <button class="q-star ${fav ? 'on' : ''}" type="button" data-q="fav" data-k="${k}" title="Notify me when this queue opens" aria-label="Favourite">${fav ? '&#9733;' : '&#9734;'}</button></div>${act ? `<div class="q-act">${act}</div>` : ''}</div>`;
+}
+function accRenderQueueBoxes(kits) {
+  accQBoxKits = kits;
+  const box = accEl('qBoxes'); if (!box) return;
+  if (!accQ) { box.innerHTML = '<div class="acc-none">Loading queues...</div>'; return; }
+  box.innerHTML = (accQErr ? '<div class="tt-note warn">Queues are unavailable. Run supabase_queue.sql in Supabase first.</div>' : '') + '<div class="q-grid">' + kits.map(accQBoxHtml).join('') + '</div>';
+  box.querySelectorAll('[data-q]').forEach(b => b.onclick = e => { e.stopPropagation(); accQAction(b.dataset.q, b.dataset.k, b); });
+}
+async function accQAction(a, k, btn) {
+  btn.disabled = true;
+  if (a === 'fav') {
+    const on = !(accQ.favs || []).includes(k);
+    const { error } = await sb.rpc('queue_fav', { p_kit: k, p_on: on });
+    if (!error) { accQ.favs = on ? [...(accQ.favs || []), k] : (accQ.favs || []).filter(x => x !== k); accToast(on ? `You'll be notified when the ${k} queue opens.` : `Notifications for ${k} turned off.`); }
+    else accToast('Could not save. Is supabase_queue.sql installed?');
+  } else {
+    const fn = { open: 'queue_open', close: 'queue_close', join: 'queue_join', leave: 'queue_leave' }[a];
+    const { data, error } = await sb.rpc(fn, { p_kit: k });
+    if (error || data !== 'ok') accToast(Q_MSG[data] || 'Something went wrong. Try again.');
+    else {
+      if (a === 'open') { accQConfirmShown[k] = false; accToast(`${k} queue opened. Confirm every 10 minutes.`); }
+      if (a === 'join') accToast(`You joined the ${k} queue.`);
+    }
+  }
+  await accQueuePoll(); accRenderQueueBoxes(accQBoxKits || [k]);
+}
+function accQBannerHtml() {
+  const t = (accQ?.testing || [])[0], m = (accQ?.mine || []).find(x => x.status === 'testing');
+  if (t) return `<div class="tt-note good q-banner"><span>Testing <b>${accEsc(t.testee)}</b> (${accEsc(t.kit)})</span><button type="button" class="q-btn" id="qResume">Open</button></div>`;
+  if (m) return `<div class="tt-note good q-banner"><span>Your ${accEsc(m.kit)} evaluation with <b>${accEsc(m.tester || '')}</b> is in progress</span><button type="button" class="q-btn" id="qResume">Open</button></div>`;
+  return '';
+}
+function accBindBanner() {
+  const b = accEl('qResume'); if (!b) return;
+  b.onclick = () => {
+    const t = (accQ?.testing || [])[0], m = (accQ?.mine || []).find(x => x.status === 'testing');
+    const row = t || m; if (!row) return;
+    const ago = row.ago + (Date.now() - accQAt) / 1000;
+    accQShowScreen(!!t, row, ago < QUEUE_ASSIGN_SECS ? 'duel' : 'assign');
+  };
+}
+async function accOpenQResolve(rid) {
+  const { data } = await sb.from('tier_requests').select('id,mc_username,kit,test_type,opponents,requested_at').eq('id', rid).maybeSingle();
+  if (!data) return accToast('Could not load the test.');
+  accPending = [data, ...accPending.filter(r => String(r.id) !== String(data.id))];
+  await accViewResolve(String(data.id));
+}
+async function accQShowScreen(isTester, row, phase) {
+  const left = Math.max(0, Math.ceil(QUEUE_ASSIGN_SECS - (row.ago + (Date.now() - accQAt) / 1000)));
+  if (isTester) {
+    if (phase === 'duel') {
+      const cmd = `/duel ${row.testee}`;
+      accOpen(`<h2>${accEsc(row.kit)} evaluation</h2>
+        <div class="q-big">You can now ${accEsc(cmd)}</div>
+        <div class="acc-copy"><code>${accEsc(cmd)}</code><button type="button" id="cpDuel">Copy</button></div>
+        <p class="acc-p">The tier screen opens in <b id="qCount">${left}</b>s.</p>`);
+      accEl('cpDuel').onclick = e => copyText(cmd, e.target);
+    } else await accOpenQResolve(row.request_id);
+  } else if (phase === 'duel') {
+    accOpen(`<h2>${accEsc(row.kit)} evaluation</h2>
+      <div class="q-big">Wait for and accept the duel requests from ${accEsc(row.tester || 'your tester')}</div>
+      <p class="acc-p">Join the server and accept the /duel request in game. This screen changes in <b id="qCount">${left}</b>s.</p>`);
+  } else {
+    accOpen(`<h2>${accEsc(row.kit)} evaluation</h2>
+      <div class="q-big">You will receive your tier soon</div>
+      <p class="acc-p">You'll get a notification when your tier has been assigned.</p>
+      <button class="acc-go ghost" id="qOk" type="button">Close</button>`);
+    accEl('qOk').onclick = accClose;
+  }
+  accEl('accBody').dataset.q = '1';
+}
+function accQTickFn() {
+  if (!accQ || !accProfile) return;
+  const drift = (Date.now() - accQAt) / 1000;
+  const t = (accQ.testing || [])[0], m = (accQ.mine || []).find(x => x.status === 'testing');
+  const key = t ? 'T:' + t.request_id : m ? 'S:' + m.request_id : null;
+  if (key !== accQKey) {
+    const had = accQKey; accQKey = key; accQPhase = null;
+    if (!key && had) { if (accEl('accBody').dataset.q) accClose(); accPollNotifs(); loadPlayersAndRender(true); }
+  }
+  if (key) {
+    const row = t || m, ago = row.ago + drift, phase = ago < QUEUE_ASSIGN_SECS ? 'duel' : 'assign';
+    if (phase !== accQPhase) { accQPhase = phase; accQShowScreen(!!t, row, phase); }
+    const c = accEl('qCount'); if (c) c.textContent = Math.max(0, Math.ceil(QUEUE_ASSIGN_SECS - ago));
+  }
+  // testers must confirm their open queue every 10 minutes (not while testing someone)
+  const open = accQ.tester_open || {};
+  Object.keys(accQConfirmShown).forEach(k => { if (!open[k]) delete accQConfirmShown[k]; });
+  document.querySelectorAll('.q-confirm').forEach(el => { if (!open[el.dataset.k]) el.remove(); });
+  Object.keys(open).forEach(k => {
+    const o = open[k], ago = o.ago + drift;
+    if (o.busy || ago < 60) { accEl('qConf_' + k)?.remove(); if (ago < 60) accQConfirmShown[k] = false; return; }
+    if (ago >= QUEUE_WARN_SECS && !accQConfirmShown[k]) { accQConfirmShown[k] = true; accQConfirmCard(k); }
+    const c = accEl('qConf_' + k + '_t'); if (c) c.textContent = Math.max(0, Math.ceil(QUEUE_EXPIRE_SECS - ago));
+  });
+}
+function accQConfirmCard(k) {
+  const d = document.createElement('div'); d.className = 'q-confirm'; d.id = 'qConf_' + k; d.dataset.k = k;
+  d.innerHTML = `<b>Is your ${accEsc(k)} queue still open?</b><small>It closes automatically in <span id="qConf_${k}_t">120</span>s.</small>
+    <div class="q-confirm-btns"><button class="q-btn" type="button" data-c="yes">Still open</button><button class="q-btn grey" type="button" data-c="no">Close queue</button></div>`;
+  document.body.appendChild(d);
+  d.querySelector('[data-c=yes]').onclick = async () => { d.remove(); await sb.rpc('queue_confirm', { p_kit: k }); accQConfirmShown[k] = false; accQueuePoll(); };
+  d.querySelector('[data-c=no]').onclick = async () => { d.remove(); await sb.rpc('queue_close', { p_kit: k }); accQueuePoll(); };
+}
+function accQStart() { if (accQTimer) return; accQueuePoll(); accQTimer = setInterval(accQueuePoll, 4000); accQTick = setInterval(accQTickFn, 1000); }
+function accQStop() {
+  clearInterval(accQTimer); clearInterval(accQTick); accQTimer = accQTick = null; accQ = null; accQKey = null; accQPhase = null;
+  document.querySelectorAll('.q-confirm').forEach(e => e.remove());
 }
 
 async function initAuth() {
