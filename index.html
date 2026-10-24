@@ -6,7 +6,7 @@
 <title>Nexo Tiers</title>
 <link rel="preload" href="https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf" as="font" type="font/otf" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;800;900&display=swap">
 <link rel="icon" type="image/x-icon" href="https://github.com/Toggelt/nexo-tiers/blob/main/assets/favicon.ico?raw=true">
 <style>
 @font-face { font-family: 'Minecraft'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
@@ -758,6 +758,21 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .van-foot { margin: 14px 0 4px; }
 .van-rulebook { font-family: 'Geist', Arial, sans-serif; font-weight: 700; font-size: 14px; background: #ececf1; color: #131318; border: none; border-radius: 10px; padding: 10px 22px; cursor: pointer; transition: transform .15s, background .15s; }
 .van-rulebook:hover { background: #fff; transform: translateY(-1px); }
+
+/* ---------- Ruleset polish ---------- */
+.gmv { background: linear-gradient(180deg, rgba(240,201,138,0.20), rgba(240,201,138,0.10)); color: #ffe2b0; border: 1px solid rgba(240,201,138,0.38); border-radius: 6px; padding: 1px 7px; font-weight: 600; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1.7; }
+.gmv b { color: #fff0d2; }
+.acc-rules summary { display: flex; align-items: center; gap: 9px; }
+.acc-rules summary .rs-ico { color: #8d93a8; flex-shrink: 0; }
+.acc-rules h5 { display: flex; align-items: center; gap: 7px; }
+.acc-rules h5 .rs-ico { color: #8d93a8; width: 15px; height: 15px; }
+.rs-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.rs-dot.g { background: #3ddc84; box-shadow: 0 0 6px rgba(61,220,132,0.5); }
+.rs-dot.r { background: #ff5c5c; box-shadow: 0 0 6px rgba(255,92,92,0.5); }
+.acc-rules p b > .rs-dot, .acc-rules p b .rs-dot { margin-right: 6px; vertical-align: 0; }
+/* Tier labels use the same font as the reference (Geist) */
+.mini-tier-label, .tier-icon-label, .global-mini-tip, .tier-elo-tip, .global-mini-tip *, .tier-elo-tip * { font-family: 'Geist', Arial, sans-serif; }
+.mini-tier-label, .tier-icon-label { font-weight: 800; }
 </style>
 </head>
 <body>
@@ -1879,6 +1894,30 @@ function accTierShift(kit, myKey) {
 const accOppNames = o => (o?.steps || []).flatMap(s => s.opponents || []);
 const oppChips = names => names.map(n => `<span class="opp"><img src="${avatarUrl(n, 40)}" alt="">${accEsc(n)}</span>`).join('');
 
+// Ruleset icons: small outline SVGs instead of emojis
+const RS_SVG = (p, extra = '') => `<svg class="rs-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${p}</svg>`;
+const RS_ICON_MAP = {
+  '✅': RS_SVG('<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>'),
+  '⏫': RS_SVG('<path d="M6 11l6-6 6 6"/><path d="M6 19l6-6 6 6"/>'),
+  '👑': RS_SVG('<path d="M4 18h16"/><path d="M4 18L3 7l5 4 4-6 4 6 5-4-1 11"/>'),
+  '🔼': RS_SVG('<path d="M12 19V6"/><path d="M6 11l6-6 6 6"/>'),
+  '📛': RS_SVG('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'),
+  '⚡': RS_SVG('<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>'),
+  '🌉': RS_SVG('<path d="M3 17h18"/><path d="M5 17V9m14 8V9"/><path d="M5 9c3 5 11 5 14 0"/>'),
+  '🏳': RS_SVG('<path d="M5 21V4"/><path d="M5 5h13l-3 4 3 4H5"/>'),
+  '❌': RS_SVG('<path d="M6 6l12 12M18 6L6 18"/>'),
+  '🎒': RS_SVG('<path d="M7 8a5 5 0 0110 0"/><rect x="5" y="8" width="14" height="13" rx="3"/><path d="M9 14h6"/>'),
+  '📝': RS_SVG('<path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6"/>'),
+  '🚫': RS_SVG('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'),
+  '🖥': RS_SVG('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
+  '⚔': RS_SVG('<path d="M5 19l9-9"/><path d="M14 10l5-5V3h-2l-5 5"/><path d="M19 19l-9-9"/><path d="M10 10L5 5V3h2l5 5"/>'),
+  '⬇': RS_SVG('<path d="M12 5v13"/><path d="M6 13l6 6 6-6"/>'),
+  '➕': RS_SVG('<path d="M12 5v14M5 12h14"/>'),
+  '❗': RS_SVG('<path d="M12 5v9"/><circle cx="12" cy="19" r="0.6" fill="currentColor"/>'),
+  '🟢': '<span class="rs-dot g"></span>',
+  '🔴': '<span class="rs-dot r"></span>'
+};
+const svgify = html => html.replace(/(✅|⏫|👑|🔼|📛|⚡|🌉|🏳|❌|🎒|📝|🚫|🖥|⚔|⬇|➕|❗|🟢|🔴)\uFE0F?/g, (m, e) => RS_ICON_MAP[e] || m);
 function tierlistRulesHtml(open = true, kit) {
   const extra = kit && GM_RULES[kit] && GM_RULES[kit].extraMatch ? GM_RULES[kit].extraMatch.map(x => `<li><span class="gmv">${x}</span></li>`).join('') : '';
   const ul = a => '<ul>' + a.map(x => `<li>${x}</li>`).join('') + '</ul>';
@@ -1922,7 +1961,7 @@ const GM_RULES = {
     dsLower: ['Losing to a player <b>below</b> your tier gives an additional <b>-2</b>', 'If you are LT1 the additional penalty is <b>-5</b>'],
     dsGain: ["Defending your tier (you are assigned to someone else's promotion test and win): <b>+1</b>", 'Winning 4-0 gives <b>+2</b> instead of +1 (not additional)'],
     bridge: 'you beat your second opponent with a score of <b>4-2 or better</b>.',
-    restrictions: ['No <b>Beacons</b>', 'No <b>Milk</b>', 'No <b>Enchanted Golden Apples</b>', 'No potions/arrows of <b>Turtle Master</b>', 'No potions/arrows of <b>Weakness</b>', 'No <b>Thorns</b> enchantment', 'Max <b>64</b> Respawn Anchors', 'Max <b>24</b> Firework Rockets', 'Max <b>4</b> Armour Pieces', 'Max <b>8</b> Totems', 'Kit items must be obtainable in 1.21+ Vanilla Survival'],
+    restrictions: ['No <b>Beacons</b>', 'No <b>Milk</b>', 'No <b>Enchanted Golden Apples</b>', 'No potions/arrows of <b>Turtle Master</b>', 'No potions/arrows of <b>Weakness</b>', 'No <b>Thorns</b> enchantment', 'No <b>Lunge</b> enchantment', 'Max <b>64</b> Respawn Anchors', 'Max <b>24</b> Firework Rockets', 'Max <b>4</b> Armour Pieces', 'Max <b>8</b> Totems', 'Kit items must be obtainable in 1.21+ Vanilla Survival'],
     extraMatch: ['Rekitting or using <b>/heal</b> mid-fight gives your opponent the round', 'Ender chest: load it <b>once per round</b>. Loading mid-round is allowed if you have not used any stored contents yet', 'No stalling (slow regearing, exploring/looting, camping, unusual EXP farming)', 'No crafting, smelting or enchanting mid-match', 'Do not mine/collect placed Respawn Anchors', 'Do not take off your armour to hide from or attack your opponent while invisible', 'No TP trapping: wait <b>3 seconds</b> after a teleport before attacking/debuffing, and only teleport if you are both surfaced', 'No RTP without mutual agreement', 'Do not fly up or place blocks within <b>3 seconds</b> of teleporting to your opponent'],
     forfeit: ['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent']
   },
@@ -1998,14 +2037,14 @@ function accRulesHtml(kit, info) {
     h += S.bridge(false) + S.forfeit(false) + S.fail(false);
   }
   h += S.items(false) + tierlistRulesHtml(false, kit);
-  return `<div class="acc-rules">${h}</div>`;
+  return svgify(`<div class="acc-rules">${h}</div>`);
 }
 // full ruleset page for one gamemode
 function rulesetHtml(kit) {
   const S = gmSections(kit);
-  return `<div class="rs-seg">${Object.keys(GM_RULES).map(k => `<button type="button" class="rs-gm ${k === kit ? 'on' : ''}" data-gm="${k}">${k}</button>`).join('')}</div>
+  return svgify(`<div class="rs-seg">${Object.keys(GM_RULES).map(k => `<button type="button" class="rs-gm ${k === kit ? 'on' : ''}" data-gm="${k}">${k}</button>`).join('')}</div>
     <p class="acc-p"><span class="gmv">Highlighted</span> rules are different in each gamemode.</p>
-    <div class="acc-rules">${S.eval(false)}${S.promo('', false, false)}${S.ht1(false)}${S.shift(null, false)}${S.demoLow(false)}${S.demoDS(false)}${S.bridge(false)}${S.forfeit(false)}${S.fail(false)}${S.items(false)}${tierlistRulesHtml(false, kit)}</div>`;
+    <div class="acc-rules">${S.eval(false)}${S.promo('', false, false)}${S.ht1(false)}${S.shift(null, false)}${S.demoLow(false)}${S.demoDS(false)}${S.bridge(false)}${S.forfeit(false)}${S.fail(false)}${S.items(false)}${tierlistRulesHtml(false, kit)}</div>`);
 }
 
 // ----- data -----
