@@ -179,13 +179,10 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .mc-row { display: grid; grid-template-columns: repeat(9, 1fr); }
 .mc-inv-title { margin: 10px 0 6px 2px; text-align: left; }
 .mc-glint { position: absolute; inset: 10%; pointer-events: none; overflow: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; image-rendering: pixelated; mix-blend-mode: screen; }
-/* modern (1.21) glint: two tiled textures drifting at different angles and speeds, clipped to the item's shape */
-.mc-glint::before, .mc-glint::after { content: ''; position: absolute; inset: -70%; background-image: var(--glint-tex); background-size: 32px 32px; image-rendering: pixelated; opacity: 0.75; }
-.mc-glint::before { transform: rotate(-50deg); animation: mcglintA 6s linear infinite; }
-.mc-glint::after { transform: rotate(10deg); animation: mcglintB 9s linear infinite; opacity: 0.55; }
-@keyframes mcglintA { from { background-position: 0 0; } to { background-position: 32px 0; } }
-@keyframes mcglintB { from { background-position: 0 0; } to { background-position: -32px 0; } }
-@media (prefers-reduced-motion: reduce) { .mc-glint::before, .mc-glint::after { animation: none; } }
+/* glint: purple diagonal gradient, colour-dodge blended, clipped to the item's shape */
+.mc-glint { background: linear-gradient(135deg, rgba(128,0,128,0) 0%, rgba(140,40,230,0.6) 25%, rgba(200,100,255,0.9) 50%, rgba(140,40,230,0.6) 75%, rgba(128,0,128,0) 100%); background-size: 200% 200%; mix-blend-mode: color-dodge; animation: glint-move 3s linear infinite; }
+@keyframes glint-move { 0% { background-position: 200% 0%; } 100% { background-position: -200% 0%; } }
+@media (prefers-reduced-motion: reduce) { .mc-glint { animation: none; } }
 
 /* ---------- Kit display: Minecraft font everywhere + equipment/player model area ---------- */
 .kit-pane, .kit-pane *, .mc-inv, .mc-inv *, .mc-tip, .mc-tip * { font-family: 'Minecraft', monospace !important; font-synthesis: none; }
@@ -732,6 +729,35 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .mc-inv.inv-img .mc-slot:hover::after { background: rgba(255,255,255,0.5); }
 .mc-inv.inv-img .mc-ibox { inset: 0; left: 0; top: 0; width: 100% !important; height: 100% !important; }
 .mc-inv.inv-img .mc-count { right: calc(var(--s) * 0.5); bottom: 0; font-size: calc(var(--s) * 6); line-height: 1; text-shadow: var(--s) var(--s) 0 #3f3f3f; }
+/* ---------- Round: kit text, Triathlon pane, ruleset, slot background ---------- */
+.kit-sub { text-align: center; font-family: 'Geist', Arial, sans-serif !important; font-weight: 600; font-size: 16px; letter-spacing: 0.3px; color: #d6d6de; }
+.tri-desc { font-size: 17px; margin: 6px auto 16px; max-width: 420px; line-height: 1.4; }
+.tri-foot { margin: 16px 0 4px; }
+.tri-boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.tri-box { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 8px 14px; background: #1c1c22; border: 1px solid #2c2c34; border-radius: 12px; }
+.tri-box img { width: 48px; height: 48px; image-rendering: pixelated; object-fit: contain; margin-bottom: 6px; }
+.tri-box b { font-family: 'Geist', Arial, sans-serif; font-size: 15px; }
+.tri-box small { font-family: 'Geist', Arial, sans-serif; font-size: 12px; color: #8b8b96; }
+.ruleset-btn { white-space: nowrap; }
+.hero-search { display: flex; align-items: center; gap: 8px; }
+.info-btn svg.info-svg { flex-shrink: 0; }
+.mc-inv.inv-img .mc-slot { background: #8b8b8b; }
+@media (max-width: 700px) { .ruleset-btn { padding: 7px 11px; font-size: 12px; } .hero-search .ruleset-btn { padding: 11px 13px; } }
+.gmv { background: rgba(240,201,138,0.14); border-bottom: 1px dashed #f0c98a; border-radius: 3px; padding: 0 3px; }
+.rs-gm { background: #1c1c22; border: 1px solid #2c2c34; color: #fff; border-radius: 10px; padding: 10px 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: Arial, sans-serif; }
+.rs-gm:hover { background: #22222a; } .rs-gm.on { background: #ececf1; color: #131318; border-color: #ececf1; }
+/* Login and "Get tier tested" are hidden for now (display-only tiers). Delete this block to bring them back. */
+#accBtn, #heroTest, #accBellWrap { display: none !important; }
+.hero-buttons { display: flex; justify-content: center; }
+.hero-buttons > span:empty { display: none; }
+.hero-buttons > .hero-search { justify-self: auto; }
+
+/* ---------- Vanilla kit pane ---------- */
+.van-pane { text-align: center; }
+.van-sub { font-size: 18px; margin: 10px 0 14px; }
+.van-foot { margin: 14px 0 4px; }
+.van-rulebook { font-family: 'Geist', Arial, sans-serif; font-weight: 700; font-size: 14px; background: #ececf1; color: #131318; border: none; border-radius: 10px; padding: 10px 22px; cursor: pointer; transition: transform .15s, background .15s; }
+.van-rulebook:hover { background: #fff; transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -766,8 +792,9 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 <div class="container">
   <div class="tab-bar" id="tabBar"></div>
   <div class="top-bar" id="topBar">
+    <button class="info-btn ruleset-btn" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><line x1="9" y1="12" x2="16" y2="12"/><line x1="9" y1="16" x2="16" y2="16"/></svg>Tierlist Ruleset</button>
     <div class="info-btn-wrapper">
-      <button class="info-btn" id="infoBtn"><span class="info-icon">i</span>Info</button>
+      <button class="info-btn" id="infoBtn"><svg class="info-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.8" r="0.7" fill="currentColor" stroke="none"/></svg>Info</button>
       <div class="info-tooltip" id="infoTooltip">Loading...</div>
     </div>
   </div>
@@ -780,6 +807,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
         <span></span>
         <a class="hero-btn hero-btn-primary" id="heroTest" role="button" tabindex="0" style="cursor:pointer">Get tier tested</a>
         <div class="hero-search" id="heroSearch">
+          <button class="info-btn ruleset-btn" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><line x1="9" y1="12" x2="16" y2="12"/><line x1="9" y1="16" x2="16" y2="16"/></svg>Tierlist Ruleset</button>
           <div class="search-btn-wrapper" id="searchWrapper">
             <div class="search-btn" id="searchBtn" role="button" tabindex="0">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
@@ -848,15 +876,17 @@ let currentProfileName = null;
 const NELISMP_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAbUExURf///5eXl////9nZ2WtraypeT1eejz56aQ5FNmFnVl4AAAABdFJOUwBA5thmAAAAPUlEQVR42qXMQQ4AIQwCQNRi+f+LN56WkHiS29AU3DNmemHN9LAijOKx/XDzuP6im261VOV3wcP95tyDwh+GIwEjm1Ka2QAAAABJRU5ErkJggg==";
 const SWORD_ICON_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAqUExURQAAAEkkPod8hx4HCnBncFBCTV1VXS4iIk45PCsbHGAxLnRDQTg2OA4CDLFjvMoAAAABdFJOUwBA5thmAAAAT0lEQVR42lXM2w7AIAgDUGtB2O3/f3fZosTyQDgl0KQAqHun2jrFrjY38fAxDXzNI1k7LNc1cnoFVq6H4uNkBjdfbGQlwP2PrCDYpB5q8AKcHQFThW5NIgAAAABJRU5ErkJggg==";
 const TRIATHLON_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/triathlon_sprite.png?raw=true";
+const VANILLA_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/Invicon_End_Crystal.gif?raw=true";
 const OVERALL_ICON_URL = "https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true";
 const imgStyle = b => b.key === "Overall" ? "image-rendering:auto;border-radius:6px;" : "";
 
 const LEADERBOARDS = {
   Overall: { key: "Overall", label: "Overall", title: "Overall Leaderboard", icon: OVERALL_ICON_URL },
   NeliSMP: { key: "NeliSMP", label: "NeliSMP", title: "NeliSMP Leaderboard", icon: NELISMP_ICON_URL, col: "nelismp" },
+  Vanilla: { key: "Vanilla", label: "Vanilla", title: "Vanilla Leaderboard", icon: VANILLA_ICON_URL, col: "vanilla" },
   Triathlon: { key: "Triathlon", label: "Triathlon", title: "Triathlon Leaderboard", icon: TRIATHLON_ICON_URL, col: "triathlon" }
 };
-const SUB_BOARDS = ["NeliSMP", "Triathlon"];
+const SUB_BOARDS = ["NeliSMP", "Vanilla", "Triathlon"];
 const NUM_MODES = SUB_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
@@ -1289,6 +1319,26 @@ function renderInventory(container) {
 }
 document.addEventListener('click', e => { if (!e.target.closest('.mc-slot')) mcTip.style.display = 'none'; });
 
+function triathlonKitHtml(withHeader = true) {
+  const box = (icon, title, sub) => `<div class="tri-box"><img src="${ICONS[icon]}" alt=""><b>${title}</b><small>${sub}</small></div>`;
+  return `<div class="kit-pane tri-pane">
+    ${withHeader ? `<div class="kit-header"><img src="${TRIATHLON_ICON_URL}" alt="Triathlon"><span>Triathlon Kit</span></div>` : ''}
+    <div class="kit-sub tri-desc">Triathlon is a special gamemode consisting of 3 different kits</div>
+    <div class="tri-boxes">${box('golden_apple', 'Early Game', '(UHC)')}${box('ender_pearl', 'Mid Game', '(SMP)')}${box('mace', 'Late Game', '(Mace)')}</div>
+    <div class="kit-sub tri-foot">Each kit is played first to 3</div>
+  </div>`;
+}
+
+function vanillaKitHtml(withHeader = true) {
+  return `<div class="kit-pane van-pane">
+    ${withHeader ? `<div class="kit-header"><img src="${VANILLA_ICON_URL}" alt="Vanilla"><span>Vanilla Kit</span></div>` : ''}
+    <div class="kit-sub van-sub">Bring your own items</div>
+    <button class="van-rulebook" type="button" data-gm="Vanilla">View rulebook</button>
+    <div class="kit-sub van-foot">Rounds are first to 4</div>
+  </div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('.van-rulebook'); if (b) { closeKitPop?.(); if (typeof infoTooltip !== 'undefined') infoTooltip.classList?.remove('visible'); openRuleset('Vanilla'); } });
+
 function getOverallSorted() {
   const sorted = [...allPlayers]
     .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
@@ -1492,7 +1542,7 @@ function render() {
 // ---------- Info tooltip ----------
 let infoTab = 'titles';
 let infoSig = '';
-const boardHasKit = () => currentBoard === 'NeliSMP' || currentBoard === 'Triathlon';
+const boardHasKit = () => currentBoard === 'NeliSMP' || currentBoard === 'Triathlon' || currentBoard === 'Vanilla';
 function renderInfoTooltip() {
   const kitAvail = boardHasKit();
   if (infoTab === 'kit' && !kitAvail) infoTab = 'titles';
@@ -1509,9 +1559,11 @@ function renderInfoTooltip() {
   const kitHtml = currentBoard === 'NeliSMP'
     ? `<div class="kit-pane">
          <div class="kit-header"><img src="${NELISMP_ICON_URL}" alt="NeliSMP"><span>NeliSMP Kit</span></div>
-         <div class="kit-sub">Rounds are first to 3</div>
+         <div class="kit-sub">Rounds are first to 4</div>
          <div id="kitInventory"></div>
        </div>`
+    : currentBoard === 'Triathlon' ? triathlonKitHtml(true)
+    : currentBoard === 'Vanilla' ? vanillaKitHtml(true)
     : `<div class="kit-empty">No kit yet</div>`;
   infoTooltip.innerHTML = `
     <div class="tooltip-tabs">
@@ -1695,11 +1747,13 @@ async function loadPlayersAndRender(force = true) {
       if (!res.ok) throw new Error((body.code || res.status) + " " + (body.message || ""));
       return body;
     };
-    // falls back to the old column names until supabase_triathlon.sql has been run
+    // falls back to older column sets until the SQL migrations have been run
     let lastErr = null;
-    for (const [c, roles] of [['triathlon', true], ['triathlon', false], ['lowblockranked', true], ['lowblockranked', false]]) {
-      const cols = `id,player,nelismp_tier,nelismp_peaktier,${c}_tier,${c}_peaktier` + (roles ? `,tierlist_regulator,nelismp_tester,${c}_tester` : '');
-      try { rows = await get(cols); LEADERBOARDS.Triathlon.col = c; break; } catch (e) { lastErr = e; }
+    outer: for (const van of [true, false]) {
+      for (const [c, roles] of [['triathlon', true], ['triathlon', false], ['lowblockranked', true], ['lowblockranked', false]]) {
+        const cols = `id,player,nelismp_tier,nelismp_peaktier,${c}_tier,${c}_peaktier` + (van ? ',vanilla_tier,vanilla_peaktier' : '') + (roles ? `,tierlist_regulator,nelismp_tester,${c}_tester` + (van ? ',vanilla_tester' : '') : '');
+        try { rows = await get(cols); LEADERBOARDS.Triathlon.col = c; break outer; } catch (e) { lastErr = e; }
+      }
     }
     if (!rows) throw lastErr;
   } catch (err) {
@@ -1809,7 +1863,7 @@ function accAssign(kit, name, info, st = {}) {
   }
   if (!tgt.length) { steps.push({ title: `Defeat all other ${keyLabel(info.myKey)} players`, opponents: own, tier: info.myKey }); return { steps, meta }; }
   if (own.length && !meta.bridged) steps.push({ title: `Win against a ${keyLabel(info.myKey)} player`, opponents: [accPick(own)], tier: info.myKey });
-  steps.push({ title: `Play a ${keyLabel(info.targetKey)} player (2-3 or better is enough)`, opponents: [accPick(tgt)], tier: info.targetKey });
+  steps.push({ title: `Play a ${keyLabel(info.targetKey)} player (${kit === 'Triathlon' ? 'win overall' : 'win with 4-3 or better'})`, opponents: [accPick(tgt)], tier: info.targetKey });
   return { steps, meta };
 }
 // Tier shift: you're in the 2nd highest occupied tier, the top tier has exactly one player and is between HT3 and LT1.
@@ -1825,60 +1879,133 @@ function accTierShift(kit, myKey) {
 const accOppNames = o => (o?.steps || []).flatMap(s => s.opponents || []);
 const oppChips = names => names.map(n => `<span class="opp"><img src="${avatarUrl(n, 40)}" alt="">${accEsc(n)}</span>`).join('');
 
-function accRulesHtml(kit, info) {
+function tierlistRulesHtml(open = true, kit) {
+  const extra = kit && GM_RULES[kit] && GM_RULES[kit].extraMatch ? GM_RULES[kit].extraMatch.map(x => `<li><span class="gmv">${x}</span></li>`).join('') : '';
   const ul = a => '<ul>' + a.map(x => `<li>${x}</li>`).join('') + '</ul>';
-  const det = (title, body, open = false) => `<details${open ? ' open' : ''}><summary>${title}</summary><div>${body}</div></details>`;
-  let h = '<h3>Rules</h3>';
-  const tn = info.myKey ? +info.myKey[0] : null;
-  if (info.mode === 'eval') {
-    h += det('✅ Evaluation Test', `<p>You will be assigned a tier by your tester based on your performance.</p>
-      <p>After beating your tester you will move up the promotion system until you reach your deserved tier.</p>
-      <p>All competitive matches are first to 3.</p>
-      <p>After an evaluation test you have a <b>7 day</b> cooldown, unless you pass evaluation and test for HT3, which you may do immediately.</p>`, true);
-  } else if (info.mode === 'promo' || info.mode === 'ht1') {
-    const t2 = info.targetKey && +info.targetKey[0] <= 2;
-    if (info.mode === 'promo') {
-      h += det(`⏫ Tier Promotion: ${info.type}`, `<p>All competitive matches are first to 3. To be promoted you must complete the following steps in order:</p>
-        ${ul(['Win against an opponent from your own tier', 'Play against an opponent from a higher tier and achieve a score of 2-3 (in the opponent\'s favour) or better'])}
-        <p><i>If the tier you\'re trying to achieve is empty, you need to defeat all other players in your tier.</i></p>
-        ${t2 ? '<p class="hl">This test is Tier 2 or above, so it must be spectated by a staff member or a recording must be provided.</p>' : ''}`, true);
-    } else {
-      h += det('👑 Testing for HT1', `<p>In order to be promoted to HT1, you must complete the following steps:</p>
-        ${ul(['Defeat all current LT1s', 'Defeat the current HT1 (if there is one)'])}
-        <p class="hl">This test is Tier 2 or above, so it must be spectated by a staff member or a recording must be provided.</p>
-        <p>As there can be only one HT1 at a time, HT1 always has a demotion score of 0.</p>`, true);
-    }
-    const shift = info.mode === 'promo' ? accTierShift(kit, info.myKey) : null;
-    if (shift) {
-      h += det('🔼 Tier Shifting (applies to you right now)', `<p>You are in the second highest occupied tier and the tier above only has one player. If you win against an opponent from your tier but <b>lose against the player from the tier above</b>, you can attempt to be promoted via a Tier Shift.</p>
-        <p>To complete a tier shift:</p>
-        ${ul([`You must defeat other players in your tier with a combined score of <b>6-2 or better</b> (the matches against the first and second opponent counted together)`,
-          shift.isLT1 ? `The LT1 player only needs to defeat up to 3 players (the player testing for LT1 + 2 other HT2s)` : `The player in the tier above must also defeat all players in your tier`])}
-        <p><b>Result:</b> ${shift.isLT1 ? 'You will be promoted. The LT1 player does not get promoted.' : 'You and the player in the tier above will both be promoted.'}</p>`);
-    }
-    if (info.myKey === '3+') {
-      h += det('📛 Demotions (HT3/LT3)', `<p>You will be demoted if:</p>${ul(['You lose against another player from your tier with a score of 0-3', '<b>or</b> you lose to 2 opponents from your tier consecutively'])}`);
-    } else if (tn <= 2) {
-      h += det('⚡ Demotion Score (Tier 2+)', `<p>Every player who reaches Tier 2 or above has a demotion score (DS) which starts at 6 and resets each time their tier changes.</p>
-        <h5>❌ Losing DS</h5><p>You lose DS when you lose competitive matches. How much depends on the score difference at the end of the match (e.g. losing 1-3 is <b>-2</b>).</p>
-        <h5>⬇️ Loss vs. lower tier</h5>${ul(['Losing to a player <b>below</b> your tier gives an additional <b>-2</b>', 'If you are LT1 the additional penalty is <b>-3</b>'])}
-        <h5>➕ Gaining DS</h5>${ul(['Defending your tier (you are assigned to someone else\'s promotion test and win): <b>+1</b>', 'Winning 3-0 in a competitive match: <b>+2</b>'])}
-        <h5>❗ Demotion (DS below 0)</h5>${ul(['All matches you were assigned before your DS dropped below 0 must be completed first', 'You will not be assigned to other promotion tests and cannot request a promotion test yourself', 'If your DS is still below 0 after those matches, you will be demoted'])}`);
-    }
-    h += det('🌉 Bridging', `<p>After passing a test and getting promoted you may <b>immediately</b> test for the next higher tier, but only if you beat your second opponent <b>3-1 or better</b>. If it is your first time testing in this gamemode, a 3-2 win is enough.</p>
-      <p>When bridging you do not need to beat an opponent from your own tier again, because your promotion already proved you are better than the players there.</p>`);
-    h += det('🏳️ Forfeit Rules', `${ul(['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent'])}
-      <p class="red"><b>Forfeiting/dodging will result in instant demotion.</b></p>`);
-    h += det('❌ Failing a Test', `${ul(['Failing a test means you must wait <b>14 days</b> before requesting another promotion test', 'If you fail because your opponent was promoted within 7 days of your match, you may be eligible to reopen your test <b>if</b> the result might have been different counting them at their new tier. Contact a staff member.'])}`);
-  }
-  h += det('📝 Tierlist Rules', `<h5>🚫 Cheating</h5>${ul(['Alting/Account Sharing', 'Boosting', 'Using Unfair Advantages/Disallowed Modifications', 'Streamsniping'])}
+  return `<details${open ? ' open' : ''}><summary>📝 Tierlist Rules</summary><div><h5>🚫 Cheating</h5>${ul(['Alting/Account Sharing', 'Boosting', 'Using Unfair Advantages/Disallowed Modifications', 'Streamsniping'])}
     <p><i>Participating, assisting or withholding information about the aforementioned activities will result in an appropriate punishment.</i></p>
     <h5>🖥️ Client Rules</h5>
     <p class="green"><b>🟢 Allowed</b></p>${ul(['HUDs (Armour, potion, saturation, FPS, ...)', 'Performance enhancing mods (e.g., OptiFine, Sodium, Lithium, ...)', 'Cosmetic changes (capes, custom crosshairs, block overlay, ...)', 'Clarity mods (fullbright, clear water, time changer, ...)'])}
     <p class="red"><b>🔴 Disallowed</b></p>${ul(['Auto clicker', 'Fast XP', 'Double Binding', 'Any mods that show information about your opponent which is not usually obtainable (opponent\'s health, armour durability, inventory, ...)', 'Any ESP (block ESP, player ESP, ...)', 'Any Minimap', 'Ping Equaliser/Ping Spoofing (or equivalents)', 'Cheats (reach, hitboxes, timer, velo, fakelag, blink, speed, aim assist, auto totem, web hits, ...)', 'Macros (stun macros, auto attribute swap, ...)', '... or any similar unfair advantages'])}
-    <h5>⚔️ Competitive Match Rules</h5>${ul(['All <b>T2+</b> competitive matches must be <b>spectated by a staff member</b> or a recording must be provided', 'You may only start fighting when both players are moving and potted up (restart the round immediately; complaining about this afterwards is not valid)', 'Do <b>not</b> hit your opponent while they are frozen due to lag', 'Do <b>not</b> stall/run excessively/camp', 'Do <b>not</b> play with inconsistent ping (these matches will be invalidated; check your connection before competitive matches)'])}
-    <p><i>Rules are subject to common sense. If you are unsure about any rules, contact a staff member.</i></p>`);
+    <h5>⚔️ Competitive Match Rules</h5>${ul(['All <b>T2+</b> competitive matches must be <b>spectated by a staff member</b> or a recording must be provided', 'You may only start fighting when both players are moving and potted up (restart the round immediately; complaining about this afterwards is not valid)', 'Do <b>not</b> hit your opponent while they are frozen due to lag', 'Do <b>not</b> stall/run excessively/camp', 'Do <b>not</b> play with inconsistent ping (these matches will be invalidated; check your connection before competitive matches)']).replace('</ul>', extra + '</ul>')}
+    <p><i>Rules are subject to common sense. If you are unsure about any rules, contact a staff member.</i></p></div></details>`;
+}
+function openRuleset(kit) {
+  kit = kit || (GM_RULES[currentBoard] ? currentBoard : 'NeliSMP');
+  accOpen(`<h2>Tierlist Ruleset</h2>${rulesetHtml(kit)}`, true);
+}
+document.addEventListener('click', e => { const b = e.target.closest('.rs-gm'); if (b) openRuleset(b.dataset.gm); });
+document.addEventListener('click', e => { if (e.target.closest('.ruleset-btn')) openRuleset(); });
+// Gamemode specific rule values. Anything that differs between gamemodes is highlighted (.gmv) in the rules.
+const GM_RULES = {
+  NeliSMP: {
+    format: 'All competitive matches are first to 4.',
+    step2: 'Play against an opponent from a higher tier and win with a score of <b>4-3 or better</b>',
+    evalPass: 'Winning with a score of <b>4-3 or better</b>',
+    shift: 'You must defeat 2 players from your tier with a combined score of <b>8-4 or better</b> (both matches counted together)',
+    demoHT3: ['You lose 0-4 against another player from your tier (instant demotion)', '<b>or</b> you lose to 2 opponents from your tier consecutively'],
+    dsStart: '<b>4</b> (max <b>8</b>); for LT1 it starts at <b>3</b> (max <b>6</b>)',
+    dsLose: 'You lose DS when you lose competitive matches. The penalty is the score difference (e.g. losing 1-4 is <b>-3</b>).',
+    dsLower: ['Losing to a player <b>below</b> your tier gives an additional <b>-2</b>', 'If you are LT1 the additional penalty is <b>-5</b>'],
+    dsGain: ["Defending your tier (you are assigned to someone else's promotion test and win): <b>+1</b>", 'Winning 4-0 gives <b>+2</b> instead of +1 (not additional)'],
+    bridge: 'you beat your second opponent with a score of <b>4-2 or better</b>.',
+    forfeit: ['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent']
+  },
+  Vanilla: {
+    format: 'All competitive matches are first to 4.',
+    step2: 'Play against an opponent from a higher tier and win with a score of <b>4-3 or better</b>',
+    evalPass: 'Winning with a score of <b>4-3 or better</b>',
+    shift: 'You must defeat 2 players from your tier with a combined score of <b>8-4 or better</b> (both matches counted together)',
+    demoHT3: ['You lose 0-4 against another player from your tier (instant demotion)', '<b>or</b> you lose to 2 opponents from your tier consecutively'],
+    dsStart: '<b>4</b> (max <b>8</b>); for LT1 it starts at <b>3</b> (max <b>6</b>)',
+    dsLose: 'You lose DS when you lose competitive matches. The penalty is the score difference (e.g. losing 1-4 is <b>-3</b>).',
+    dsLower: ['Losing to a player <b>below</b> your tier gives an additional <b>-2</b>', 'If you are LT1 the additional penalty is <b>-5</b>'],
+    dsGain: ["Defending your tier (you are assigned to someone else's promotion test and win): <b>+1</b>", 'Winning 4-0 gives <b>+2</b> instead of +1 (not additional)'],
+    bridge: 'you beat your second opponent with a score of <b>4-2 or better</b>.',
+    restrictions: ['No <b>Beacons</b>', 'No <b>Milk</b>', 'No <b>Enchanted Golden Apples</b>', 'No potions/arrows of <b>Turtle Master</b>', 'No potions/arrows of <b>Weakness</b>', 'No <b>Thorns</b> enchantment', 'Max <b>64</b> Respawn Anchors', 'Max <b>24</b> Firework Rockets', 'Max <b>4</b> Armour Pieces', 'Max <b>8</b> Totems', 'Kit items must be obtainable in 1.21+ Vanilla Survival'],
+    extraMatch: ['Rekitting or using <b>/heal</b> mid-fight gives your opponent the round', 'Ender chest: load it <b>once per round</b>. Loading mid-round is allowed if you have not used any stored contents yet', 'No stalling (slow regearing, exploring/looting, camping, unusual EXP farming)', 'No crafting, smelting or enchanting mid-match', 'Do not mine/collect placed Respawn Anchors', 'Do not take off your armour to hide from or attack your opponent while invisible', 'No TP trapping: wait <b>3 seconds</b> after a teleport before attacking/debuffing, and only teleport if you are both surfaced', 'No RTP without mutual agreement', 'Do not fly up or place blocks within <b>3 seconds</b> of teleporting to your opponent'],
+    forfeit: ['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent']
+  },
+  Triathlon: {
+    format: 'Triathlon consists of 3 kits (Early Game UHC, Mid Game SMP, Late Game Mace), each played first to 3. The final score is the <b>total of all 3 matches combined</b>.',
+    step2: 'Play against an opponent from a higher tier and <b>win overall</b> (any winning total score)',
+    evalPass: 'A <b>winning total score</b> (any margin)',
+    shift: 'You must win overall by <b>3 or more</b> (total score of all 3 kits combined)',
+    demoHT3: ['You lose against another player from your tier by <b>4 or more</b> (total score) and are demoted instantly', '<b>or</b> you lose to 2 players from your tier by <b>3 or more</b> each'],
+    dsStart: 8,
+    dsLose: 'You lose DS when you lose competitive matches. The penalty is the total score difference at the end of the match.',
+    dsLower: ['Losing to a player <b>below</b> your tier gives an additional <b>-3</b>', 'If you are LT1 the additional penalty is <b>-4</b>'],
+    dsGain: ["Defending your tier (you are assigned to someone else's promotion test and win): <b>+1</b>", 'Winning by <b>4 or more</b> (total score): <b>+2</b>'],
+    bridge: 'you win your second opponent overall by <b>3 or more</b> (total score of all 3 kits combined).',
+    forfeit: ['If your opponent forfeits in any kit, you <b>win overall automatically</b>']
+  }
+};
+const gmCfg = kit => GM_RULES[kit] || GM_RULES.NeliSMP;
+const gmv0 = t => `<span class="gmv">${t}</span>`;
+const gmv = t => `<span class="gmv">${t}</span>`;
+
+function gmSections(kit, ctx = {}) {
+  const c = gmCfg(kit);
+  const ul = (a, hlAll = false) => '<ul>' + a.map(x => `<li>${hlAll ? gmv(x) : x}</li>`).join('') + '</ul>';
+  const det = (title, body, open = false) => `<details${open ? ' open' : ''}><summary>${title}</summary><div>${body}</div></details>`;
+  const S = {};
+  S.eval = open => det('✅ Evaluation Test', `<p>You will be assigned a tier by your tester based on your performance.</p>
+      <p>After beating your tester you will move up the promotion system until you reach your deserved tier.</p>
+      <p>${gmv(c.format)}</p>
+      <p>After an evaluation test you have a <b>7 day</b> cooldown, unless you pass evaluation and test for HT3, which you may do immediately.</p>`, open);
+  S.promo = (type, t2, open) => det(`⏫ Tier Promotion${type ? ': ' + type : ''}`, `<p>${gmv(c.format)} To be promoted you must complete the following steps in order:</p>
+        ${ul(['Win against an opponent from your own tier', gmv(c.step2)])}
+        <p><i>If the tier you're trying to achieve is empty, you need to defeat all other players in your tier.</i></p>
+        ${t2 ? '<p class="hl">This test is Tier 2 or above, so it must be spectated by a staff member or a recording must be provided.</p>' : ''}`, open);
+  S.ht1 = open => det('👑 Testing for HT1', `<p>In order to be promoted to HT1, you must complete the following steps:</p>
+        ${ul(['Defeat all current LT1s', 'Defeat the current HT1 (if there is one)'])}
+        <p class="hl">This test is Tier 2 or above, so it must be spectated by a staff member or a recording must be provided.</p>
+        <p>As there can be only one HT1 at a time, HT1 always has a demotion score of 0.</p>`, open);
+  S.shift = (shift, open) => det(shift ? '🔼 Tier Shifting (applies to you right now)' : '🔼 Tier Shifting', `<p>${shift ? 'You are' : 'If you are'} in the second highest occupied tier and the tier above only has one player. If you win against an opponent from your tier but <b>lose against the player from the tier above</b>, you can attempt to be promoted via a Tier Shift.</p>
+        <p>To complete a tier shift:</p>
+        ${ul([gmv(c.shift),
+          !shift ? 'If the top tier is LT1: the LT1 player only needs to defeat up to 3 players (the player testing for LT1 + 2 other HT2s). Otherwise the player in the tier above must also defeat all players in your tier'
+            : shift.isLT1 ? 'The LT1 player only needs to defeat up to 3 players (the player testing for LT1 + 2 other HT2s)' : 'The player in the tier above must also defeat all players in your tier'])}
+        <p><b>Result:</b> ${!shift ? 'If the top tier is LT1 you are promoted and the LT1 player is not. Otherwise you and the player in the tier above are both promoted.' : shift.isLT1 ? 'You will be promoted. The LT1 player does not get promoted.' : 'You and the player in the tier above will both be promoted.'}</p>`, open);
+  S.demoLow = open => det('📛 Demotions (HT3/LT3)', `<p>You will be demoted if:</p>${ul(c.demoHT3, true)}`, open);
+  S.demoDS = open => det('⚡ Demotion Score (Tier 2+)', `<p>Every player who reaches Tier 2 or above has a demotion score (DS) which starts at ${gmv(c.dsStart)} and resets each time their tier changes.</p>
+        <h5>❌ Losing DS</h5><p>${gmv(c.dsLose)}</p>
+        <h5>⬇️ Loss vs. lower tier</h5>${ul(c.dsLower, true)}
+        <h5>➕ Gaining DS</h5>${ul(c.dsGain, true)}
+        <h5>❗ Demotion (DS below 0)</h5>${ul(['All matches you were assigned before your DS dropped below 0 must be completed first', 'You will not be assigned to other promotion tests and cannot request a promotion test yourself', 'If your DS is still below 0 after those matches, you will be demoted'])}`, open);
+  S.bridge = open => det('🌉 Bridging', `<p>After passing a test and getting promoted you may <b>immediately</b> test for the next higher tier, but only if ${gmv(c.bridge)}</p>
+      <p>When bridging you do not need to beat an opponent from your own tier again, because your promotion already proved you are better than the players there.</p>`, open);
+  S.forfeit = open => det('🏳️ Forfeit Rules', `${ul(c.forfeit, true)}
+      <p class="red"><b>Forfeiting/dodging will result in instant demotion.</b></p>`, open);
+  S.items = open => { const c2 = gmCfg(kit); return c2.restrictions ? det('🎒 Item Restrictions', `<p>These are in addition to the base rules.</p><ul>${c2.restrictions.map(x => `<li>${gmv(x)}</li>`).join('')}</ul>`, open) : ''; };
+  S.fail = open => det('❌ Failing a Test', `${ul(['Failing a test means you must wait <b>14 days</b> before requesting another promotion test', 'If you fail because your opponent was promoted within 7 days of your match, you may be eligible to reopen your test <b>if</b> the result might have been different counting them at their new tier. Contact a staff member.'])}`, open);
+  return S;
+}
+
+function accRulesHtml(kit, info) {
+  const S = gmSections(kit);
+  let h = '<h3>Rules</h3>';
+  const tn = info.myKey ? +info.myKey[0] : null;
+  if (info.mode === 'eval') {
+    h += S.eval(true);
+  } else if (info.mode === 'promo' || info.mode === 'ht1') {
+    const t2 = info.targetKey && +info.targetKey[0] <= 2;
+    h += info.mode === 'promo' ? S.promo(info.type, t2, true) : S.ht1(true);
+    const shift = info.mode === 'promo' ? accTierShift(kit, info.myKey) : null;
+    if (shift) h += S.shift(shift, false);
+    if (info.myKey === '3+') h += S.demoLow(false);
+    else if (tn <= 2) h += S.demoDS(false);
+    h += S.bridge(false) + S.forfeit(false) + S.fail(false);
+  }
+  h += S.items(false) + tierlistRulesHtml(false, kit);
   return `<div class="acc-rules">${h}</div>`;
+}
+// full ruleset page for one gamemode
+function rulesetHtml(kit) {
+  const S = gmSections(kit);
+  return `<div class="rs-seg">${Object.keys(GM_RULES).map(k => `<button type="button" class="rs-gm ${k === kit ? 'on' : ''}" data-gm="${k}">${k}</button>`).join('')}</div>
+    <p class="acc-p"><span class="gmv">Highlighted</span> rules are different in each gamemode.</p>
+    <div class="acc-rules">${S.eval(false)}${S.promo('', false, false)}${S.ht1(false)}${S.shift(null, false)}${S.demoLow(false)}${S.demoDS(false)}${S.bridge(false)}${S.forfeit(false)}${S.fail(false)}${S.items(false)}${tierlistRulesHtml(false, kit)}</div>`;
 }
 
 // ----- data -----
@@ -1895,8 +2022,8 @@ function openKitPop(kit) {
   closeKitPop();
   const pop = document.createElement('div');
   pop.id = 'kitPop'; pop.className = 'info-tooltip overall-tooltip kit-open kit-pop active';
-  pop.innerHTML = '<button class="kit-close" type="button" aria-label="Close">&times;</button>' + (kit === 'NeliSMP'
-    ? `<div class="kit-pane"><div class="kit-header"><img src="${LEADERBOARDS[kit].icon}" alt=""><span>${kit} Kit</span></div><div class="kit-sub">Rounds are first to 3</div><div id="kitPopInv"></div></div>`
+  pop.innerHTML = '<button class="kit-close" type="button" aria-label="Close">&times;</button>' + (kit === 'Triathlon' ? triathlonKitHtml(true) : kit === 'Vanilla' ? vanillaKitHtml(true) : kit === 'NeliSMP'
+    ? `<div class="kit-pane"><div class="kit-header"><img src="${LEADERBOARDS[kit].icon}" alt=""><span>${kit} Kit</span></div><div class="kit-sub">Rounds are first to 4</div><div id="kitPopInv"></div></div>`
     : `<div class="kit-header" style="margin:4px 0 10px"><img src="${LEADERBOARDS[kit].icon}" alt="" style="width:36px;height:36px;image-rendering:pixelated"><span style="font-size:22px;font-weight:700">${accEsc(kit)} Kit</span></div><div class="kit-empty">No kit yet</div>`);
   accEl('accModal').appendChild(pop);
   pop.querySelector('.kit-close').onclick = closeKitPop;
@@ -2216,14 +2343,15 @@ function accBindMatches(box) {
 }
 function accViewScore(m) {
   const iAmTestee = m.testee_user === accSession.user.id, you = iAmTestee ? m.testee_name : m.opponent_name, them = iAmTestee ? m.opponent_name : m.testee_name;
-  accOpen(`<h2>Final score</h2><p class="acc-p">${accEsc(m.test_type || 'Test')} · ${accEsc(m.kit || '')}<br>${accEsc(m.testee_name)} vs ${accEsc(m.opponent_name)}. Matches are first to 3.</p>
-    <div class="tt-when"><div><div class="acc-label">${accEsc(you)} (you)</div><input class="acc-in" id="sMe" type="number" min="0" max="3" inputmode="numeric"></div>
-    <div><div class="acc-label">${accEsc(them)}</div><input class="acc-in" id="sThem" type="number" min="0" max="3" inputmode="numeric"></div></div>
+  accOpen(`<h2>Final score</h2><p class="acc-p">${accEsc(m.test_type || 'Test')} · ${accEsc(m.kit || '')}<br>${accEsc(m.testee_name)} vs ${accEsc(m.opponent_name)}. ${m.kit === 'Triathlon' ? 'Enter the total score of all 3 kits combined.' : 'Matches are first to 4.'}</p>
+    <div class="tt-when"><div><div class="acc-label">${accEsc(you)} (you)</div><input class="acc-in" id="sMe" type="number" min="0" max="${m.kit === 'Triathlon' ? 9 : 4}" inputmode="numeric"></div>
+    <div><div class="acc-label">${accEsc(them)}</div><input class="acc-in" id="sThem" type="number" min="0" max="${m.kit === 'Triathlon' ? 9 : 4}" inputmode="numeric"></div></div>
     <div class="acc-msg" id="aMsg"></div><button class="acc-go" id="aGo" type="button">Submit score</button><button class="acc-go ghost" id="aLater" type="button">Later</button>`);
   accEl('aLater').onclick = accClose;
   accEl('aGo').onclick = async () => {
     const a = parseInt(accEl('sMe').value, 10), b = parseInt(accEl('sThem').value, 10);
-    if (![a, b].every(n => Number.isInteger(n) && n >= 0 && n <= 3) || (a === 3) === (b === 3)) return accMsg('Enter a valid score: exactly one player has 3.');
+    const tri = m.kit === 'Triathlon';
+    if (tri ? (![a, b].every(n => Number.isInteger(n) && n >= 0 && n <= 9) || a === b) : (![a, b].every(n => Number.isInteger(n) && n >= 0 && n <= 4) || (a === 4) === (b === 4))) return accMsg(tri ? 'Enter the total score of all 3 kits (0-9). It cannot be a tie.' : 'Enter a valid score: exactly one player has 4.');
     accEl('aGo').disabled = true;
     const vals = { status: 'completed', score_testee: iAmTestee ? a : b, score_opponent: iAmTestee ? b : a };
     if (await accMatchUpdate(m, vals, `${accProfile.mc_username} reported the final score of your duel: ${you} ${a}-${b} ${them}.`)) {
@@ -2288,7 +2416,9 @@ function accViewAssign(id) {
 }
 
 // ----- tester: resolve a test -----
-const RS_SCORES = [['3-0', 3, 0], ['3-1', 3, 1], ['3-2', 3, 2], ['2-3', 2, 3]];
+const RS_SCORES = [['4-0', 4, 0], ['4-1', 4, 1], ['4-2', 4, 2], ['4-3', 4, 3]];
+// Triathlon: only the total margin over all 3 kits matters
+const TRI_SCORES = [['Won by 1-2', 2, 0], ['Won by 3+', 3, 0], ['Lost', 0, 1]];
 async function accSubmitResult(req, outcome) {
   const col = LEADERBOARDS[req.kit].col, now = new Date().toISOString();
   if (outcome.tier) {
@@ -2317,7 +2447,9 @@ async function accViewResolve(id) {
   const high = !!myKey && TIER_ORDER[myKey] <= TIER_ORDER['3+'];     // HT3 or above in this gamemode
   const plan = req.opponents || { steps: [] }, meta = plan.meta || {};
   const tm = /^([HL])T([1-5]) Test$/.exec(req.test_type || ''), target = tm ? tm[2] + (tm[1] === 'H' ? '+' : '') : null;
-  const bridgeOk = (score) => { const sc = RS_SCORES.find(x => x[0] === score); return !!sc && sc[1] === 3 && target !== '1+' && (sc[1] - sc[2] >= 2 || !!meta.firstTime); };
+  const isTri = kit === 'Triathlon', SCORES = isTri ? TRI_SCORES : RS_SCORES;
+  const bridgeSc = sc => isTri ? (sc[1] - sc[2] >= 3) : (sc[1] - sc[2] >= 2);
+  const bridgeOk = (score) => { const sc = SCORES.find(x => x[0] === score); return !!sc && target !== '1+' && bridgeSc(sc); };
   let side = null, choice = null, score = null, opp2 = null;
 
   const getOpp2 = () => {
@@ -2326,13 +2458,13 @@ async function accViewResolve(id) {
     const pool = accTierPlayers(kit, myKey, me).filter(n => n.toLowerCase() !== req.mc_username.toLowerCase());
     const pick = pool.length ? accPick(pool) : null;
     if (pick) {
-      plan.steps = [...(plan.steps || []), { kind: 'eval2', title: `Tester lost: play a ${keyLabel(myKey)} player (2-3 or better)`, opponents: [pick], tier: myKey }];
+      plan.steps = [...(plan.steps || []), { kind: 'eval2', title: `Tester lost: play a ${keyLabel(myKey)} player (${isTri ? 'win overall' : 'win with 4-3 or better'})`, opponents: [pick], tier: myKey }];
       sb.from('tier_requests').update({ opponents: plan }).eq('id', req.id).then(() => sb.rpc('sync_matches', { p_request: String(req.id) })).then(() => {}, () => {});
     }
     return pick;
   };
   const opt = (val, cur, label, sub = '', cls = '') => `<button type="button" class="rs-opt ${cls} ${cur === val ? 'on' : ''}" data-v="${val}">${label}${sub ? `<small>${sub}</small>` : ''}</button>`;
-  const scoreOpts = (cur, extra = '') => `<div class="rs-opts">${RS_SCORES.map(x => opt(x[0], cur, x[0])).join('')}${extra}</div>`;
+  const scoreOpts = (cur, extra = '') => `<div class="rs-opts">${(isTri ? SCORES.filter(x => x[1] > x[2]) : SCORES).map(x => opt(x[0], cur, x[0])).join('')}${extra}</div>`;
 
   const outcomeNow = () => {
     if (isEval) {
@@ -2343,7 +2475,7 @@ async function accViewResolve(id) {
         if (!high) return choice === 'PASS' ? { status: 'passed', tier: '3', eval_passed: true, side } : null;
         if (choice === 'GRANT') return { status: 'passed', tier: myKey, side };
         if (score === 'WORSE') return { status: 'passed', tier: '3', eval_passed: true, side, score };
-        if (score) { const sc = RS_SCORES.find(x => x[0] === score); return { status: 'passed', tier: myKey, bridge: sc[1] === 3 && myKey !== '1+' && (sc[1] - sc[2] >= 2 || !!meta.firstTime), side, score }; }
+        if (score) { const sc = SCORES.find(x => x[0] === score); return { status: 'passed', tier: myKey, bridge: myKey !== '1+' && bridgeSc(sc), side, score }; }
       }
       return null;
     }
@@ -2364,16 +2496,16 @@ async function accViewResolve(id) {
         if (!high) {
           body += `<div class="rs-opts one">${opt('PASS', choice, 'Passed Evaluation', 'Assigns LT3 and lets them test for HT3 right away', 'pass')}</div>`;
         } else if (opp2) {
-          body += `<div class="tt-note">The testee beat you, so they now play another ${keyLabel(myKey)} player. A score of <b>2-3 or better</b> earns ${keyLabel(myKey)}. Winning also lets them test the next tier straight away (bridging).</div>
+          body += `<div class="tt-note">The testee beat you, so they now play another ${keyLabel(myKey)} player. ${isTri ? 'Winning overall (any margin)' : 'Winning with <b>4-3 or better</b>'} earns ${keyLabel(myKey)}. Winning also lets them test the next tier straight away (bridging).</div>
             <div class="acc-label">Assigned opponent</div><div style="margin-bottom:12px">${oppChips([opp2])}</div>
-            <div class="acc-label">Testee's score against ${accEsc(opp2)}</div>${scoreOpts(score, opt('WORSE', score, 'Worse than 2-3', 'Gets LT3 + Passed Evaluation', 'bad'))}`;
+            <div class="acc-label">Testee's score against ${accEsc(opp2)}</div>${scoreOpts(score, opt('WORSE', score, isTri ? 'Lost overall' : 'Lost', 'Gets LT3 + Passed Evaluation', 'bad'))}`;
         } else {
           body += `<div class="tt-note warn">There is no other ${keyLabel(myKey)} player to assign, so the testee gets ${keyLabel(myKey)} directly.</div><div class="rs-opts one">${opt('GRANT', choice, 'Grant ' + keyLabel(myKey), '', 'pass')}</div>`;
         }
       }
     } else {
       body += `<div class="rs-seg">${opt('PASS', choice, 'Passed', '', 'pass')}${opt('FAIL', choice, 'Failed', '14 day cooldown', 'bad')}</div>`;
-      if (choice === 'PASS') body += `<div class="acc-label">Score of the final match</div>${scoreOpts(score)}`;
+      if (choice === 'PASS') body += `<div class="acc-label">${isTri ? 'Total result over all 3 kits' : 'Score of the final match'}</div>${scoreOpts(score)}`;
     }
     const out = outcomeNow();
     let sum = '';
