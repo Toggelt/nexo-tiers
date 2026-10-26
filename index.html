@@ -773,6 +773,25 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 /* Tier labels use the same font as the reference (Geist) */
 .mini-tier-label, .tier-icon-label, .global-mini-tip, .tier-elo-tip, .global-mini-tip *, .tier-elo-tip * { font-family: 'Geist', Arial, sans-serif; }
 .mini-tier-label, .tier-icon-label { font-weight: 800; }
+
+/* ---------- Arrows, server line, coming soon, profile badges ---------- */
+.acc-rules summary { list-style: none; }
+.acc-rules summary::-webkit-details-marker { display: none; }
+.acc-rules summary::after { content: ''; margin-left: auto; width: 8px; height: 8px; border-right: 2px solid #8d93a8; border-bottom: 2px solid #8d93a8; transform: rotate(45deg) translateY(-2px); transition: transform .2s; flex-shrink: 0; }
+.acc-rules details[open] > summary::after { transform: rotate(-135deg) translateY(-2px); }
+.kit-server { font-size: 14px !important; margin: 4px 0 6px; color: #a9a9b4; display: flex; align-items: center; justify-content: center; gap: 7px; flex-wrap: wrap; }
+.srv-addr { color: #fff; font-weight: 700; }
+.srv-copy { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: #26262f; color: #c8c8d2; border: 1px solid #34343f; border-radius: 7px; cursor: pointer; padding: 0; transition: background .15s, color .15s; }
+.srv-copy:hover { background: #32323e; color: #fff; }
+.srv-copy.ok { color: #3ddc84; border-color: #2a6a45; }
+.coming-soon { text-align: center; padding: 90px 20px; }
+.cs-title { font-family: 'Geist', Arial, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: 0.3px; }
+.cs-sub { margin-top: 8px; color: #8b8b96; font-size: 15px; }
+.role-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+.tester-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tester-dot { width: 36px; height: 36px; }
+.tester-dot img { width: 21px; height: 21px; }
+.tester-dot::after { font-size: 18px; padding: 7px 14px; border-radius: 10px; top: calc(100% + 10px); }
 </style>
 </head>
 <body>
@@ -861,7 +880,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">✕</button>
-    <div class="role-row"><div class="role-badge" id="modalRoleBadge"></div><span id="modalTesterBadges" style="display:contents"></span></div>
+    <div class="role-row"><div class="role-badge" id="modalRoleBadge"></div><div id="modalTesterBadges" class="tester-row"></div></div>
     <div class="modal-avatar" id="modalAvatar"></div>
     <div class="modal-name" id="modalName"></div>
     <div class="title-section" id="titleSection">
@@ -902,7 +921,11 @@ const LEADERBOARDS = {
   Triathlon: { key: "Triathlon", label: "Triathlon", title: "Triathlon Leaderboard", icon: TRIATHLON_ICON_URL, col: "triathlon" }
 };
 const SUB_BOARDS = ["NeliSMP", "Vanilla", "Triathlon"];
-const NUM_MODES = SUB_BOARDS.length;
+// Gamemodes listed here show "Coming soon" instead of tier columns and are left out of titles/points.
+// RELEASE: remove "Vanilla" from this object (or set it to {}) and everything switches back on.
+const COMING_SOON = { Vanilla: true };
+const LIVE_BOARDS = SUB_BOARDS.filter(k => !COMING_SOON[k]);
+const NUM_MODES = LIVE_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
 const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 200, "3": 125, "4+": 75, "4": 50, "5+": 25, "5": 15 };
@@ -938,7 +961,7 @@ function recomputePlus() {
 
 function computePlayerPoints(player) {
   let total = 0;
-  SUB_BOARDS.forEach(key => {
+  LIVE_BOARDS.forEach(key => {
     const tier = player[`${key}_tier`];
     if (tier != null && tier >= 1 && tier <= 5) total += TIER_POINTS[tierKey(tier, player[`_computed_plus_${key}`])] || 0;
   });
@@ -1042,7 +1065,7 @@ function renderTabBar() {
 
 // ---------- Rendering ----------
 function tierEntries(player) {
-  const entries = SUB_BOARDS.map(key => ({
+  const entries = LIVE_BOARDS.map(key => ({
     tier: player[`${key}_tier`], plus: player[`_computed_plus_${key}`],
     peakTier: player[`${key}_peak_tier`] ?? null, peakPlus: player[`${key}_peak_plus`] ?? false,
     board: LEADERBOARDS[key], mode: key
@@ -1334,6 +1357,20 @@ function renderInventory(container) {
 }
 document.addEventListener('click', e => { if (!e.target.closest('.mc-slot')) mcTip.style.display = 'none'; });
 
+const TEST_SERVERS = { NeliSMP: 'mcpvp.club', Triathlon: 'mcpvp.club', Vanilla: 'centralpvp.net' };
+const COPY_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>';
+const CHECK_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+function serverLineHtml(kit) {
+  const a = TEST_SERVERS[kit]; if (!a) return '';
+  return `<div class="kit-sub kit-server">Tests must take place on <span class="srv-addr">${a}</span><button type="button" class="srv-copy" data-addr="${a}" title="Copy server address" aria-label="Copy server address">${COPY_ICON}</button></div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('.srv-copy'); if (!b) return;
+  e.stopPropagation();
+  const done = () => { b.innerHTML = CHECK_ICON; b.classList.add('ok'); setTimeout(() => { b.innerHTML = COPY_ICON; b.classList.remove('ok'); }, 1400); };
+  const fallback = () => { const t = document.createElement('textarea'); t.value = b.dataset.addr; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (_) {} t.remove(); done(); };
+  (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.addr).then(done, fallback) : fallback());
+});
 function triathlonKitHtml(withHeader = true) {
   const box = (icon, title, sub) => `<div class="tri-box"><img src="${ICONS[icon]}" alt=""><b>${title}</b><small>${sub}</small></div>`;
   return `<div class="kit-pane tri-pane">
@@ -1341,6 +1378,7 @@ function triathlonKitHtml(withHeader = true) {
     <div class="kit-sub tri-desc">Triathlon is a special gamemode consisting of 3 different kits</div>
     <div class="tri-boxes">${box('golden_apple', 'Early Game', '(UHC)')}${box('ender_pearl', 'Mid Game', '(SMP)')}${box('mace', 'Late Game', '(Mace)')}</div>
     <div class="kit-sub tri-foot">Each kit is played first to 3</div>
+    ${serverLineHtml('Triathlon')}
   </div>`;
 }
 
@@ -1350,13 +1388,14 @@ function vanillaKitHtml(withHeader = true) {
     <div class="kit-sub van-sub">Bring your own items</div>
     <button class="van-rulebook" type="button" data-gm="Vanilla">View rulebook</button>
     <div class="kit-sub van-foot">Rounds are first to 4</div>
+    ${serverLineHtml('Vanilla')}
   </div>`;
 }
-document.addEventListener('click', e => { const b = e.target.closest('.van-rulebook'); if (b) { closeKitPop?.(); if (typeof infoTooltip !== 'undefined') infoTooltip.classList?.remove('visible'); openRuleset('Vanilla'); } });
+document.addEventListener('click', e => { const b = e.target.closest('.van-rulebook'); if (b) { closeKitPop?.(); infoTooltip.classList.remove('active'); openRuleset('Vanilla'); } });
 
 function getOverallSorted() {
   const sorted = [...allPlayers]
-    .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
+    .filter(p => LIVE_BOARDS.some(key => p[`${key}_tier`] != null))
     .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
     .sort((a, b) => b.__points - a.__points);
   return assignRanks(sorted);
@@ -1512,6 +1551,11 @@ function render() {
     const firstShow = lastAnimBoard !== currentBoard;
     lastAnimBoard = currentBoard;
     const mode = currentBoard;
+    if (COMING_SOON[mode]) {
+      list.innerHTML = `<div class="coming-soon"><div class="cs-title">Coming soon</div><div class="cs-sub">The ${LEADERBOARDS[mode].label} tierlist isn't live yet.</div></div>`;
+      toggleBtn.style.display = "none";
+      return;
+    }
     const tierGroups = { 1: [], 2: [], 3: [], 4: [], 5: [] };
     allPlayers.forEach(p => { const t = p[`${mode}_tier`]; if (t >= 1 && t <= 5) tierGroups[t].push(p); });
     for (let t = 1; t <= 5; t++) {
@@ -1575,6 +1619,7 @@ function renderInfoTooltip() {
     ? `<div class="kit-pane">
          <div class="kit-header"><img src="${NELISMP_ICON_URL}" alt="NeliSMP"><span>NeliSMP Kit</span></div>
          <div class="kit-sub">Rounds are first to 4</div>
+         ${serverLineHtml('NeliSMP')}
          <div id="kitInventory"></div>
        </div>`
     : currentBoard === 'Triathlon' ? triathlonKitHtml(true)
@@ -1600,8 +1645,8 @@ function renderInfoTooltip() {
 
 function getRole(name, player) {
   if (name === "TestingCheats") return { label: "Developer", cls: "role-developer" };
-  if (name === "cutekiss") return { label: "Tierlist Owner", cls: "role-owner" };
-  if (player && player.regulator) return { label: "Tierlist Regulator", cls: "role-regulator" };
+  if (name === "cutekiss") return { label: "Owner", cls: "role-owner" };
+  if (player && player.regulator) return { label: "Regulator", cls: "role-regulator" };
   return { label: "Player", cls: "role-player" };
 }
 function rankClass(rank) { return rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : ""; }
@@ -1663,7 +1708,7 @@ function openProfile(player) {
     titleSection.style.display = "flex";
   } else titleSection.style.display = "none";
   const overallSorted = allPlayers
-    .filter(p => SUB_BOARDS.some(key => p[`${key}_tier`] != null))
+    .filter(p => LIVE_BOARDS.some(key => p[`${key}_tier`] != null))
     .map(p => ({ ...p, __points: computePlayerPoints(p) }))
     .sort((a, b) => b.__points - a.__points);
   assignRanks(overallSorted);
@@ -1906,6 +1951,7 @@ const RS_ICON_MAP = {
   '🌉': RS_SVG('<path d="M3 17h18"/><path d="M5 17V9m14 8V9"/><path d="M5 9c3 5 11 5 14 0"/>'),
   '🏳': RS_SVG('<path d="M5 21V4"/><path d="M5 5h13l-3 4 3 4H5"/>'),
   '❌': RS_SVG('<path d="M6 6l12 12M18 6L6 18"/>'),
+  '🗺': RS_SVG('<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>'),
   '🎒': RS_SVG('<path d="M7 8a5 5 0 0110 0"/><rect x="5" y="8" width="14" height="13" rx="3"/><path d="M9 14h6"/>'),
   '📝': RS_SVG('<path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6"/>'),
   '🚫': RS_SVG('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'),
@@ -1917,7 +1963,7 @@ const RS_ICON_MAP = {
   '🟢': '<span class="rs-dot g"></span>',
   '🔴': '<span class="rs-dot r"></span>'
 };
-const svgify = html => html.replace(/(✅|⏫|👑|🔼|📛|⚡|🌉|🏳|❌|🎒|📝|🚫|🖥|⚔|⬇|➕|❗|🟢|🔴)\uFE0F?/g, (m, e) => RS_ICON_MAP[e] || m);
+const svgify = html => html.replace(/(✅|⏫|👑|🔼|📛|⚡|🌉|🏳|❌|🗺|🎒|📝|🚫|🖥|⚔|⬇|➕|❗|🟢|🔴)\uFE0F?/g, (m, e) => RS_ICON_MAP[e] || m);
 function tierlistRulesHtml(open = true, kit) {
   const extra = kit && GM_RULES[kit] && GM_RULES[kit].extraMatch ? GM_RULES[kit].extraMatch.map(x => `<li><span class="gmv">${x}</span></li>`).join('') : '';
   const ul = a => '<ul>' + a.map(x => `<li>${x}</li>`).join('') + '</ul>';
@@ -1936,8 +1982,10 @@ function openRuleset(kit) {
 document.addEventListener('click', e => { const b = e.target.closest('.rs-gm'); if (b) openRuleset(b.dataset.gm); });
 document.addEventListener('click', e => { if (e.target.closest('.ruleset-btn')) openRuleset(); });
 // Gamemode specific rule values. Anything that differs between gamemodes is highlighted (.gmv) in the rules.
+const FORFEIT_RULES = ['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent'];
 const GM_RULES = {
   NeliSMP: {
+    maps: ['Map: <b>Giant Stadium (Plains)</b>'],
     format: 'All competitive matches are first to 4.',
     step2: 'Play against an opponent from a higher tier and win with a score of <b>4-3 or better</b>',
     evalPass: 'Winning with a score of <b>4-3 or better</b>',
@@ -1948,9 +1996,11 @@ const GM_RULES = {
     dsLower: ['Losing to a player <b>below</b> your tier gives an additional <b>-2</b>', 'If you are LT1 the additional penalty is <b>-5</b>'],
     dsGain: ["Defending your tier (you are assigned to someone else's promotion test and win): <b>+1</b>", 'Winning 4-0 gives <b>+2</b> instead of +1 (not additional)'],
     bridge: 'you beat your second opponent with a score of <b>4-2 or better</b>.',
-    forfeit: ['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent']
+    forfeit: FORFEIT_RULES
   },
   Vanilla: {
+    evalEarly: 'A tester may end the evaluation test after <b>2-3 rounds</b> if they have already decided the testee\'s tier and the testee has not won a round.',
+    maps: ['<b>Map pool:</b> Plains, Desert, Badlands, Mushroom Fields, Snowy Fields', 'Both players <b>ban 2 maps</b> each; the last remaining map is the one you fight on', '<b>Evaluation tests</b> are always played on <b>Plains</b> (no map selection)'],
     format: 'All competitive matches are first to 4.',
     step2: 'Play against an opponent from a higher tier and win with a score of <b>4-3 or better</b>',
     evalPass: 'Winning with a score of <b>4-3 or better</b>',
@@ -1963,9 +2013,10 @@ const GM_RULES = {
     bridge: 'you beat your second opponent with a score of <b>4-2 or better</b>.',
     restrictions: ['No <b>Beacons</b>', 'No <b>Milk</b>', 'No <b>Enchanted Golden Apples</b>', 'No potions/arrows of <b>Turtle Master</b>', 'No potions/arrows of <b>Weakness</b>', 'No <b>Thorns</b> enchantment', 'No <b>Lunge</b> enchantment', 'Max <b>64</b> Respawn Anchors', 'Max <b>24</b> Firework Rockets', 'Max <b>4</b> Armour Pieces', 'Max <b>8</b> Totems', 'Kit items must be obtainable in 1.21+ Vanilla Survival'],
     extraMatch: ['Rekitting or using <b>/heal</b> mid-fight gives your opponent the round', 'Ender chest: load it <b>once per round</b>. Loading mid-round is allowed if you have not used any stored contents yet', 'No stalling (slow regearing, exploring/looting, camping, unusual EXP farming)', 'No crafting, smelting or enchanting mid-match', 'Do not mine/collect placed Respawn Anchors', 'Do not take off your armour to hide from or attack your opponent while invisible', 'No TP trapping: wait <b>3 seconds</b> after a teleport before attacking/debuffing, and only teleport if you are both surfaced', 'No RTP without mutual agreement', 'Do not fly up or place blocks within <b>3 seconds</b> of teleporting to your opponent'],
-    forfeit: ['If your opponent forfeits while you are winning the match, you receive the win', 'If your opponent forfeits while the score is even or you are losing, the match is invalidated', 'If your opponent forfeits while being a higher tier, the rounds you won carry over to the next opponent']
+    forfeit: FORFEIT_RULES
   },
   Triathlon: {
+    maps: ['Early Game (UHC): <b>Stadium (Any)</b>', 'Mid Game (SMP): <b>Giant Stadium (Plains)</b>', 'Late Game (Mace): <b>Giant Stadium (Plains)</b>'],
     format: 'Triathlon consists of 3 kits (Early Game UHC, Mid Game SMP, Late Game Mace), each played first to 3. The final score is the <b>total of all 3 matches combined</b>.',
     step2: 'Play against an opponent from a higher tier and <b>win overall</b> (any winning total score)',
     evalPass: 'A <b>winning total score</b> (any margin)',
@@ -1976,7 +2027,7 @@ const GM_RULES = {
     dsLower: ['Losing to a player <b>below</b> your tier gives an additional <b>-3</b>', 'If you are LT1 the additional penalty is <b>-4</b>'],
     dsGain: ["Defending your tier (you are assigned to someone else's promotion test and win): <b>+1</b>", 'Winning by <b>4 or more</b> (total score): <b>+2</b>'],
     bridge: 'you win your second opponent overall by <b>3 or more</b> (total score of all 3 kits combined).',
-    forfeit: ['If your opponent forfeits in any kit, you <b>win overall automatically</b>']
+    forfeit: FORFEIT_RULES
   }
 };
 const gmCfg = kit => GM_RULES[kit] || GM_RULES.NeliSMP;
@@ -1991,6 +2042,7 @@ function gmSections(kit, ctx = {}) {
   S.eval = open => det('✅ Evaluation Test', `<p>You will be assigned a tier by your tester based on your performance.</p>
       <p>After beating your tester you will move up the promotion system until you reach your deserved tier.</p>
       <p>${gmv(c.format)}</p>
+      ${c.evalEarly ? `<p>${gmv(c.evalEarly)}</p>` : ''}
       <p>After an evaluation test you have a <b>7 day</b> cooldown, unless you pass evaluation and test for HT3, which you may do immediately.</p>`, open);
   S.promo = (type, t2, open) => det(`⏫ Tier Promotion${type ? ': ' + type : ''}`, `<p>${gmv(c.format)} To be promoted you must complete the following steps in order:</p>
         ${ul(['Win against an opponent from your own tier', gmv(c.step2)])}
@@ -2014,9 +2066,10 @@ function gmSections(kit, ctx = {}) {
         <h5>❗ Demotion (DS below 0)</h5>${ul(['All matches you were assigned before your DS dropped below 0 must be completed first', 'You will not be assigned to other promotion tests and cannot request a promotion test yourself', 'If your DS is still below 0 after those matches, you will be demoted'])}`, open);
   S.bridge = open => det('🌉 Bridging', `<p>After passing a test and getting promoted you may <b>immediately</b> test for the next higher tier, but only if ${gmv(c.bridge)}</p>
       <p>When bridging you do not need to beat an opponent from your own tier again, because your promotion already proved you are better than the players there.</p>`, open);
-  S.forfeit = open => det('🏳️ Forfeit Rules', `${ul(c.forfeit, true)}
+  S.forfeit = open => det('🏳️ Forfeit Rules', `${ul(c.forfeit)}
       <p class="red"><b>Forfeiting/dodging will result in instant demotion.</b></p>`, open);
   S.items = open => { const c2 = gmCfg(kit); return c2.restrictions ? det('🎒 Item Restrictions', `<p>These are in addition to the base rules.</p><ul>${c2.restrictions.map(x => `<li>${gmv(x)}</li>`).join('')}</ul>`, open) : ''; };
+  S.maps = open => det('🗺 Maps', `<ul>${gmCfg(kit).maps.map(x => `<li>${gmv(x)}</li>`).join('')}</ul>`, open);
   S.fail = open => det('❌ Failing a Test', `${ul(['Failing a test means you must wait <b>14 days</b> before requesting another promotion test', 'If you fail because your opponent was promoted within 7 days of your match, you may be eligible to reopen your test <b>if</b> the result might have been different counting them at their new tier. Contact a staff member.'])}`, open);
   return S;
 }
@@ -2036,7 +2089,7 @@ function accRulesHtml(kit, info) {
     else if (tn <= 2) h += S.demoDS(false);
     h += S.bridge(false) + S.forfeit(false) + S.fail(false);
   }
-  h += S.items(false) + tierlistRulesHtml(false, kit);
+  h += S.items(false) + S.maps(false) + tierlistRulesHtml(false, kit);
   return svgify(`<div class="acc-rules">${h}</div>`);
 }
 // full ruleset page for one gamemode
@@ -2044,7 +2097,7 @@ function rulesetHtml(kit) {
   const S = gmSections(kit);
   return svgify(`<div class="rs-seg">${Object.keys(GM_RULES).map(k => `<button type="button" class="rs-gm ${k === kit ? 'on' : ''}" data-gm="${k}">${k}</button>`).join('')}</div>
     <p class="acc-p"><span class="gmv">Highlighted</span> rules are different in each gamemode.</p>
-    <div class="acc-rules">${S.eval(false)}${S.promo('', false, false)}${S.ht1(false)}${S.shift(null, false)}${S.demoLow(false)}${S.demoDS(false)}${S.bridge(false)}${S.forfeit(false)}${S.fail(false)}${S.items(false)}${tierlistRulesHtml(false, kit)}</div>`);
+    <div class="acc-rules">${S.eval(false)}${S.promo('', false, false)}${S.ht1(false)}${S.shift(null, false)}${S.demoLow(false)}${S.demoDS(false)}${S.bridge(false)}${S.forfeit(false)}${S.fail(false)}${S.items(false)}${S.maps(false)}${tierlistRulesHtml(false, kit)}</div>`);
 }
 
 // ----- data -----
@@ -2062,7 +2115,7 @@ function openKitPop(kit) {
   const pop = document.createElement('div');
   pop.id = 'kitPop'; pop.className = 'info-tooltip overall-tooltip kit-open kit-pop active';
   pop.innerHTML = '<button class="kit-close" type="button" aria-label="Close">&times;</button>' + (kit === 'Triathlon' ? triathlonKitHtml(true) : kit === 'Vanilla' ? vanillaKitHtml(true) : kit === 'NeliSMP'
-    ? `<div class="kit-pane"><div class="kit-header"><img src="${LEADERBOARDS[kit].icon}" alt=""><span>${kit} Kit</span></div><div class="kit-sub">Rounds are first to 4</div><div id="kitPopInv"></div></div>`
+    ? `<div class="kit-pane"><div class="kit-header"><img src="${LEADERBOARDS[kit].icon}" alt=""><span>${kit} Kit</span></div><div class="kit-sub">Rounds are first to 4</div>${serverLineHtml('NeliSMP')}<div id="kitPopInv"></div></div>`
     : `<div class="kit-header" style="margin:4px 0 10px"><img src="${LEADERBOARDS[kit].icon}" alt="" style="width:36px;height:36px;image-rendering:pixelated"><span style="font-size:22px;font-weight:700">${accEsc(kit)} Kit</span></div><div class="kit-empty">No kit yet</div>`);
   accEl('accModal').appendChild(pop);
   pop.querySelector('.kit-close').onclick = closeKitPop;
