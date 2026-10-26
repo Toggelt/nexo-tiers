@@ -1332,7 +1332,7 @@ function renderInventory(container) {
   const slotHtml = it => {
     const p = slotPos(it.slot); if (!p) return '';
     const src = ICONS[it.icon];
-    const glint = (isEnchanted(it) || it.glint) ? `<div class="mc-glint" data-src="${src}"></div>` : '';
+    const glint = ''; // enchantment glint is switched off on the kit page
     return `<div class="mc-slot" data-slot="${it.slot}" style="left:calc(var(--s) * ${p[0]});top:calc(var(--s) * ${p[1]})"><div class="mc-ibox"><img class="mc-icon" src="${src}" alt="">${glint}</div>${it.count > 1 ? `<span class="mc-count">${it.count}</span>` : ''}</div>`;
   };
   container.innerHTML = `<div class="mc-inv inv-img"><div class="mc-window"></div>${KIT_ITEMS.map(slotHtml).join('')}</div>`;
@@ -1372,7 +1372,7 @@ document.addEventListener('click', e => {
   const done = () => { b.innerHTML = CHECK_ICON; b.classList.add('ok'); setTimeout(() => { b.innerHTML = COPY_ICON; b.classList.remove('ok'); }, 1400); };
   const fallback = () => { const t = document.createElement('textarea'); t.value = b.dataset.addr; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (_) {} t.remove(); done(); };
   (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.addr).then(done, fallback) : fallback());
-});
+}, true);
 function triathlonKitHtml(withHeader = true) {
   const box = (icon, title, sub) => `<div class="tri-box"><img src="${ICONS[icon]}" alt=""><b>${title}</b><small>${sub}</small></div>`;
   return `<div class="kit-pane tri-pane">
@@ -1393,7 +1393,7 @@ function vanillaKitHtml(withHeader = true) {
     ${serverLineHtml('Vanilla')}
   </div>`;
 }
-document.addEventListener('click', e => { const b = e.target.closest('.van-rulebook'); if (b) { closeKitPop?.(); infoTooltip.classList.remove('active'); openRuleset('Vanilla'); } });
+document.addEventListener('click', e => { const b = e.target.closest('.van-rulebook'); if (b) { closeKitPop?.(); infoTooltip.classList.remove('active'); openRuleset('Vanilla'); } }, true);
 
 function getOverallSorted() {
   const sorted = [...allPlayers]
