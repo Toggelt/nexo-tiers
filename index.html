@@ -928,7 +928,7 @@ const LEADERBOARDS = {
 const SUB_BOARDS = ["NeliSMP", "Vanilla", "Sword", "Spear", "Triathlon"];
 // Gamemodes listed here show "Coming soon" instead of tier columns and are left out of titles/points.
 // RELEASE: remove "Vanilla" from this object (or set it to {}) and everything switches back on.
-const COMING_SOON = { Vanilla: true };
+const COMING_SOON = {};
 const LIVE_BOARDS = SUB_BOARDS.filter(k => !COMING_SOON[k]);
 const NUM_MODES = LIVE_BOARDS.length;
 
