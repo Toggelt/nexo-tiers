@@ -726,6 +726,8 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .mini-tier-label { width: auto !important; min-width: 36px; padding: 0 6px !important; height: 20px; }
 .mini-tier-circle, .tier-icon-circle { transform: translateY(2.5px); }
 .tier-icon-label { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 22px; padding: 0 8px; background: #22222a; }
+.inactive-tag { display: inline-flex; align-items: center; height: 20px; padding: 0 10px; margin-left: 10px; border-radius: 999px; background: #1e2634; color: #7d7d7d; font-family: 'Geist', Arial, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.3px; vertical-align: middle; }
+.kit-sub b, .kit-sub strong { font-family: 'Geist', Arial, sans-serif !important; font-weight: 800; }
 .inactive-pill { position: absolute; top: 14px; right: 54px; height: 32px; padding: 0 14px; display: flex; align-items: center; border-radius: 999px; background: #3a3a44; color: #a4a4b0; font-size: 13px; font-weight: 700; z-index: 2; }
 /* Tooltip pop-in like the reference (fade + zoom 95% + slide up 8px, 150ms), with arrow */
 @keyframes tipIn { from { opacity: 0; scale: 0.95; translate: 0 8px; } to { opacity: 1; scale: 1; translate: 0 0; } }
@@ -1524,7 +1526,7 @@ function buildOverallRow(p) {
       <div class="skin-wrap">${skinImg(p.name, 160)}</div>
     </div>
     <div class="info">
-      <div class="player-name">${p.name}</div>
+      <div class="player-name">${p.name}${p.inactive ? '<span class="inactive-tag">Inactive</span>' : ''}</div>
       <div class="player-title-row">
         ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]};${titleFontCSS(p.__title)}">${p.__title}</span></div>` : ''}
         <span class="player-points">(${p.__points} points)</span>
