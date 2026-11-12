@@ -719,7 +719,9 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .mini-tier-circle, .tier-icon-circle { background: #22222a !important; border-style: solid !important; }
 .mini-tier-wrap { gap: 0 !important; }
 .tier-icon-wrap { gap: 0 !important; }
-.mini-tier-label, .tier-icon-label { position: relative; z-index: 1; margin-top: -5px; }
+.mini-tier-label, .tier-icon-label { position: relative; margin-top: 0; }
+.mini-tier-wrap.no-tier .mini-tier-circle { border-color: #2e2e38; }
+.mini-tier-wrap.no-tier .mini-tier-label { background: #2e2e38; color: #8b8b96; }
 .mini-tier-label, .tier-icon-label { border: none !important; border-radius: 999px !important; }
 .mini-tier-label { width: auto !important; min-width: 44px; padding: 0 10px !important; height: 20px; }
 .tier-icon-label { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 22px; padding: 0 12px; background: #22222a; }
