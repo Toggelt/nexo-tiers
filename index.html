@@ -85,7 +85,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .player-title-text { font-size: 16px; font-weight: 900; font-family: 'Bahnschrift', sans-serif; letter-spacing: 0.3px; white-space: nowrap; background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 .player-points { font-size: 16px; font-weight: 600; color: #8b8b96; white-space: nowrap; }
 .elo-wrap { display: flex; align-items: center; gap: 14px; padding: 0 26px; }
-.mini-tiers-row { display: flex; align-items: center; gap: 18px; }
+.mini-tiers-row { display: flex; align-items: center; gap: 9px; }
 .mini-tier-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; cursor: default; }
 .mini-tier-circle { width: 36px; height: 36px; border-radius: 50%; background: #131318; display: flex; align-items: center; justify-content: center; border: 2px solid #454b54; overflow: hidden; }
 .mini-tier-circle img { width: 24px; height: 24px; }
@@ -144,7 +144,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .position-card .pos-info { flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 14px; font-weight: 700; font-size: 15px; }
 .pos-overall { color: #fff; font-size: 20px; font-weight: 800; }
 .pos-points { color: #8b8b96; font-size: 15px; font-weight: 600; }
-.tiers-row { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; margin-bottom: 6px; }
+.tiers-row { display: flex; gap: 8px; justify-content: flex-start; flex-wrap: wrap; margin-bottom: 6px; }
 .tier-icon-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 7px; }
 .tier-icon-circle { width: 54px; height: 54px; border-radius: 50%; background: #191920; display: flex; align-items: center; justify-content: center; border: 3px solid #454b54; overflow: hidden; }
 .tier-icon-circle img { width: 32px; height: 32px; }
@@ -229,7 +229,7 @@ img[src*="Respawn_Anchor"] { image-rendering: auto !important; }
   .player-title-text { font-size: 13px; }
   .player-points { font-size: 13px; }
   .elo-wrap { flex: 1 1 100%; width: 100%; justify-content: center; padding: 6px 0 12px; }
-  .mini-tiers-row { gap: 14px; }
+  .mini-tiers-row { gap: 7px; }
 
   .tier-columns { margin: 8px 12px; }
   .tier-column { flex: 0 0 min(230px, 72vw); min-width: min(230px, 72vw); }
@@ -243,7 +243,7 @@ img[src*="Respawn_Anchor"] { image-rendering: auto !important; }
   .modal-box { padding: 40px 16px 20px; max-width: 100%; }
   .modal-avatar { width: 90px; height: 90px; }
   .modal-name { font-size: 22px; }
-  .tiers-row { gap: 12px; }
+  .tiers-row { gap: 6px; }
   .tier-elo-tip { font-size: 15px; }
 
   .kit-pane { width: 100%; padding: 0; }
@@ -720,11 +720,12 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .mini-tier-wrap { gap: 0 !important; }
 .tier-icon-wrap { gap: 0 !important; }
 .mini-tier-label, .tier-icon-label { position: relative; margin-top: 0; }
-.mini-tier-wrap.no-tier .mini-tier-circle { border-color: #2f2f2f; }
-.mini-tier-wrap.no-tier .mini-tier-label { background: #2f2f2f; color: #7d7d7d; }
+.mini-tier-wrap.no-tier .mini-tier-circle { border-color: #1e2634; }
+.mini-tier-wrap.no-tier .mini-tier-label { background: #1e2634; color: #7d7d7d; }
 .mini-tier-label, .tier-icon-label { border: none !important; border-radius: 999px !important; }
-.mini-tier-label { width: auto !important; min-width: 44px; padding: 0 10px !important; height: 20px; }
-.tier-icon-label { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 22px; padding: 0 12px; background: #22222a; }
+.mini-tier-label { width: auto !important; min-width: 36px; padding: 0 6px !important; height: 20px; }
+.mini-tier-circle, .tier-icon-circle { transform: translateY(2.5px); }
+.tier-icon-label { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 22px; padding: 0 8px; background: #22222a; }
 .inactive-pill { position: absolute; top: 14px; right: 54px; height: 32px; padding: 0 14px; display: flex; align-items: center; border-radius: 999px; background: #3a3a44; color: #a4a4b0; font-size: 13px; font-weight: 700; z-index: 2; }
 /* Tooltip pop-in like the reference (fade + zoom 95% + slide up 8px, 150ms), with arrow */
 @keyframes tipIn { from { opacity: 0; scale: 0.95; translate: 0 8px; } to { opacity: 1; scale: 1; translate: 0 0; } }
@@ -1101,20 +1102,20 @@ function tierEntries(player) {
 }
 
 const INACTIVE_GREY = '#7d7d7d';
-const NO_TIER_FILL = '#2f2f2f';
+const NO_TIER_FILL = '#1e2634';   // outline + pill colour for inactive players and gamemodes without a tier
 // Pill fills measured from the reference (text colour -> pill/ring colour)
-const PILL_BY_COLOR = { '#e8ba3a': '#6d5d2c', '#d5b355': '#584c25', '#c4d3e7': '#5e6979', '#a0a7b2': '#4a505a', '#f89f5a': '#6b4b36', '#c67b42': '#593722', '#81749a': '#303144', '#655b79': '#2c2e40', '#7d7d7d': '#2f2f2f' };
+const PILL_BY_COLOR = { '#e8ba3a': '#6d5d2c', '#d5b355': '#584c25', '#c4d3e7': '#5e6979', '#a0a7b2': '#4a505a', '#f89f5a': '#6b4b36', '#c67b42': '#593722', '#81749a': '#303144', '#655b79': '#2c2e40', '#7d7d7d': '#1e2634' };
 const pillTint = hex => PILL_BY_COLOR[hex.toLowerCase()] || hex;
 const TIER_COL_BG = { 1: '#2a2a1a', 2: '#2a2a30', 3: '#2a221a', 4: '#22222a', 5: '#22222a' };
 function renderMiniTierIcons(player) {
   let html = "";
   tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
     if (tier != null && tier >= 1 && tier <= 5) {
-      const color = player.inactive ? INACTIVE_GREY : TIER_COLORS[tierKey(tier, plus)];
+      const color = TIER_COLORS[tierKey(tier, plus)], fill = player.inactive ? NO_TIER_FILL : pillTint(color);
       html += `
         <div class="mini-tier-wrap" data-mode="${mode}" data-current-tier="${tier}" data-current-plus="${plus ? '1' : '0'}" data-peak-tier="${peakTier ?? ''}" data-peak-plus="${peakPlus ? '1' : '0'}">
-          <div class="mini-tier-circle" style="border-color:${pillTint(color)}"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="mini-tier-label" style="color:${color}; background:${pillTint(color)};">${shortTierLabel(tier, plus)}</div>
+          <div class="mini-tier-circle" style="border-color:${fill}"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="mini-tier-label" style="color:${color}; background:${fill};">${shortTierLabel(tier, plus)}</div>
         </div>`;
     } else {
       html += `
@@ -1828,18 +1829,18 @@ function renderProfileTiers(player) {
   let html = "";
   tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
     if (tier != null && tier >= 1 && tier <= 5) {
-      const color = player.inactive ? INACTIVE_GREY : TIER_COLORS[tierKey(tier, plus)];
+      const color = TIER_COLORS[tierKey(tier, plus)], fill = player.inactive ? NO_TIER_FILL : pillTint(color);
       html += `
         <div class="tier-icon-wrap">
-          <div class="tier-icon-circle" style="border-color:${pillTint(color)}"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="tier-icon-label" style="color:${color};background:${pillTint(color)}">${shortTierLabel(tier, plus)}</div>
+          <div class="tier-icon-circle" style="border-color:${fill}"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="tier-icon-label" style="color:${color};background:${fill}">${shortTierLabel(tier, plus)}</div>
           <div class="tier-elo-tip">${generateTierTooltipHTML(mode, tier, plus, peakTier, peakPlus)}</div>
         </div>`;
     } else {
       html += `
         <div class="tier-icon-wrap" style="opacity:0.6">
-          <div class="tier-icon-circle" style="border-color:#2f2f2f"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="tier-icon-label" style="color:#7d7d7d;background:#2f2f2f">No Tier</div>
+          <div class="tier-icon-circle" style="border-color:#1e2634"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="tier-icon-label" style="color:#7d7d7d;background:#1e2634">No Tier</div>
           <div class="tier-elo-tip"><div class="tip-tier">No Tier</div></div>
         </div>`;
     }
