@@ -716,7 +716,10 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .mini-tier-label { display: flex; align-items: center; justify-content: center; width: 40px; height: 20px; padding: 0; line-height: 1; letter-spacing: 0; text-align: center; }
 
 /* Tier pills: circle and pill share one tinted fill, the text carries the bright tier colour, no outline */
-.mini-tier-circle, .tier-icon-circle { border: none !important; }
+.mini-tier-circle, .tier-icon-circle { background: #22222a !important; border-style: solid !important; }
+.mini-tier-wrap { gap: 0 !important; }
+.tier-icon-wrap { gap: 0 !important; }
+.mini-tier-label, .tier-icon-label { position: relative; z-index: 1; margin-top: -5px; }
 .mini-tier-label, .tier-icon-label { border: none !important; border-radius: 999px !important; }
 .mini-tier-label { width: auto !important; min-width: 44px; padding: 0 10px !important; height: 20px; }
 .tier-icon-label { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 22px; padding: 0 12px; background: #22222a; }
@@ -950,7 +953,7 @@ const NUM_MODES = LIVE_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
 const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 200, "3": 125, "4+": 75, "4": 50, "5+": 25, "5": 15 };
-const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#C67B42", "4+": "#655B79", "4": "#655B79", "5+": "#81749a", "5": "#81749a" };
+const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#C67B42", "4+": "#81749a", "4": "#81749a", "5+": "#655B79", "5": "#655B79" };
 const TIER_LIGHT_COLORS = { 1: "#ffd54f", 2: "#e0e0e0", 3: "#e0a86c", 4: "#d0d8ff", 5: "#9fb0f0" };
 const TIER_ORDER = { "1+": 0, "1": 1, "2+": 2, "2": 3, "3+": 4, "3": 5, "4+": 6, "4": 7, "5+": 8, "5": 9, "none": 10 };
 
@@ -1096,16 +1099,18 @@ function tierEntries(player) {
 }
 
 const INACTIVE_GREY = '#8b8b96';
+const pillTint = hex => { const n = parseInt(hex.slice(1), 16), b = [0x13, 0x13, 0x18], f = 0.32;
+  return '#' + [n >> 16, (n >> 8) & 255, n & 255].map((c, i) => Math.round(c * f + b[i] * (1 - f)).toString(16).padStart(2, '0')).join(''); };
 const TIER_COL_BG = { 1: '#2a2a1a', 2: '#2a2a30', 3: '#2a221a', 4: '#22222a', 5: '#22222a' };
 function renderMiniTierIcons(player) {
   let html = "";
   tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
     if (tier != null && tier >= 1 && tier <= 5) {
-      const color = TIER_COLORS[tierKey(tier, plus)];
+      const color = player.inactive ? INACTIVE_GREY : TIER_COLORS[tierKey(tier, plus)];
       html += `
         <div class="mini-tier-wrap" data-mode="${mode}" data-current-tier="${tier}" data-current-plus="${plus ? '1' : '0'}" data-peak-tier="${peakTier ?? ''}" data-peak-plus="${peakPlus ? '1' : '0'}">
-          <div class="mini-tier-circle" style="background:${hexA(color, 0.25)}"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="mini-tier-label" style="color:${color}; background:${hexA(color, 0.25)};">${shortTierLabel(tier, plus)}</div>
+          <div class="mini-tier-circle" style="border-color:${pillTint(color)}"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="mini-tier-label" style="color:${color}; background:${pillTint(color)};">${shortTierLabel(tier, plus)}</div>
         </div>`;
     } else {
       html += `
@@ -1822,15 +1827,15 @@ function renderProfileTiers(player) {
       const color = player.inactive ? INACTIVE_GREY : TIER_COLORS[tierKey(tier, plus)];
       html += `
         <div class="tier-icon-wrap">
-          <div class="tier-icon-circle" style="background:${hexA(color, 0.25)}"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="tier-icon-label" style="color:${color};background:${hexA(color, 0.25)}">${shortTierLabel(tier, plus)}</div>
+          <div class="tier-icon-circle" style="border-color:${pillTint(color)}"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="tier-icon-label" style="color:${color};background:${pillTint(color)}">${shortTierLabel(tier, plus)}</div>
           <div class="tier-elo-tip">${generateTierTooltipHTML(mode, tier, plus, peakTier, peakPlus)}</div>
         </div>`;
     } else {
       html += `
         <div class="tier-icon-wrap" style="opacity:0.6">
-          <div class="tier-icon-circle" style="background:#22222a"><img src="${board.icon}" alt="${board.label}"></div>
-          <div class="tier-icon-label" style="color:#8b8b96;background:#22222a">No Tier</div>
+          <div class="tier-icon-circle" style="border-color:#2e2e38"><img src="${board.icon}" alt="${board.label}"></div>
+          <div class="tier-icon-label" style="color:#8b8b96;background:#2e2e38">No Tier</div>
           <div class="tier-elo-tip"><div class="tip-tier">No Tier</div></div>
         </div>`;
     }
