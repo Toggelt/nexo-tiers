@@ -91,7 +91,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .mini-tier-circle img { width: 24px; height: 24px; }
 .mini-tier-label { font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #1a1a22; border: 1px solid #454b54; color: #8b8b96; letter-spacing: 0.3px; text-align: center; width: 40px; }
 .global-mini-tip { position: fixed; background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 8px 16px; font-size: 18px; font-weight: 700; display: none; z-index: 1000; pointer-events: none; transform: translate(-50%, -100%); text-align: center; line-height: 1.4; white-space: normal; }
-.global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; }
+.global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
 .global-mini-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
 .global-mini-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 
@@ -150,7 +150,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-icon-circle img { width: 32px; height: 32px; }
 .tier-icon-label { font-size: 12px; font-weight: 800; letter-spacing: 0.4px; }
 .tier-elo-tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 5px 12px; font-size: 18px; font-weight: 700; white-space: nowrap; display: none; z-index: 10; box-shadow: 0 6px 14px rgba(0,0,0,0.5); pointer-events: none; text-align: center; line-height: 1.4; }
-.tier-elo-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; }
+.tier-elo-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
 .tier-elo-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
 .tier-elo-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 .tier-icon-wrap:hover .tier-elo-tip { display: block; }
@@ -989,16 +989,13 @@ function isPeakBetter(cT, cP, pT, pP) {
   return TIER_ORDER[tierKey(pT, pP)] < TIER_ORDER[tierKey(cT, cP)];
 }
 
-// Peak (if better) on top, then current tier, then points. Tier text is white.
+// Tier text is always white. If the peak tier differs (is better), it replaces the current tier line.
 function generateTierTooltipHTML(mode, cT, cP, pT, pP, state, pts) {
   const ck = tierKey(cT, cP);
   const prefix = state === 'retired' ? 'Retired ' : state === 'inactive' ? 'Inactive ' : '';
-  let html = "";
-  if (pT != null && isPeakBetter(cT, cP, pT, pP)) {
-    html += `<div class="tip-peak">${peakTierLabel(pT, pP)}</div>`;
-  }
-  html += `<div class="tip-tier" style="color:${TIER_COLORS[ck] || '#fff'}">${prefix}${fullTierLabel(cT, cP)}</div>`;
-  return html + `<div class="tip-points">${pts != null ? pts : (TIER_POINTS[ck] || 0)} points</div>`;
+  const showPeak = pT != null && isPeakBetter(cT, cP, pT, pP);
+  const tierText = showPeak ? peakTierLabel(pT, pP) : `${prefix}${fullTierLabel(cT, cP)}`;
+  return `<div class="tip-tier">${tierText}</div>` + `<div class="tip-points">${pts != null ? pts : (TIER_POINTS[ck] || 0)} points</div>`;
 }
 
 // HT = plus, LT = no plus
