@@ -98,9 +98,9 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-columns { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: flex-start; margin: 8px 20px; overflow-x: auto; padding-bottom: 8px; }
 .tier-column:first-child { margin-left: auto; }
 .tier-column:last-child { margin-right: auto; }
-.tier-column { flex: 0 0 230px; min-width: 230px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
+.tier-column { flex: 0 0 345px; min-width: 345px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
 .tier-column-1 { background: #2a2a1a; } .tier-column-2 { background: #2a2a30; } .tier-column-3 { background: #2a221a; } .tier-column-4 { background: #22222a; } .tier-column-5 { background: #22222a; }
-.tier-header { text-align: center; font-family: 'Minecraft', monospace; font-size: 18px; font-weight: normal; padding: 10px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+.tier-header { text-align: center; font-family: 'Minecraft', monospace; font-size: 27px; font-weight: normal; padding: 12px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
 .tier-players { padding: 6px 4px; display: flex; flex-direction: column; gap: 3px; }
 .tier-player { display: flex; align-items: center; gap: 8px; background: #16161e; border-radius: 6px; padding: 4px 8px; transition: background 0.2s; cursor: pointer; border: 1px solid transparent; }
 .tier-player:hover { background: #2a2a36; }
@@ -229,15 +229,18 @@ img[src*="Respawn_Anchor"] { image-rendering: auto !important; }
   .player-title-text { font-size: 13px; }
   .player-points { font-size: 13px; }
   .elo-wrap { flex: 1 1 100%; width: 100%; justify-content: center; padding: 6px 0 12px; }
-  .mini-tiers-row { gap: 7px; }
+  .elo-wrap { overflow: hidden; }
+  .mini-tiers-row { gap: 7px; max-width: 100%; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; padding: 2px 12px 4px; margin: 0 auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; touch-action: pan-x pan-y; }
+  .mini-tiers-row::-webkit-scrollbar { display: none; }
+  .mini-tier-wrap { flex: 0 0 auto; }
 
   .tier-columns { margin: 8px 12px; }
-  .tier-column { flex: 0 0 min(230px, 72vw); min-width: min(230px, 72vw); }
+  .tier-column { flex: 0 0 min(345px, 92vw); min-width: min(345px, 92vw); }
   .tier-player { gap: 8px; padding: 5px 8px; }
   .tier-player .tier-name { font-size: 15px; }
   .tier-column:first-child { margin-left: 0; }
   .tier-column:last-child { margin-right: 0; }
-  .tier-header { font-size: 16px; }
+  .tier-header { font-size: 24px; }
 
   .modal-overlay { padding: 12px; }
   .modal-box { padding: 40px 16px 20px; max-width: 100%; }
@@ -685,7 +688,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .container.is-home-view { width: 1100px; max-width: 100%; }
   .top-fixed-bar { padding: 0 14px; }
   .tier-columns { margin: 8px 6px; gap: 6px; }
-  .tier-column { flex: 1 1 0; min-width: 190px; }
+  .tier-column { flex: 1 1 0; min-width: 285px; }
   .home-section { margin: 0 28px; }
 
   .player { min-height: 80px; height: 80px; margin: 8px 28px; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
@@ -729,6 +732,8 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .inactive-tag { display: inline-flex; align-items: center; height: 20px; padding: 0 10px; margin-left: 10px; border-radius: 999px; background: #1e2634; color: #7d7d7d; font-family: 'Geist', Arial, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.3px; vertical-align: middle; }
 .kit-sub b, .kit-sub strong { font-family: 'Geist', Arial, sans-serif !important; font-weight: 800; }
 .inactive-pill { position: absolute; top: 14px; right: 54px; height: 32px; padding: 0 14px; display: flex; align-items: center; border-radius: 999px; background: #3a3a44; color: #a4a4b0; font-size: 13px; font-weight: 700; z-index: 2; }
+body.drag-pan, body.drag-pan * { cursor: grabbing !important; user-select: none !important; }
+@media (hover: hover) and (pointer: fine) { .tier-columns { cursor: grab; } .tier-player { cursor: pointer; } }
 /* Tooltip pop-in like the reference (fade + zoom 95% + slide up 8px, 150ms), with arrow */
 @keyframes tipIn { from { opacity: 0; scale: 0.95; translate: 0 8px; } to { opacity: 1; scale: 1; translate: 0 0; } }
 .global-mini-tip, .tier-elo-tip { transform-origin: 50% 100%; animation: tipIn 0.15s ease; }
@@ -3049,6 +3054,30 @@ async function initAuth() {
   accEl('accModal').addEventListener('click', e => { if (!e.target.closest('#kitPop') && !e.target.closest('.tt-i')) closeKitPop(); });
 }
 initAuth();
+
+// Click-and-drag panning (mouse): dragging on empty space scrolls the tier columns left/right and the page up/down
+(function () {
+  const SKIP = '.tier-player, .player, button, a, input, textarea, select, label, .modal-overlay, .modal-box, .info-tooltip, .search-panel, .global-mini-tip, .kit-pane';
+  let st = null;
+  document.addEventListener('mousedown', e => {
+    if (e.button !== 0 || e.target.closest(SKIP)) return;
+    const cols = document.querySelector('.tier-columns');
+    st = { x: e.clientX, y: e.clientY, left: cols ? cols.scrollLeft : 0, top: window.scrollY, cols, moved: false };
+  });
+  document.addEventListener('mousemove', e => {
+    if (!st) return;
+    const dx = e.clientX - st.x, dy = e.clientY - st.y;
+    if (!st.moved && Math.abs(dx) + Math.abs(dy) < 5) return;
+    st.moved = true;
+    document.body.classList.add('drag-pan');
+    if (st.cols) st.cols.scrollLeft = st.left - dx;
+    window.scrollTo(window.scrollX, st.top - dy);
+  });
+  const end = () => { if (st) { st = null; document.body.classList.remove('drag-pan'); } };
+  document.addEventListener('mouseup', end);
+  window.addEventListener('blur', end);
+  document.addEventListener('mouseleave', end);
+})();
 </script>
 <div class="acc-overlay" id="accModal"><div class="acc-box"><button class="acc-x" id="accX" type="button" aria-label="Close">&times;</button><div id="accBody"></div></div></div>
 <div class="acc-toast-wrap" id="accToasts"></div>
