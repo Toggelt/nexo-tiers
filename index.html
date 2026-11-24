@@ -90,9 +90,10 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .mini-tier-circle { width: 36px; height: 36px; border-radius: 50%; background: #131318; display: flex; align-items: center; justify-content: center; border: 2px solid #454b54; overflow: hidden; }
 .mini-tier-circle img { width: 24px; height: 24px; }
 .mini-tier-label { font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #1a1a22; border: 1px solid #454b54; color: #8b8b96; letter-spacing: 0.3px; text-align: center; width: 40px; }
-.global-mini-tip { position: fixed; background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 8px 16px; font-size: 18px; font-weight: 700; display: none; z-index: 1000; pointer-events: none; transform: translate(-50%, -100%); text-align: center; line-height: 1.4; white-space: normal; }
+.global-mini-tip { position: fixed; background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 8px 16px; font-size: 18px; font-weight: 700; display: none; z-index: 1000; pointer-events: none; transform: translate(-50%, -100%); text-align: center; line-height: 1.4; white-space: nowrap; width: max-content; }
 .global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
 .global-mini-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
+.global-mini-tip .tip-word, .tier-elo-tip .tip-word { color: #fff; }
 .global-mini-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 
 .tier-columns { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: flex-start; margin: 8px 20px; overflow-x: auto; padding-bottom: 8px; }
@@ -747,7 +748,7 @@ body.drag-pan, body.drag-pan * { cursor: grabbing !important; user-select: none 
 /* Tooltip pop-in like the reference (fade + zoom 95% + slide up 8px, 150ms), with arrow */
 @keyframes tipIn { from { opacity: 0; scale: 0.95; translate: 0 8px; } to { opacity: 1; scale: 1; translate: 0 0; } }
 .global-mini-tip, .tier-elo-tip { transform-origin: 50% 100%; animation: tipIn 0.15s ease; }
-.global-mini-tip::after, .tier-elo-tip::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 10px; height: 10px; background: #0e0e12; border: 1px solid #2c2c34; border-top: none; border-left: none; transform: translateX(-50%) rotate(45deg); border-radius: 0 0 3px 0; }
+.global-mini-tip::after, .tier-elo-tip::after { content: ''; position: absolute; left: calc(50% + var(--arrow-dx, 0px)); bottom: -6px; width: 10px; height: 10px; background: #0e0e12; border: 1px solid #2c2c34; border-top: none; border-left: none; transform: translateX(-50%) rotate(45deg); border-radius: 0 0 3px 0; }
 @media (prefers-reduced-motion: reduce) { .global-mini-tip, .tier-elo-tip { animation: none; } }
 
 /* Kit sprites: icon box snapped to whole multiples of 16px so pixels stay even; glint mask is a hi-res copy */
@@ -989,13 +990,19 @@ function isPeakBetter(cT, cP, pT, pP) {
   return TIER_ORDER[tierKey(pT, pP)] < TIER_ORDER[tierKey(cT, cP)];
 }
 
-// Tier text is always white. If the peak tier differs (is better), it replaces the current tier line.
+// Peak (if better) goes above the current tier in slightly smaller text.
+// The words "Peak", "Inactive" and "Retired" are always white; tiers keep their own color,
+// except retired tiers (#9fd2fb) and inactive tiers (white, same as the word "Inactive").
 function generateTierTooltipHTML(mode, cT, cP, pT, pP, state, pts) {
   const ck = tierKey(cT, cP);
-  const prefix = state === 'retired' ? 'Retired ' : state === 'inactive' ? 'Inactive ' : '';
-  const showPeak = pT != null && isPeakBetter(cT, cP, pT, pP);
-  const tierText = showPeak ? peakTierLabel(pT, pP) : `${prefix}${fullTierLabel(cT, cP)}`;
-  return `<div class="tip-tier">${tierText}</div>` + `<div class="tip-points">${pts != null ? pts : (TIER_POINTS[ck] || 0)} points</div>`;
+  let html = "";
+  if (pT != null && isPeakBetter(cT, cP, pT, pP)) {
+    html += `<div class="tip-peak"><span class="tip-word">Peak</span> <span style="color:${TIER_COLORS[tierKey(pT, pP)] || '#fff'}">${shortTierLabel(pT, pP)}</span></div>`;
+  }
+  const word = state === 'retired' ? 'Retired' : state === 'inactive' ? 'Inactive' : '';
+  const tierColor = state === 'retired' ? '#9fd2fb' : state === 'inactive' ? '#fff' : (TIER_COLORS[ck] || '#fff');
+  html += `<div class="tip-tier">${word ? `<span class="tip-word">${word}</span> ` : ''}<span style="color:${tierColor}">${fullTierLabel(cT, cP)}</span></div>`;
+  return html + `<div class="tip-points">${pts != null ? pts : (TIER_POINTS[ck] || 0)} points</div>`;
 }
 
 // HT = plus, LT = no plus
@@ -1162,7 +1169,10 @@ function showMiniTip(wrap) {
     : generateTierTooltipHTML(wrap.dataset.mode, cT, wrap.dataset.currentPlus === '1', wrap.dataset.peakTier ? parseInt(wrap.dataset.peakTier) : null, wrap.dataset.peakPlus === '1', wrap.dataset.state, wrap.dataset.pts !== undefined ? parseInt(wrap.dataset.pts) : null);
   globalMiniTip.style.display = "block";
   const rect = wrap.getBoundingClientRect();
-  globalMiniTip.style.left = (rect.left + rect.width / 2) + "px";
+  const cx = rect.left + rect.width / 2, half = globalMiniTip.offsetWidth / 2, edge = 8;
+  const left = Math.min(Math.max(cx, edge + half), window.innerWidth - edge - half);
+  globalMiniTip.style.left = left + "px";
+  globalMiniTip.style.setProperty("--arrow-dx", (cx - left) + "px");
   globalMiniTip.style.top = (rect.top - 8) + "px";
 }
 const hideMiniTip = () => { globalMiniTip.style.display = "none"; lastTipWrap = null; };
