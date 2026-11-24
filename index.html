@@ -1017,9 +1017,9 @@ function computePlayerPoints(player, countRetired = false) {
 }
 
 // Points needed per title (fixed, not scaled by the number of gamemodes)
-const TITLE_BASE = { Legend: 400, Grandmaster: 250, Master: 100, Expert: 50, Cadet: 20 };
+const TITLE_BASE = { Legend: 400, Grandmaster: 300, Master: 250, Champion: 100, Expert: 50, Cadet: 20 };
 const TITLE_MIN = { ...TITLE_BASE };
-const TITLE_ORDER = ['Legend', 'Grandmaster', 'Master', 'Expert', 'Cadet', 'Novice'];
+const TITLE_ORDER = ['Legend', 'Grandmaster', 'Master', 'Champion', 'Expert', 'Cadet', 'Novice'];
 const titleRank = t => t ? TITLE_ORDER.indexOf(t) : 99;   // lower = higher title
 
 function getPlayerTitle(points) {
