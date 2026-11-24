@@ -98,7 +98,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-columns { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: flex-start; margin: 8px 20px; overflow-x: auto; padding-bottom: 8px; }
 .tier-column:first-child { margin-left: auto; }
 .tier-column:last-child { margin-right: auto; }
-.tier-column { flex: 0 0 320px; min-width: 320px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
+.tier-column { flex: 0 0 var(--tier-col-w, 280px); min-width: var(--tier-col-w, 280px); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
 .tier-column-1 { background: #2a2a1a; } .tier-column-2 { background: #2a2a30; } .tier-column-3 { background: #2a221a; } .tier-column-4 { background: #22222a; } .tier-column-5 { background: #22222a; }
 .tier-header { text-align: center; font-family: 'Minecraft', monospace; font-size: 27px; font-weight: normal; padding: 12px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
 .tier-players { padding: 6px 4px; display: flex; flex-direction: column; gap: 3px; }
@@ -235,7 +235,7 @@ img[src*="Respawn_Anchor"] { image-rendering: auto !important; }
   .mini-tier-wrap { flex: 0 0 auto; }
 
   .tier-columns { margin: 8px 12px; }
-  .tier-column { flex: 0 0 min(320px, 92vw); min-width: min(320px, 92vw); }
+  .tier-column { flex: 0 0 min(var(--tier-col-w, 280px), 92vw); min-width: min(var(--tier-col-w, 280px), 92vw); }
   .tier-player { gap: 8px; padding: 5px 8px; }
   .tier-player .tier-name { font-size: 15px; }
   .tier-column:first-child { margin-left: 0; }
@@ -688,7 +688,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .container.is-home-view { width: 1100px; max-width: 100%; }
   .top-fixed-bar { padding: 0 14px; }
   .tier-columns { margin: 8px 6px; gap: 6px; }
-  .tier-column { flex: 0 0 320px; min-width: 320px; }
+  .tier-column { flex: 0 0 var(--tier-col-w, 280px); min-width: var(--tier-col-w, 280px); }
   .home-section { margin: 0 28px; }
 
   .player { min-height: 80px; height: 80px; margin: 8px 28px; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
@@ -1733,6 +1733,24 @@ function render() {
     columnsDiv.scrollLeft = prevScroll;
     toggleBtn.style.display = "none";
   }
+}
+
+// ---------- Tier column width ----------
+// Minecraft names are 3-16 chars of [A-Za-z0-9_]. Size the columns to fit 16 of the widest glyph in the
+// name font, plus the row's avatar, badge, gaps and padding. Re-measured once the font has loaded.
+function updateTierColWidth() {
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.font = "15px 'Minecraft', monospace";
+  let widest = 0;
+  for (const ch of 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_') widest = Math.max(widest, ctx.measureText(ch).width);
+  // column padding 8 + row border 2 + row padding 16 + avatar 28 + gaps 16 + badge 35 + 2px safety
+  const w = Math.ceil(widest * 16) + 107;
+  document.documentElement.style.setProperty('--tier-col-w', w + 'px');
+}
+updateTierColWidth();
+if (document.fonts) {
+  document.fonts.load("15px 'Minecraft'").then(updateTierColWidth).catch(() => {});
+  document.fonts.ready.then(updateTierColWidth);
 }
 
 // ---------- Info tooltip ----------
