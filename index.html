@@ -98,7 +98,7 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-columns { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: flex-start; margin: 8px 20px; overflow-x: auto; padding-bottom: 8px; }
 .tier-column:first-child { margin-left: auto; }
 .tier-column:last-child { margin-right: auto; }
-.tier-column { flex: 0 0 345px; min-width: 345px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
+.tier-column { flex: 0 0 320px; min-width: 320px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; background: #14141a; }
 .tier-column-1 { background: #2a2a1a; } .tier-column-2 { background: #2a2a30; } .tier-column-3 { background: #2a221a; } .tier-column-4 { background: #22222a; } .tier-column-5 { background: #22222a; }
 .tier-header { text-align: center; font-family: 'Minecraft', monospace; font-size: 27px; font-weight: normal; padding: 12px 4px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
 .tier-players { padding: 6px 4px; display: flex; flex-direction: column; gap: 3px; }
@@ -235,7 +235,7 @@ img[src*="Respawn_Anchor"] { image-rendering: auto !important; }
   .mini-tier-wrap { flex: 0 0 auto; }
 
   .tier-columns { margin: 8px 12px; }
-  .tier-column { flex: 0 0 min(345px, 92vw); min-width: min(345px, 92vw); }
+  .tier-column { flex: 0 0 min(320px, 92vw); min-width: min(320px, 92vw); }
   .tier-player { gap: 8px; padding: 5px 8px; }
   .tier-player .tier-name { font-size: 15px; }
   .tier-column:first-child { margin-left: 0; }
@@ -688,7 +688,7 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
   .container.is-home-view { width: 1100px; max-width: 100%; }
   .top-fixed-bar { padding: 0 14px; }
   .tier-columns { margin: 8px 6px; gap: 6px; }
-  .tier-column { flex: 1 1 0; min-width: 285px; }
+  .tier-column { flex: 0 0 320px; min-width: 320px; }
   .home-section { margin: 0 28px; }
 
   .player { min-height: 80px; height: 80px; margin: 8px 28px; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
@@ -732,6 +732,16 @@ body { background: radial-gradient(ellipse 110% 560px at 50% 0, #2a1418 0%, rgba
 .inactive-tag { display: inline-flex; align-items: center; height: 20px; padding: 0 10px; margin-left: 10px; border-radius: 999px; background: #1e2634; color: #7d7d7d; font-family: 'Geist', Arial, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.3px; vertical-align: middle; }
 .kit-sub b, .kit-sub strong { font-family: 'Geist', Arial, sans-serif !important; font-weight: 800; }
 .inactive-pill { position: absolute; top: 14px; right: 54px; height: 32px; padding: 0 14px; display: flex; align-items: center; border-radius: 999px; background: #3a3a44; color: #a4a4b0; font-size: 13px; font-weight: 700; z-index: 2; }
+
+.retired-toggle { display: inline-flex; align-items: center; gap: 9px; margin-right: auto; cursor: pointer; user-select: none; color: #c9c9d1; font-size: 13px; font-weight: 700; }
+.retired-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.retired-toggle .rt-track { width: 36px; height: 20px; border-radius: 999px; background: #2c2c34; position: relative; transition: background 0.18s; flex: 0 0 auto; }
+.retired-toggle .rt-thumb { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #8b8b96; transition: transform 0.18s, background 0.18s; }
+.retired-toggle input:checked + .rt-track { background: #4b5a78; }
+.retired-toggle input:checked + .rt-track .rt-thumb { transform: translateX(16px); background: #fff; }
+.retired-toggle input:focus-visible + .rt-track { outline: 2px solid #8aa0d0; outline-offset: 2px; }
+.retired-word { color: #fff; font-family: 'Minecraft', monospace; font-weight: normal; font-size: 16px; margin-right: 8px; white-space: nowrap; }
+@media (max-width: 700px) { .retired-word { font-size: 13px; margin-right: 6px; } }
 body.drag-pan, body.drag-pan * { cursor: grabbing !important; user-select: none !important; }
 @media (hover: hover) and (pointer: fine) { .tier-columns { cursor: grab; } .tier-player { cursor: pointer; } }
 /* Tooltip pop-in like the reference (fade + zoom 95% + slide up 8px, 150ms), with arrow */
@@ -842,6 +852,7 @@ body.drag-pan, body.drag-pan * { cursor: grabbing !important; user-select: none 
 <div class="container">
   <div class="tab-bar" id="tabBar"></div>
   <div class="top-bar" id="topBar">
+    <label class="retired-toggle" id="retiredToggle" style="display:none"><input type="checkbox" id="retiredToggleInput"><span class="rt-track"><span class="rt-thumb"></span></span><span class="rt-text">Count retired tiers</span></label>
     <button class="info-btn ruleset-btn" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><line x1="9" y1="12" x2="16" y2="12"/><line x1="9" y1="16" x2="16" y2="16"/></svg>Tierlist Ruleset</button>
     <div class="info-btn-wrapper">
       <button class="info-btn" id="infoBtn"><svg class="info-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.8" r="0.7" fill="currentColor" stroke="none"/></svg>Info</button>
@@ -963,7 +974,7 @@ const LIVE_BOARDS = SUB_BOARDS.filter(k => !COMING_SOON[k]);
 const NUM_MODES = LIVE_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
-const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 200, "3": 125, "4+": 75, "4": 50, "5+": 25, "5": 15 };
+const TIER_POINTS = { "1+": 60, "1": 45, "2+": 30, "2": 20, "3+": 10, "3": 6, "4+": 4, "4": 3, "5+": 2, "5": 1 };
 const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#C67B42", "4+": "#81749a", "4": "#81749a", "5+": "#655B79", "5": "#655B79" };
 const TIER_LIGHT_COLORS = { 1: "#ffd54f", 2: "#e0e0e0", 3: "#e0a86c", 4: "#d0d8ff", 5: "#9fb0f0" };
 const TIER_ORDER = { "1+": 0, "1": 1, "2+": 2, "2": 3, "3+": 4, "3": 5, "4+": 6, "4": 7, "5+": 8, "5": 9, "none": 10 };
@@ -979,14 +990,15 @@ function isPeakBetter(cT, cP, pT, pP) {
 }
 
 // Peak (if better) on top, then current tier, then points. Tier text is white.
-function generateTierTooltipHTML(mode, cT, cP, pT, pP) {
+function generateTierTooltipHTML(mode, cT, cP, pT, pP, state, pts) {
   const ck = tierKey(cT, cP);
+  const prefix = state === 'retired' ? 'Retired ' : state === 'inactive' ? 'Inactive ' : '';
   let html = "";
   if (pT != null && isPeakBetter(cT, cP, pT, pP)) {
     html += `<div class="tip-peak">${peakTierLabel(pT, pP)}</div>`;
   }
-  html += `<div class="tip-tier" style="color:${TIER_COLORS[ck] || '#fff'}">${fullTierLabel(cT, cP)}</div>`;
-  return html + `<div class="tip-points">(${TIER_POINTS[ck] || 0} points)</div>`;
+  html += `<div class="tip-tier" style="color:${TIER_COLORS[ck] || '#fff'}">${prefix}${fullTierLabel(cT, cP)}</div>`;
+  return html + `<div class="tip-points">${pts != null ? pts : (TIER_POINTS[ck] || 0)} points</div>`;
 }
 
 // HT = plus, LT = no plus
@@ -994,20 +1006,21 @@ function recomputePlus() {
   allPlayers.forEach(p => SUB_BOARDS.forEach(m => { p[`_computed_plus_${m}`] = p[`${m}_tier`] != null && p[`${m}_plus`]; }));
 }
 
-function computePlayerPoints(player) {
+function computePlayerPoints(player, countRetired = false) {
   let total = 0;
   LIVE_BOARDS.forEach(key => {
+    if (player[`${key}_retired`] && !countRetired) return;   // retired tiers give no points unless the Overall toggle is on
     const tier = player[`${key}_tier`];
     if (tier != null && tier >= 1 && tier <= 5) total += TIER_POINTS[tierKey(tier, player[`_computed_plus_${key}`])] || 0;
   });
   return total;
 }
 
-// Point requirement = base x number of gamemodes, with a trailing 50 dropped (1950 -> 1900)
-const cleanReq = v => (v % 100 === 50 && v > 50) ? v - 50 : v;
-const TITLE_BASE = { Legend: 750, Grandmaster: 650, Master: 500, Champion: 300, Expert: 150, Cadet: 50 };
-const TITLE_MIN = {};
-Object.keys(TITLE_BASE).forEach(k => { const v = TITLE_BASE[k] * NUM_MODES; TITLE_MIN[k] = k === 'Cadet' ? v : cleanReq(v); }); // Cadet keeps its exact number
+// Points needed per title (fixed, not scaled by the number of gamemodes)
+const TITLE_BASE = { Legend: 400, Grandmaster: 250, Master: 100, Expert: 50, Cadet: 20 };
+const TITLE_MIN = { ...TITLE_BASE };
+const TITLE_ORDER = ['Legend', 'Grandmaster', 'Master', 'Expert', 'Cadet', 'Novice'];
+const titleRank = t => t ? TITLE_ORDER.indexOf(t) : 99;   // lower = higher title
 
 function getPlayerTitle(points) {
   if (!points) return null;
@@ -1103,10 +1116,12 @@ function tierEntries(player) {
   const entries = LIVE_BOARDS.map(key => ({
     tier: player[`${key}_tier`], plus: player[`_computed_plus_${key}`],
     peakTier: player[`${key}_peak_tier`] ?? null, peakPlus: player[`${key}_peak_plus`] ?? false,
+    retired: !!player[`${key}_retired`] && player[`${key}_tier`] != null,
     board: LEADERBOARDS[key], mode: key
   }));
-  const k = e => e.tier != null ? tierKey(e.tier, e.plus) : "none";
-  return entries.sort((a, b) => TIER_ORDER[k(a)] - TIER_ORDER[k(b)]);
+  // retired tiers go last (higher retired tier first)
+  const k = e => (e.retired ? 100 : 0) + TIER_ORDER[e.tier != null ? tierKey(e.tier, e.plus) : "none"];
+  return entries.sort((a, b) => k(a) - k(b));
 }
 
 const INACTIVE_GREY = '#7d7d7d';
@@ -1115,13 +1130,15 @@ const NO_TIER_FILL = '#1e2634';   // outline + pill colour for inactive players 
 const PILL_BY_COLOR = { '#e8ba3a': '#6d5d2c', '#d5b355': '#584c25', '#c4d3e7': '#5e6979', '#a0a7b2': '#4a505a', '#f89f5a': '#6b4b36', '#c67b42': '#593722', '#81749a': '#303144', '#655b79': '#2c2e40', '#7d7d7d': '#1e2634' };
 const pillTint = hex => PILL_BY_COLOR[hex.toLowerCase()] || hex;
 const TIER_COL_BG = { 1: '#2a2a1a', 2: '#2a2a30', 3: '#2a221a', 4: '#22222a', 5: '#22222a' };
-function renderMiniTierIcons(player) {
+function renderMiniTierIcons(player, countRetired) {
   let html = "";
-  tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
+  tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode, retired }) => {
     if (tier != null && tier >= 1 && tier <= 5) {
-      const color = TIER_COLORS[tierKey(tier, plus)], fill = player.inactive ? NO_TIER_FILL : pillTint(color);
+      const color = TIER_COLORS[tierKey(tier, plus)], fill = (player.inactive || retired) ? NO_TIER_FILL : pillTint(color);
+      const state = retired ? 'retired' : player.inactive ? 'inactive' : '';
+      const pts = retired && !countRetired ? 0 : (TIER_POINTS[tierKey(tier, plus)] || 0);
       html += `
-        <div class="mini-tier-wrap" data-mode="${mode}" data-current-tier="${tier}" data-current-plus="${plus ? '1' : '0'}" data-peak-tier="${peakTier ?? ''}" data-peak-plus="${peakPlus ? '1' : '0'}">
+        <div class="mini-tier-wrap" data-state="${state}" data-pts="${pts}" data-mode="${mode}" data-current-tier="${tier}" data-current-plus="${plus ? '1' : '0'}" data-peak-tier="${peakTier ?? ''}" data-peak-plus="${peakPlus ? '1' : '0'}">
           <div class="mini-tier-circle" style="border-color:${fill}"><img src="${board.icon}" alt="${board.label}"></div>
           <div class="mini-tier-label" style="color:${color}; background:${fill};">${shortTierLabel(tier, plus)}</div>
         </div>`;
@@ -1145,7 +1162,7 @@ function showMiniTip(wrap) {
   const cT = parseInt(wrap.dataset.currentTier);
   globalMiniTip.innerHTML = isNaN(cT)
     ? `<div class="tip-tier">No Tier</div>`
-    : generateTierTooltipHTML(wrap.dataset.mode, cT, wrap.dataset.currentPlus === '1', wrap.dataset.peakTier ? parseInt(wrap.dataset.peakTier) : null, wrap.dataset.peakPlus === '1');
+    : generateTierTooltipHTML(wrap.dataset.mode, cT, wrap.dataset.currentPlus === '1', wrap.dataset.peakTier ? parseInt(wrap.dataset.peakTier) : null, wrap.dataset.peakPlus === '1', wrap.dataset.state, wrap.dataset.pts !== undefined ? parseInt(wrap.dataset.pts) : null);
   globalMiniTip.style.display = "block";
   const rect = wrap.getBoundingClientRect();
   globalMiniTip.style.left = (rect.left + rect.width / 2) + "px";
@@ -1506,10 +1523,17 @@ function vanillaKitHtml(withHeader = true, withRulebook = true) {
 }
 document.addEventListener('click', e => { const b = e.target.closest('.van-rulebook'); if (b) { closeKitPop?.(); infoTooltip.classList.remove('active'); openRuleset('Vanilla'); } }, true);
 
-function getOverallSorted() {
+function getOverallSorted(countRetired = false) {
   const sorted = [...allPlayers]
     .filter(p => LIVE_BOARDS.some(key => p[`${key}_tier`] != null))
-    .map(p => { const points = computePlayerPoints(p); return { ...p, __points: points, __title: getPlayerTitle(points, p) }; })
+    .map(p => {
+      const points = computePlayerPoints(p, countRetired);
+      const baseTitle = getPlayerTitle(computePlayerPoints(p, false));
+      const fullTitle = countRetired ? getPlayerTitle(points) : baseTitle;
+      // with retired tiers counted: if that gives a higher title, show it as "Retired <title>"
+      const retiredTitle = countRetired && titleRank(fullTitle) < titleRank(baseTitle);
+      return { ...p, __points: points, __title: retiredTitle ? fullTitle : baseTitle, __retiredTitle: retiredTitle, __countRetired: countRetired };
+    })
     .sort((a, b) => b.__points - a.__points);
   return assignRanks(sorted);
 }
@@ -1526,11 +1550,11 @@ function buildOverallRow(p) {
     <div class="info">
       <div class="player-name">${p.name}${p.inactive ? '<span class="inactive-tag">Inactive</span>' : ''}</div>
       <div class="player-title-row">
-        ${p.__title ? `<div class="player-title-badge"><span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]};${titleFontCSS(p.__title)}">${p.__title}</span></div>` : ''}
+        ${p.__title ? `<div class="player-title-badge">${p.__retiredTitle ? '<span class="retired-word">Retired</span>' : ''}<span class="player-title-text" style="background-image:${TITLE_COLORS[p.__title]};${titleFontCSS(p.__title)}">${p.__title}</span></div>` : ''}
         <span class="player-points">(${p.__points} points)</span>
       </div>
     </div>
-    <div class="elo-wrap"><div class="mini-tiers-row">${renderMiniTierIcons(p)}</div></div>`;
+    <div class="elo-wrap"><div class="mini-tiers-row">${renderMiniTierIcons(p, p.__countRetired)}</div></div>`;
   div.addEventListener("click", (e) => {
     const wrap = e.target.closest(".mini-tier-wrap");
     if (wrap && isTouch()) { showMiniTip(wrap); return; }
@@ -1630,12 +1654,15 @@ function renderInfoSections() {
   } else titlesCard.classList.add('in-view');
 }
 
+let countRetired = false;   // Overall tab toggle (off by default); profiles never count retired tiers
+document.addEventListener('change', e => { if (e.target.id === 'retiredToggleInput') { countRetired = e.target.checked; render(); } });
 function openFromList(p) { currentProfileName = p.name; navigateTo(currentBoard, p.name); openProfile(p); }
 
 function render() {
   applyView();
   if (currentBoard === 'Home') { renderHome(); return; }
   const isOverall = currentBoard === "Overall";
+  document.getElementById('retiredToggle').style.display = isOverall ? '' : 'none';
   const prevScroll = list.querySelector('.tier-columns')?.scrollLeft || 0;
   list.innerHTML = "";
   overallHeaders.style.display = isOverall ? 'flex' : 'none';
@@ -1643,7 +1670,7 @@ function render() {
   renderInfoTooltip();
 
   if (isOverall) {
-    const sorted = getOverallSorted();
+    const sorted = getOverallSorted(countRetired);
 
     if (sorted.length === 0) {
       list.innerHTML = `<div style="text-align:center;padding:30px;color:#8b8b96;">No players on this leaderboard yet</div>`;
@@ -1670,7 +1697,7 @@ function render() {
       return;
     }
     const tierGroups = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-    allPlayers.forEach(p => { const t = p[`${mode}_tier`]; if (!p.inactive && t >= 1 && t <= 5) tierGroups[t].push(p); });
+    allPlayers.forEach(p => { const t = p[`${mode}_tier`]; if (!p.inactive && !p[`${mode}_retired`] && t >= 1 && t <= 5) tierGroups[t].push(p); });
     for (let t = 1; t <= 5; t++) {
       tierGroups[t].sort((a, b) => (b[`_computed_plus_${mode}`] - a[`_computed_plus_${mode}`]) || a.name.localeCompare(b.name));
     }
@@ -1826,14 +1853,15 @@ document.addEventListener('DOMContentLoaded', () => hydrateSkins());
 // ---------- Profile modal ----------
 function renderProfileTiers(player) {
   let html = "";
-  tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode }) => {
+  tierEntries(player).forEach(({ tier, plus, board, peakTier, peakPlus, mode, retired }) => {
     if (tier != null && tier >= 1 && tier <= 5) {
-      const color = TIER_COLORS[tierKey(tier, plus)], fill = player.inactive ? NO_TIER_FILL : pillTint(color);
+      const color = TIER_COLORS[tierKey(tier, plus)], fill = (player.inactive || retired) ? NO_TIER_FILL : pillTint(color);
+      const state = retired ? 'retired' : player.inactive ? 'inactive' : '';
       html += `
         <div class="tier-icon-wrap">
           <div class="tier-icon-circle" style="border-color:${fill}"><img src="${board.icon}" alt="${board.label}"></div>
           <div class="tier-icon-label" style="color:${color};background:${fill}">${shortTierLabel(tier, plus)}</div>
-          <div class="tier-elo-tip">${generateTierTooltipHTML(mode, tier, plus, peakTier, peakPlus)}</div>
+          <div class="tier-elo-tip">${generateTierTooltipHTML(mode, tier, plus, peakTier, peakPlus, state, retired ? 0 : null)}</div>
         </div>`;
     } else {
       html += `
@@ -1945,15 +1973,16 @@ infoTooltip.addEventListener("click", (e) => {
 
 // ---------- Data ----------
 function parseTier(t) {
-  const m = /^([HL])T([1-5])$/i.exec((t || '').trim());
-  return m ? { tier: +m[2], plus: m[1].toUpperCase() === 'H' } : { tier: null, plus: false };
+  // an "R" in front (e.g. RHT3) means the player retired in that gamemode
+  const m = /^(R)?\s*([HL])T([1-5])$/i.exec((t || '').trim());
+  return m ? { tier: +m[3], plus: m[2].toUpperCase() === 'H', retired: !!m[1] } : { tier: null, plus: false, retired: false };
 }
 function mapPlayer(row) {
   const o = { id: row.id, name: row.player, regulator: !!row.tierlist_regulator, inactive: !!row.inactive, tester: {} };
   SUB_BOARDS.forEach(key => {
     const col = LEADERBOARDS[key].col;
     const cur = parseTier(row[`${col}_tier`]), peak = parseTier(row[`${col}_peaktier`]);
-    o[`${key}_tier`] = cur.tier; o[`${key}_plus`] = cur.plus;
+    o[`${key}_tier`] = cur.tier; o[`${key}_plus`] = cur.plus; o[`${key}_retired`] = cur.retired;
     o[`${key}_peak_tier`] = peak.tier; o[`${key}_peak_plus`] = peak.plus;
     o.tester[key] = !!row[`${col}_tester`];
   });
@@ -2080,7 +2109,7 @@ function accTestInfo(kit, name, st = {}) {
   return { mode: myKey === '1' ? 'ht1' : 'promo', type: keyLabel(targetKey) + ' Test', myKey, targetKey, bridge: !!st.bridge };
 }
 function accTierPlayers(kit, key, exclude) {
-  return allPlayers.filter(p => !p.inactive && p[`${kit}_tier`] != null && tierKey(p[`${kit}_tier`], !!p[`${kit}_plus`]) === key && p.name.toLowerCase() !== exclude.toLowerCase()).map(p => p.name);
+  return allPlayers.filter(p => !p.inactive && !p[`${kit}_retired`] && p[`${kit}_tier`] != null && tierKey(p[`${kit}_tier`], !!p[`${kit}_plus`]) === key && p.name.toLowerCase() !== exclude.toLowerCase()).map(p => p.name);
 }
 // Sword: rounds the testee has to score against the higher tier opponent, and the match format per tier
 const swordRoundsNeeded = key => key === '1+' ? 20 : key === '1' ? 17 : (key === '2+' || key === '2') ? 12 : key === '3+' ? 8 : 4;
@@ -2106,7 +2135,7 @@ function accAssign(kit, name, info, st = {}) {
 // Tier shift: you're in the 2nd highest occupied tier, the top tier has exactly one player and is between HT3 and LT1.
 function accTierShift(kit, myKey) {
   const counts = {};
-  allPlayers.forEach(p => { const t = p[`${kit}_tier`]; if (!p.inactive && t != null) { const k = tierKey(t, !!p[`${kit}_plus`]); counts[k] = (counts[k] || 0) + 1; } });
+  allPlayers.forEach(p => { const t = p[`${kit}_tier`]; if (!p.inactive && !p[`${kit}_retired`] && t != null) { const k = tierKey(t, !!p[`${kit}_plus`]); counts[k] = (counts[k] || 0) + 1; } });
   const occ = LADDER.filter(k => counts[k]);
   if (occ.length < 2) return null;
   const top = occ[0];
@@ -3055,7 +3084,7 @@ async function initAuth() {
 }
 initAuth();
 
-// Click-and-drag panning (mouse): dragging on empty space scrolls the tier columns left/right and the page up/down
+// Click-and-drag panning (mouse): dragging on empty space scrolls the tier columns left/right (no vertical dragging)
 (function () {
   const SKIP = '.tier-player, .player, button, a, input, textarea, select, label, .modal-overlay, .modal-box, .info-tooltip, .search-panel, .global-mini-tip, .kit-pane';
   let st = null;
@@ -3071,7 +3100,6 @@ initAuth();
     st.moved = true;
     document.body.classList.add('drag-pan');
     if (st.cols) st.cols.scrollLeft = st.left - dx;
-    window.scrollTo(window.scrollX, st.top - dy);
   });
   const end = () => { if (st) { st = null; document.body.classList.remove('drag-pan'); } };
   document.addEventListener('mouseup', end);
