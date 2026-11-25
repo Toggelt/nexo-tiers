@@ -831,9 +831,8 @@ body.drag-pan, body.drag-pan * { cursor: grabbing !important; user-select: none 
 .ranked-mid .rb-gold, .ranked-top .rb-gold { display: inline-flex; }
 body.is-ranked .rb-gold { display: none; }
 body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { display: inline-flex; }
-@media (min-width: 920px) { .ranked-top { display: flex; margin: 0 auto; } }
+@media (min-width: 920px) { .ranked-top { display: flex; } }
 @media (min-width: 920px) and (max-width: 1099px) { .ranked-btn { padding: 6px 22px 7px; } .ranked-btn .rb-big { font-size: 21px; } .ranked-btn .rb-small { font-size: 12px; } }
-@media (min-width: 1100px) { .ranked-top { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; z-index: 2; } }
 @media (max-width: 919px) { .ranked-mid { display: flex; } }
 .ranked-title { margin: auto; display: flex; align-items: center; gap: 10px; font-family: Arial, 'Helvetica Neue', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 0.3px; color: #ffd24a; }
 .ranked-title img { width: 32px; height: 32px; object-fit: contain; image-rendering: pixelated; }
@@ -912,6 +911,19 @@ body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { dis
   .hm-row { padding: 0 8px; gap: 6px; } .hm-skin { width: 28px; height: 46px; } .hm-names { font-size: 11px; margin: 0 4px; }
   .hm-score { font-size: 17px; min-width: 40px; } .hm-delta { min-width: 46px; font-size: 11px; flex-direction: column; gap: 0; align-items: center; } .hm-mid { gap: 4px; }
 }
+
+.rk-queue { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin: 10px 6px 12px; padding: 14px 18px; background: #191920; border: 1px solid #2c2c34; border-radius: 12px; }
+.rkq-text { flex: 1 1 260px; color: #c9c9d1; font-size: 15px; }
+.rkq-text b { color: #fff; }
+.rkq-opp { font-family: 'Minecraft', monospace; color: #fff; }
+.rkq-warn { color: #ff8a8a; }
+.rkq-wait { color: #ffd24a; font-weight: 700; }
+.rkq-score { display: flex; align-items: center; gap: 8px; color: #c9c9d1; font-weight: 700; }
+.rkq-sel { background: #0a0a1a; color: #fff; border: 1px solid #1d263b; border-radius: 8px; padding: 7px 8px; font: 700 15px Arial, sans-serif; }
+.rkq-btn { background: linear-gradient(180deg, #ffe27a 0%, #f7bd1f 52%, #d9920a 100%); color: #3b2600; border: 1px solid rgba(255,238,170,0.85); border-radius: 10px; padding: 10px 20px; font: 800 15px Arial, sans-serif; cursor: pointer; transition: filter 0.15s, transform 0.15s; }
+.rkq-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.rkq-btn:disabled { opacity: 0.6; cursor: default; }
+.rkq-btn.ghost { background: #0a0a1a; color: #a2a5a6; border-color: #535966; }
 </style>
 </head>
 <body>
@@ -922,7 +934,6 @@ body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { dis
     </a>
     <a class="hero-btn hero-btn-secondary rank-btn" id="rankBtn" href="#/overall"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>View rankings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
   </div>
-  <div class="ranked-top" id="rankedTop"></div>
   <div class="top-bar-right">
     <div class="acc-wrap" id="accBellWrap">
       <button class="acc-bell" id="accBell" type="button" aria-label="Notifications"><svg viewBox="120 90 500 560" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -933,6 +944,7 @@ body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { dis
       </svg></button>
       <div class="acc-drop wide" id="accPanel"></div>
     </div>
+    <div class="ranked-top" id="rankedTop"></div>
     <a class="discord-btn" href="https://discord.gg/BjBjqmRHAD" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
       <span>Discord</span>
@@ -996,6 +1008,7 @@ body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { dis
     <div class="header-player">Player</div>
     <div class="header-tiers">Tiers</div>
   </div>
+  <div class="rk-queue" id="rkQueue" style="display:none"></div>
   <div id="list">Loading...</div>
   <button id="toggleBtn" class="toggle-btn" style="display:none;">Show more</button>
 </div>
@@ -1693,6 +1706,7 @@ function applyView() {
   if (!home) document.getElementById('titlesCard').classList.remove('in-view');
   document.body.classList.toggle('is-home', home);
   document.body.classList.toggle('is-ranked', currentBoard === 'Ranked');
+  renderRankedPanel();
   document.querySelector('.container').classList.toggle('is-home-view', home);
   homeView.style.display = home ? 'block' : 'none';
   tabBar.style.display = home ? 'none' : '';
@@ -1892,6 +1906,7 @@ async function renderRanked(force = true) {
   if (!force && sig === rankedSig && list.children.length) return;
   rankedSig = sig;
   rankedTeams = rows;
+  rkQPoll();
   const first = lastAnimBoard !== 'Ranked';
   lastAnimBoard = 'Ranked';
   list.innerHTML = rows.length ? '' : '<div style="text-align:center;padding:30px;color:#8b8b96;">No ranked teams yet</div>';
@@ -1998,6 +2013,64 @@ async function renderProfileRanked(player) {
   }).join('');
 }
 document.getElementById('rkBoxes').addEventListener('click', e => { const el = e.target.closest('.rkp-mate.link'); const p = el && playerByName(el.dataset.name); if (p) openFromList(p); });
+
+
+// ---------- Ranked queue ----------
+let rkQ = { state: 'none' }, rkQBusy = false, rkQTimer = null;
+async function rkQCall(fn, args) {
+  if (!sb || !accSession) return;
+  rkQBusy = true; renderRankedPanel();
+  const { data, error } = await sb.rpc(fn, args);
+  rkQBusy = false;
+  if (error) {
+    const t = (error.message || '') + (error.code || '');
+    accToast(t.includes('bad_score') ? 'A game is first to 4: one team needs 4, the other 0-3.' : t.includes('in_match') ? 'You are already in a match.' : t.includes('no_team') ? 'Your account is not on a ranked team.' : 'Queue unavailable. Has supabase_ranked_queue.sql been run?');
+    rkQ.state = rkQ.state === 'none' ? 'error' : rkQ.state;
+  } else rkQApply(data);
+  renderRankedPanel();
+}
+function rkQApply(d) {
+  if (!d) return;
+  if (rkQ.state === 'queued' && d.state === 'matched') accToast('Ranked match found!');
+  if (d.me && accProfile && accProfile.__fb) { accProfile.mc_username = d.me; accEl('accBtn').querySelector('span').textContent = d.me; }
+  rkQ = d;
+}
+async function rkQPoll() {
+  if (!sb || !accSession || rkQBusy) return;
+  const { data, error } = await sb.rpc('ranked_queue_status');
+  if (error) { if (rkQ.state === 'none') rkQ = { state: 'error' }; } else rkQApply(data);
+  renderRankedPanel();
+}
+function rkQSync() {
+  if (!accSession) { rkQ = { state: 'none' }; renderRankedPanel(); return; }
+  if (currentBoard === 'Ranked' || rkQ.state === 'queued' || rkQ.state === 'matched') rkQPoll();
+}
+setInterval(() => { if (accSession && (currentBoard === 'Ranked' || rkQ.state === 'queued' || rkQ.state === 'matched')) rkQPoll(); }, 4000);
+setInterval(() => { if (rkQ.state === 'queued' && currentBoard === 'Ranked') { const e = document.getElementById('rkQTime'); if (e) e.textContent = rkElapsed(); } }, 1000);
+const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new Date(rkQ.since).getTime()) / 1000)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
+function renderRankedPanel() {
+  const box = document.getElementById('rkQueue');
+  if (currentBoard !== 'Ranked') { box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  const busy = rkQBusy ? ' disabled' : '';
+  const names = t => `${rkEsc(t.name1)} <span class="rk-amp">&amp;</span> ${rkEsc(t.name2)}`;
+  let html;
+  if (!accSession) html = '<div class="rkq-text">Log in to queue for ranked games.</div><button class="rkq-btn" id="rkqLogin" type="button">Log in</button>';
+  else if (rkQ.state === 'noteam') html = '<div class="rkq-text">Your account is not on a ranked team.</div>';
+  else if (rkQ.state === 'error') html = '<div class="rkq-text">Queue unavailable right now.</div>';
+  else if (rkQ.state === 'queued') html = `<div class="rkq-text"><b>Searching for a team...</b> <span id="rkQTime">${rkElapsed()}</span> &middot; ${rkQ.queued} in queue</div><button class="rkq-btn ghost" id="rkqLeave" type="button"${busy}>Leave queue</button>`;
+  else if (rkQ.state === 'matched') {
+    const sel = id => `<select class="rkq-sel" id="${id}">${[0, 1, 2, 3, 4].map(n => `<option>${n}</option>`).join('')}</select>`;
+    html = `<div class="rkq-text"><b>Match found!</b> You play against <span class="rkq-opp">${names(rkQ.opponent)}</span>. Play first to 4, then enter the score.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The scores did not match - enter it again.</span>' : ''}</div>` +
+      (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>' : `<div class="rkq-score">You ${sel('rkqMy')} - ${sel('rkqOpp')} Them<button class="rkq-btn" id="rkqSend" type="button"${busy}>Submit</button></div>`);
+  } else html = `<div class="rkq-text">Queue as <b>${rkQ.team ? names(rkQ.team) : ''}</b>. Any opponent, no Elo range. Max. 2 games against the same team per 7 days.</div><button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>`;
+  box.innerHTML = html;
+  const on = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
+  on('rkqLogin', () => accEl('accBtn').click());
+  on('rkqJoin', () => rkQCall('ranked_queue_join'));
+  on('rkqLeave', () => rkQCall('ranked_queue_leave'));
+  on('rkqSend', () => rkQCall('ranked_report', { p_pairing: rkQ.pairing_id, p_my: +document.getElementById('rkqMy').value, p_opp: +document.getElementById('rkqOpp').value }));
+}
 
 // ---------- Tier column width ----------
 // Minecraft names are 3-16 chars of [A-Za-z0-9_]. Size the columns to fit 16 of the widest glyph in the
@@ -2872,6 +2945,7 @@ function accUpdateUI() {
   if (accProfile && !accNotifTimer) { accPollAll(); accNotifTimer = setInterval(accPollAll, 8000); }
   if (!accProfile && accNotifTimer) { clearInterval(accNotifTimer); accNotifTimer = null; accNotifs = []; accNotifSeen = null; accMatches = []; accRenderBell(); }
   if (accProfile) accQStart(); else accQStop();
+  rkQSync();
   const sig = `${accProfile ? accProfile.mc_username : ''}|${accTesterKits().join()}|${accIsRegulator()}`;
   if (sig === accRoleSig) return;
   accRoleSig = sig;
@@ -2883,7 +2957,8 @@ function accUpdateUI() {
 async function accRefreshProfile() {
   if (!accSession) { accProfile = null; accUpdateUI(); return; }
   const { data } = await sb.from('profiles').select('mc_username').eq('user_id', accSession.user.id).maybeSingle();
-  accProfile = data || null; accUpdateUI();
+  const fb = ((accSession.user.email || '').split('@')[0]);
+  accProfile = data || (fb ? { mc_username: fb, __fb: true } : null); accUpdateUI();
 }
 
 let accNotifs = [], accNotifSeen = null, accNotifTimer = null, accMatches = [], accScoreShown = new Set(), accUnreadAtOpen = new Set(), accRefreshPending = null;
