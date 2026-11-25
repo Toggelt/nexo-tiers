@@ -937,6 +937,14 @@ body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { dis
 .hm-flame b { position: absolute; left: 0; right: 0; top: 58%; transform: translateY(-50%); text-align: center; font: 900 12px Arial, sans-serif; color: #ffd24a; text-shadow: 0 0 3px #000, 0 1px 2px #000; }
 .rk-card { margin-top: 18px; padding: 14px 16px 8px; text-align: left; border-radius: 18px; border: 1px solid #1d263b; background: linear-gradient(150deg, #18265a 0%, #0f1838 48%, #0a0f26 100%); }
 .rk-card .rk-label { margin: 0 0 10px; }
+
+/* ranked page: blue rounded container, the title sits inside it */
+body.is-ranked .container { border-radius: 22px; margin-bottom: 30px; }
+body.is-ranked .container::before { top: 0; border-radius: 22px; border: 1px solid #1d263b; background: linear-gradient(150deg, #18265a 0%, #0f1838 48%, #0a0f26 100%); }
+body.is-ranked .tab-bar { border-radius: 22px 22px 0 0; }
+body.is-ranked .player { background: rgba(8,10,28,0.72); border-color: #1d263b; }
+body.is-ranked .player:hover { background: #131a38; border-color: #535966; }
+.rk-queue { background: rgba(8,10,28,0.72); border-color: #1d263b; }
 </style>
 </head>
 <body>
@@ -2070,11 +2078,13 @@ const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new D
 function renderRankedPanel() {
   const box = document.getElementById('rkQueue');
   if (currentBoard !== 'Ranked') { box.style.display = 'none'; return; }
+  let loggedIn;
+  try { loggedIn = !!accSession; } catch (e) { return; }   // account code is not initialised yet during the very first paint
   box.style.display = 'flex';
   const busy = rkQBusy ? ' disabled' : '';
   const names = t => `${rkEsc(t.name1)} <span class="rk-amp">&amp;</span> ${rkEsc(t.name2)}`;
   let html;
-  if (!accSession) html = '<div class="rkq-text">Log in to queue for ranked games.</div><button class="rkq-btn" id="rkqLogin" type="button">Log in</button>';
+  if (!loggedIn) html = '<div class="rkq-text">Log in to queue for ranked games.</div><button class="rkq-btn" id="rkqLogin" type="button">Log in</button>';
   else if (rkQ.state === 'noteam') html = '<div class="rkq-text">Your account is not on a ranked team.</div>';
   else if (rkQ.state === 'error') html = '<div class="rkq-text">Queue unavailable right now.</div>';
   else if (rkQ.state === 'queued') html = `<div class="rkq-text"><b>Searching for a team...</b> <span id="rkQTime">${rkElapsed()}</span> &middot; ${rkQ.queued} in queue</div><button class="rkq-btn ghost" id="rkqLeave" type="button"${busy}>Leave queue</button>`;
