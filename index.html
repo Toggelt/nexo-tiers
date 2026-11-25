@@ -831,12 +831,12 @@ body.drag-pan, body.drag-pan * { cursor: grabbing !important; user-select: none 
 .ranked-mid .rb-gold, .ranked-top .rb-gold { display: inline-flex; }
 body.is-ranked .rb-gold { display: none; }
 body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { display: inline-flex; }
-@media (min-width: 1100px) { .ranked-top { display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; } }
-@media (max-width: 1099px) { .ranked-mid { display: flex; } }
+@media (min-width: 920px) { .ranked-top { display: flex; margin: 0 auto; } }
+@media (min-width: 920px) and (max-width: 1099px) { .ranked-btn { padding: 6px 22px 7px; } .ranked-btn .rb-big { font-size: 21px; } .ranked-btn .rb-small { font-size: 12px; } }
+@media (min-width: 1100px) { .ranked-top { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; z-index: 2; } }
+@media (max-width: 919px) { .ranked-mid { display: flex; } }
 .ranked-title { margin: auto; display: flex; align-items: center; gap: 10px; font-family: Arial, 'Helvetica Neue', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 0.3px; color: #ffd24a; }
 .ranked-title img { width: 32px; height: 32px; object-fit: contain; image-rendering: pixelated; }
-.ranked-row { cursor: default; }
-.ranked-row:hover { transform: none; }
 .ranked-row .rank-flag.has-skin { min-width: 0; padding-right: 46px; }
 .ranked-row .skin-wrap { width: 88px; }
 .ranked-row .info { min-width: 0; }
@@ -869,11 +869,7 @@ body.is-ranked .ranked-mid .rb-green, body.is-ranked .ranked-top .rb-green { dis
 }
 
 /* ---------- Ranked: team profile, hover, profile box ---------- */
-.ranked-row:hover { transform: none; background: #191920; border-color: #24242d; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
-.player.ranked-row:hover .rank-flag::after { background: rgba(255,255,255,0); }
 .ranked-row { cursor: pointer; }
-.rk-name { padding: 2px 6px; margin: 0 -6px; border-radius: 6px; transition: background 0.12s; }
-.rk-name:hover { background: rgba(255,255,255,0.16); }
 .team-box { width: 760px; text-align: left; padding: 28px; }
 .tm-top { display: flex; justify-content: flex-end; margin: 0 44px 20px 0; }
 .tm-tabs { display: flex; gap: 12px; }
@@ -1087,7 +1083,7 @@ const LIVE_BOARDS = SUB_BOARDS.filter(k => !COMING_SOON[k]);
 const NUM_MODES = LIVE_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
-const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 175, "3": 100, "4+": 50, "4": 25, "5+": 15, "5": 10 };
+const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 150, "3": 100, "4+": 50, "4": 25, "5+": 15, "5": 10 };
 const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#C67B42", "4+": "#81749a", "4": "#81749a", "5+": "#655B79", "5": "#655B79" };
 const TIER_LIGHT_COLORS = { 1: "#ffd54f", 2: "#e0e0e0", 3: "#e0a86c", 4: "#d0d8ff", 5: "#9fb0f0" };
 const TIER_ORDER = { "1+": 0, "1": 1, "2+": 2, "2": 3, "3+": 4, "3": 5, "4+": 6, "4": 7, "5+": 8, "5": 9, "none": 10 };
@@ -1952,6 +1948,16 @@ function tmHistoryRow(m) {
     <div class="hm-mid">${tmDelta(my > op, my === op, m)}<span class="hm-score">${my} - ${op}</span>${tmDelta(op > my, my === op, m)}</div>
     <div class="hm-team right">${names(opp)}${tmSkins(opp)}</div></div>`;
 }
+// Win % color: dark purple (0-25) -> red (25-40) -> light green (40-60) -> strong green (60-90) -> gold (90+), blended smoothly in HSL
+const WIN_STOPS = [[0, [270, 70, 40]], [20, [270, 70, 40]], [30, [354, 80, 56]], [36, [354, 80, 56]], [44, [140, 70, 72]], [60, [140, 70, 72]], [87, [142, 85, 45]], [93, [44, 100, 60]], [100, [44, 100, 60]]];
+function winPctColor(pct) {
+  let i = 1;
+  while (i < WIN_STOPS.length - 1 && pct > WIN_STOPS[i][0]) i++;
+  const [p0, a] = WIN_STOPS[i - 1], [p1, b] = WIN_STOPS[i];
+  const t = Math.min(1, Math.max(0, (pct - p0) / (p1 - p0)));
+  const dh = ((b[0] - a[0] + 540) % 360) - 180;
+  return `hsl(${((a[0] + dh * t) % 360 + 360) % 360} ${a[1] + (b[1] - a[1]) * t}% ${a[2] + (b[2] - a[2]) * t}%)`;
+}
 function renderTeam() {
   const t = tmTeam, m = tmMatches;
   document.querySelectorAll('.tm-tab').forEach(b => b.classList.toggle('active', b.dataset.v === tmView));
@@ -1962,9 +1968,10 @@ function renderTeam() {
   const plr = n => `<div class="tm-player${playerByName(n) ? ' link' : ''}" data-name="${rkEsc(n)}"><img src="${avatarUrl(n, 40)}" alt="" onerror="this.style.visibility='hidden'"><span>${rkEsc(n)}</span></div>`;
   let w = 0, l = 0;
   (m || []).forEach(x => { const my = x.team1 === t.teamname ? x.team1_score : x.team2_score, op = x.team1 === t.teamname ? x.team2_score : x.team1_score; if (my > op) w++; else if (my < op) l++; });
-  const stat = (label, v) => `<div class="tm-stat"><small>${label}</small><b>${v}</b></div>`;
+  const stat = (label, v, c) => `<div class="tm-stat"><small>${label}</small><b${c ? ` style="color:${c}"` : ''}>${v}</b></div>`;
+  const pct = m && (w + l) ? w / (w + l) * 100 : null;
   tmBody.innerHTML = `<div class="tm-stats-view"><div class="tm-players">${plr(t.name1)}${plr(t.name2)}</div>
-    <div class="tm-stats">${stat('Wins', m ? w : '...')}${stat('Losses', m ? l : '...')}${stat('Win %', !m ? '...' : (w + l) ? Math.round(w / (w + l) * 1000) / 10 + '%' : 'N/A')}</div></div>`;
+    <div class="tm-stats">${stat('Wins', m ? w : '...')}${stat('Losses', m ? l : '...')}${stat('Win %', !m ? '...' : pct != null ? Math.round(pct * 10) / 10 + '%' : 'N/A', pct != null ? winPctColor(pct) : '')}</div></div>`;
 }
 document.querySelectorAll('.tm-tab').forEach(b => b.addEventListener('click', () => { tmView = b.dataset.v; renderTeam(); }));
 tmBody.addEventListener('click', e => { const el = e.target.closest('.tm-player.link'); const p = el && playerByName(el.dataset.name); if (p) openFromList(p); });
