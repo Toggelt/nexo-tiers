@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FT4 2v2 Elo Simulator</title>
+<style>
+  :root { color-scheme: light dark; --bg:#0b1020; --panel:#151d31; --muted:#aab5ca; --line:#2a3650; --green:#38c98a; --red:#ff7185; --accent:#83a7ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:#eef3ff; font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  main { max-width:850px; margin:auto; }
+  h1 { font-size:clamp(1.6rem,4vw,2.2rem); margin:0 0 6px; }
+  .sub, .muted { color:var(--muted); }
+  .sub { margin:0 0 22px; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; margin:16px 0; }
+  h2 { font-size:1.1rem; margin:0 0 16px; }
+  .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+  label { display:block; color:var(--muted); font-size:.9rem; margin-bottom:6px; }
+  input, select { width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 12px; background:#0d1528; color:#fff; font:inherit; }
+  .scores { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; }
+  .scores label { margin:0; }
+  .scores input { position:absolute; opacity:0; pointer-events:none; }
+  .scores span { display:block; text-align:center; padding:12px 6px; border:1px solid var(--line); border-radius:9px; cursor:pointer; color:var(--muted); }
+  .scores input:checked + span { border-color:var(--accent); background:#233354; color:white; }
+  .results { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .metric { background:#0d1528; border:1px solid var(--line); border-radius:12px; padding:14px; min-width:0; }
+  .metric .name { color:var(--muted); font-size:.85rem; }
+  .metric .value { font-size:1.55rem; font-weight:750; margin-top:3px; overflow-wrap:anywhere; }
+  .green { color:var(--green); } .red { color:var(--red); }
+  .teamresult { padding:14px 0; border-top:1px solid var(--line); }
+  .teamresult:first-of-type { border-top:0; }
+  .teamhead { display:flex; justify-content:space-between; gap:12px; align-items:center; }
+  .pill { font-size:.78rem; border:1px solid var(--line); border-radius:99px; padding:3px 9px; color:var(--muted); }
+  .details { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:12px; }
+  .detail { background:#0d1528; border-radius:9px; padding:10px; }
+  .detail small { display:block; color:var(--muted); }
+  .detail strong { display:block; margin-top:3px; font-size:1.05rem; }
+  button { border:1px solid var(--line); border-radius:9px; padding:10px 15px; background:#263a62; color:white; font:inherit; cursor:pointer; }
+  button:hover { filter:brightness(1.15); }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .note { font-size:.88rem; color:var(--muted); }
+  @media(max-width:560px) { body{padding:14px} .grid,.results{grid-template-columns:1fr 1fr} .scores{grid-template-columns:repeat(2,1fr)} .panel{padding:15px} }
+</style>
+</head>
+<body>
+<main>
+  <h1>FT4 2v2 Elo Simulator</h1>
+  <p class="sub">Fixed teams · First to 4 rounds · Elo and streak bonus shown separately</p>
+
+  <section class="panel">
+    <h2>Team ratings and current streaks</h2>
+    <div class="grid">
+      <div><label for="ratingA">Team A Elo</label><input id="ratingA" type="number" min="0" step="1" value="1000"></div>
+      <div><label for="ratingB">Team B Elo</label><input id="ratingB" type="number" min="0" step="1" value="1000"></div>
+      <div><label for="streakA">Team A current consecutive wins</label><input id="streakA" type="number" min="0" step="1" value="0"></div>
+      <div><label for="streakB">Team B current consecutive wins</label><input id="streakB" type="number" min="0" step="1" value="0"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Match result</h2>
+    <div class="scores" id="scores">
+      <label><input type="radio" name="score" value="A,0" checked><span>Team A 4–0</span></label>
+      <label><input type="radio" name="score" value="A,1"><span>Team A 4–1</span></label>
+      <label><input type="radio" name="score" value="A,2"><span>Team A 4–2</span></label>
+      <label><input type="radio" name="score" value="A,3"><span>Team A 4–3</span></label>
+      <label><input type="radio" name="score" value="B,0"><span>Team B 4–0</span></label>
+      <label><input type="radio" name="score" value="B,1"><span>Team B 4–1</span></label>
+      <label><input type="radio" name="score" value="B,2"><span>Team B 4–2</span></label>
+      <label><input type="radio" name="score" value="B,3"><span>Team B 4–3</span></label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Rating calculation</h2>
+    <div class="results">
+      <div class="metric"><div class="name">Regular Elo change (winner)</div><div class="value" id="regularGain">+16.00</div></div>
+      <div class="metric"><div class="name">Win-streak bonus (winner)</div><div class="value green" id="streakBonus">+1.00</div></div>
+      <div class="metric"><div class="name">Total winner gain</div><div class="value green" id="totalGain">+17.00</div></div>
+      <div class="metric"><div class="name">Regular Elo loss (loser)</div><div class="value red" id="loserLoss">−16.00</div></div>
+    </div>
+    <p class="note" id="calcInfo">Expected win probability: 50.0% · Score multiplier: 0.800×</p>
+  </section>
+
+  <section class="panel">
+    <h2>New ratings and streaks</h2>
+    <div class="teamresult">
+      <div class="teamhead"><strong>Team A</strong><span class="pill" id="statusA">Winner</span></div>
+      <div class="details">
+        <div class="detail"><small>New Elo</small><strong id="newA">1,017.00</strong></div>
+        <div class="detail"><small>New win streak</small><strong id="newStreakA">1</strong></div>
+      </div>
+    </div>
+    <div class="teamresult">
+      <div class="teamhead"><strong>Team B</strong><span class="pill" id="statusB">Loser</span></div>
+      <div class="details">
+        <div class="detail"><small>New Elo</small><strong id="newB">983.00</strong></div>
+        <div class="detail"><small>New win streak</small><strong id="newStreakB">0</strong></div>
+      </div>
+    </div>
+    <div class="actions"><button id="reset">Reset values</button></div>
+  </section>
+
+  <section class="panel">
+    <h2>Rules used</h2>
+    <p class="note"><strong>K-factor:</strong> 40 · <strong>Default starting Elo:</strong> 1,000 · <strong>Format:</strong> FT4.</p>
+    <p class="note">Expected score uses the standard Elo formula. The score multiplier is calibrated so an equal-rated 4–3 win gives exactly 16 regular Elo points: <code>M = 0.8 + 0.2 × (4 − losing rounds) / 3</code>.</p>
+    <p class="note">The winning team's streak increments before its bonus is calculated: first consecutive win +1, second +2, third +3, fourth +4, fifth and later +5. The losing team's streak resets to zero. The winner's streak bonus is not deducted from the loser.</p>
+    <p class="note">Because the streak bonus is added only to the winner, the system is intentionally not zero-sum.</p>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const number = id => Math.max(0, Number($(id).value) || 0);
+const fmt = n => n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const integer = n => Math.floor(n);
+function calculate() {
+  const ra = number('ratingA'), rb = number('ratingB');
+  const sa = integer(number('streakA')), sb = integer(number('streakB'));
+  const [winner, losingRounds] = document.querySelector('input[name="score"]:checked').value.split(',');
+  const loser = winner === 'A' ? 'B' : 'A';
+  const winnerRating = winner === 'A' ? ra : rb;
+  const loserRating = winner === 'A' ? rb : ra;
+  const winnerStreak = winner === 'A' ? sa : sb;
+  const expected = 1 / (1 + Math.pow(10, (loserRating - winnerRating) / 400));
+  const multiplier = 0.8 + 0.2 * ((4 - Number(losingRounds)) / 3);
+  const regular = 40 * (1 - expected) * multiplier;
+  const nextStreak = winnerStreak + 1;
+  const bonus = Math.min(nextStreak, 5);
+  const total = regular + bonus;
+  const loserLoss = regular;
+  const newA = ra + (winner === 'A' ? total : -loserLoss);
+  const newB = rb + (winner === 'B' ? total : -loserLoss);
+
+  $('regularGain').textContent = '+' + fmt(regular);
+  $('streakBonus').textContent = '+' + fmt(bonus);
+  $('totalGain').textContent = '+' + fmt(total);
+  $('loserLoss').textContent = '−' + fmt(loserLoss);
+  $('calcInfo').textContent = `Expected win probability: ${(expected*100).toFixed(1)}% · Score multiplier: ${multiplier.toFixed(3)}×`;
+  $('newA').textContent = fmt(newA);
+  $('newB').textContent = fmt(newB);
+  $('newStreakA').textContent = winner === 'A' ? nextStreak : '0';
+  $('newStreakB').textContent = winner === 'B' ? nextStreak : '0';
+  $('statusA').textContent = winner === 'A' ? 'Winner' : 'Loser';
+  $('statusB').textContent = winner === 'B' ? 'Winner' : 'Loser';
+}
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', calculate));
+$('reset').addEventListener('click', () => {
+  $('ratingA').value = '1000'; $('ratingB').value = '1000';
+  $('streakA').value = '0'; $('streakB').value = '0';
+  document.querySelector('input[name="score"][value="A,3"]').checked = true;
+  calculate();
+});
+calculate();
+</script>
+</body>
+</html>
