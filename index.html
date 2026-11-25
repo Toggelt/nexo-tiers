@@ -10,6 +10,7 @@
 <link rel="icon" type="image/x-icon" href="https://github.com/Toggelt/nexo-tiers/blob/main/assets/favicon.ico?raw=true">
 <style>
 @font-face { font-family: 'Minecraft'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/26.2-Minecraft-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+@font-face { font-family: 'FabricGrotesk'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/Fabric-Grotesk-Bold-BF6ae8b9e9d69a1.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
 @font-face { font-family: 'MinecraftBold'; src: url('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/3%20Minecraft-Bold.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -91,8 +92,8 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .mini-tier-circle img { width: 24px; height: 24px; }
 .mini-tier-label { font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #1a1a22; border: 1px solid #454b54; color: #8b8b96; letter-spacing: 0.3px; text-align: center; width: 40px; }
 .global-mini-tip { position: fixed; background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 8px 16px; font-size: 18px; font-weight: 700; display: none; z-index: 1000; pointer-events: none; transform: translate(-50%, -100%); text-align: center; line-height: 1.4; white-space: nowrap; width: max-content; }
-.global-mini-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
-.global-mini-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
+.global-mini-tip .tip-tier { font-family: 'FabricGrotesk', Arial, sans-serif; font-size: 18px; font-weight: normal; display: block; color: #fff; }
+.global-mini-tip .tip-peak { font-family: 'FabricGrotesk', Arial, sans-serif; font-size: 15px; font-weight: normal; display: block; margin-bottom: 2px; color: #fff; }
 .global-mini-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 
 .tier-columns { display: flex; flex-wrap: nowrap; gap: 5px; justify-content: flex-start; margin: 8px 20px; overflow-x: auto; padding-bottom: 8px; }
@@ -150,8 +151,8 @@ body { font-family: Arial, sans-serif; background: #0b0b0e; color: #fff; padding
 .tier-icon-circle img { width: 32px; height: 32px; }
 .tier-icon-label { font-size: 12px; font-weight: 800; letter-spacing: 0.4px; }
 .tier-elo-tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0e0e12; border: 1px solid #2c2c34; border-radius: 9px; padding: 5px 12px; font-size: 18px; font-weight: 700; white-space: nowrap; display: none; z-index: 10; box-shadow: 0 6px 14px rgba(0,0,0,0.5); pointer-events: none; text-align: center; line-height: 1.4; }
-.tier-elo-tip .tip-tier { font-size: 18px; font-weight: 800; display: block; color: #fff; }
-.tier-elo-tip .tip-peak { font-size: 15px; font-weight: 800; display: block; margin-bottom: 2px; color: #fff; }
+.tier-elo-tip .tip-tier { font-family: 'FabricGrotesk', Arial, sans-serif; font-size: 18px; font-weight: normal; display: block; color: #fff; }
+.tier-elo-tip .tip-peak { font-family: 'FabricGrotesk', Arial, sans-serif; font-size: 15px; font-weight: normal; display: block; margin-bottom: 2px; color: #fff; }
 .tier-elo-tip .tip-points { font-size: 13px; font-weight: 600; color: #8b8b96; margin-top: 4px; }
 .tier-icon-wrap:hover .tier-elo-tip { display: block; }
 
@@ -1763,6 +1764,7 @@ function updateTierColWidth() {
 updateTierColWidth();
 if (document.fonts) {
   document.fonts.load("15px 'Minecraft'").then(updateTierColWidth).catch(() => {});
+  document.fonts.load("18px 'FabricGrotesk'").catch(() => {});
   document.fonts.ready.then(updateTierColWidth);
 }
 
