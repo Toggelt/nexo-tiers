@@ -958,6 +958,28 @@ body.is-ranked .search-result-item:hover { background: #131a38; }
 .search-result-item img + img { margin-left: -4px; }
 .rules-box { width: 680px; min-height: 260px; }
 .rules-title { margin: 0 44px 18px 0; font-size: 22px; color: #fff; }
+
+/* match history: elo gained / lost / streak bonus in the Minecraft font */
+.hm-delta { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 16px; }
+.hm-flame b { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 13px; }
+@media (max-width: 700px) { .hm-delta { font-size: 12px; } .hm-flame b { font-size: 11px; } }
+
+/* match found popup */
+.match-box { width: 600px; max-width: 94vw; }
+.mp-title { margin: 0 0 16px; font-size: 22px; color: #fff; }
+.mp-opp { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid #1d263b; background: rgba(8,10,28,0.72); border-radius: 14px; cursor: pointer; transition: background 0.12s, border-color 0.12s; }
+.mp-opp:hover { background: #131a38; border-color: #535966; }
+.mp-opp .hm-skin { width: 56px; height: 86px; }
+.mp-opp .hm-names { font-size: 20px; flex: 1; }
+.mp-stats { display: flex; align-items: center; gap: 12px; }
+.mp-opp .rk-elo { font-size: 24px; }
+.mp-opp .rk-streak { width: 44px; height: 54px; }
+.mp-opp .rk-streak b { font-size: 14px; }
+.mp-server { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 10px 14px; border: 1px solid #1d263b; background: rgba(8,10,28,0.72); border-radius: 12px; color: #8b8b96; }
+.mp-server b { font-family: 'Minecraft', monospace; font-size: 20px; color: #fff; flex: 1; font-weight: normal; }
+.mp-body { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; color: #c9c9d1; }
+.mp-body .rkq-score { justify-content: flex-start; flex-wrap: wrap; }
+.rk-hint { color: #8b8b96; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -1048,6 +1070,7 @@ body.is-ranked .search-result-item:hover { background: #131a38; }
   <button id="toggleBtn" class="toggle-btn" style="display:none;">Show more</button>
 </div>
 
+<div class="modal-overlay" id="matchOverlay"><div class="modal-box team-box no-glow match-box" id="matchBox"></div></div>
 <div class="modal-overlay" id="rulesOverlay">
   <div class="modal-box team-box no-glow rules-box">
     <button class="modal-close" id="rulesClose">✕</button>
@@ -1986,6 +2009,7 @@ async function openTeamProfile(team) {
   globalMiniTip.style.display = 'none';
   tmEl.classList.add('active');
   renderTeam();
+  if (!rankedTeams.length) { try { rankedTeams = await rkFetch('ranked_teams?select=id,name1,name2,teamname,elo,winstreak&order=elo.desc,id.asc'); } catch (e) {} }
   const enc = encodeURIComponent(team.teamname);
   try { tmMatches = await rkFetch(`ranked_matches?select=id,team1,team2,team1_score,team2_score,elo_change,streak_bonus&or=(team1.eq.${enc},team2.eq.${enc})&order=id.desc&limit=1000`); }
   catch (e) { tmMatches = []; tmErr = e.message; }
@@ -2067,22 +2091,29 @@ document.getElementById('rkBoxes').addEventListener('click', e => { const el = e
 
 
 // ---------- Ranked queue ----------
-let rkQ = { state: 'none' }, rkQBusy = false, rkQTimer = null;
+let rkQ = { state: 'none' }, rkQBusy = false, rkQTimer = null, rkJoining = false;
+const rkAudio = new Audio('https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/Beacon_power1.ogg.mp3');
+rkAudio.preload = 'auto';
+const rkSound = () => { try { rkAudio.currentTime = 0; rkAudio.play().catch(() => {}); } catch (e) {} };
+// unlock audio on the click that joins the queue, so the match sound can play later even when the tab is in the background
+const rkAudioPrime = () => { try { rkAudio.muted = true; rkAudio.play().then(() => { rkAudio.pause(); rkAudio.currentTime = 0; rkAudio.muted = false; }).catch(() => { rkAudio.muted = false; }); } catch (e) {} };
 async function rkQCall(fn, args) {
   if (!sb || !accSession) return;
-  rkQBusy = true; renderRankedPanel();
+  rkQBusy = true; rkJoining = fn === 'ranked_queue_join'; if (rkJoining) rkAudioPrime(); renderRankedPanel();
   const { data, error } = await sb.rpc(fn, args);
   rkQBusy = false;
   if (error) {
     const t = (error.message || '') + (error.code || '');
-    accToast(t.includes('bad_score') ? 'A game is first to 4: one team needs 4, the other 0-3.' : t.includes('in_match') ? 'You are already in a match.' : t.includes('no_team') ? 'Your account is not on a ranked team.' : 'Queue unavailable. Has supabase_ranked_queue.sql been run?');
+    accToast(t.includes('bad_score') ? 'A game is first to 4: one team needs 4, the other 0-3.' : t.includes('expired') ? 'The accept time ran out.' : t.includes('in_match') ? 'You are already in a match.' : t.includes('no_team') ? 'Your account is not on a ranked team.' : 'Queue unavailable. Has supabase_ranked_queue.sql been run?');
     rkQ.state = rkQ.state === 'none' ? 'error' : rkQ.state;
   } else rkQApply(data);
+  rkJoining = false;
   renderRankedPanel();
 }
 function rkQApply(d) {
   if (!d) return;
-  if (rkQ.state === 'queued' && d.state === 'matched') accToast('Ranked match found!');
+  if (d.state === 'matched') d.deadline = Date.now() + (d.seconds_left || 0) * 1000;
+  if ((rkQ.state === 'queued' || rkJoining) && d.state === 'matched') { rkSound(); accToast('Ranked match found! Accept the duel.'); }
   if (d.me && accProfile && accProfile.__fb) { accProfile.mc_username = d.me; accEl('accBtn').querySelector('span').textContent = d.me; }
   rkQ = d;
 }
@@ -2094,12 +2125,26 @@ async function rkQPoll() {
 }
 function rkQSync() {
   if (!accSession) { rkQ = { state: 'none' }; renderRankedPanel(); return; }
-  if (currentBoard === 'Ranked' || rkQ.state === 'queued' || rkQ.state === 'matched') rkQPoll();
+  rkQPoll();
 }
-setInterval(() => { if (accSession && (currentBoard === 'Ranked' || rkQ.state === 'queued' || rkQ.state === 'matched')) rkQPoll(); }, 4000);
-setInterval(() => { if (rkQ.state === 'queued' && currentBoard === 'Ranked') { const e = document.getElementById('rkQTime'); if (e) e.textContent = rkElapsed(); } }, 1000);
+let rkTick = 0;
+function rkOnTick() {
+  rkTick++;
+  if (!accSession) return;
+  const active = currentBoard === 'Ranked' || rkQ.state === 'queued' || rkQ.state === 'matched';
+  if (active && (rkQ.state === 'matched' || rkTick % 2 === 0)) rkQPoll();
+}
+try { // a worker timer is not throttled in background tabs, so a found match is noticed (and the sound plays) even when tabbed out
+  const w = new Worker(URL.createObjectURL(new Blob(['setInterval(function(){postMessage(0)},2000)'], { type: 'text/javascript' })));
+  w.onmessage = rkOnTick;
+} catch (e) { setInterval(rkOnTick, 2000); }
+setInterval(() => {
+  const tq = document.getElementById('rkQTime'); if (tq && rkQ.state === 'queued') tq.textContent = rkElapsed();
+  const ta = document.getElementById('rkAccTime'); if (ta && rkQ.state === 'matched') ta.textContent = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
+}, 1000);
 const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new Date(rkQ.since).getTime()) / 1000)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
 function renderRankedPanel() {
+  renderMatchPopup();
   const box = document.getElementById('rkQueue');
   if (currentBoard !== 'Ranked') { box.style.display = 'none'; return; }
   let loggedIn;
@@ -2109,20 +2154,59 @@ function renderRankedPanel() {
   const names = t => `${rkEsc(t.name1)} <span class="rk-amp">&amp;</span> ${rkEsc(t.name2)}`;
   let html;
   if (!loggedIn) html = '<div class="rkq-text">Log in to queue for ranked games.</div><button class="rkq-btn" id="rkqLogin" type="button">Log in</button>';
+  else if (rkJoining) html = '<div class="rkq-text"><b>Joining queue.</b> This will take a moment</div>';
   else if (rkQ.state === 'noteam') html = '<div class="rkq-text">Your account is not on a ranked team.</div>';
   else if (rkQ.state === 'error') html = '<div class="rkq-text">Queue unavailable right now.</div>';
   else if (rkQ.state === 'queued') html = `<div class="rkq-text"><b>Searching for a team...</b> <span id="rkQTime">${rkElapsed()}</span> &middot; ${rkQ.queued} in queue</div><button class="rkq-btn ghost" id="rkqLeave" type="button"${busy}>Leave queue</button>`;
-  else if (rkQ.state === 'matched') {
-    const sel = id => `<select class="rkq-sel" id="${id}">${[0, 1, 2, 3, 4].map(n => `<option>${n}</option>`).join('')}</select>`;
-    html = `<div class="rkq-text"><b>Match found!</b> You play against <span class="rkq-opp">${names(rkQ.opponent)}</span>. Play first to 4, then enter the score.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The scores did not match - enter it again.</span>' : ''}</div>` +
-      (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>' : `<div class="rkq-score">You ${sel('rkqMy')} - ${sel('rkqOpp')} Them<button class="rkq-btn" id="rkqSend" type="button"${busy}>Submit</button></div>`);
-  } else html = `<div class="rkq-text">Queue as <b>${rkQ.team ? names(rkQ.team) : ''}</b>. Any opponent, no Elo range. Max. 2 games against the same team per 7 days.</div><button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>`;
+  else if (rkQ.state === 'matched') html = `<div class="rkq-text"><b>Match found!</b> Your duel against <span class="rkq-opp">${names(rkQ.opponent)}</span> is in the popup window.</div>`;
+  else html = `<div class="rkq-text">You may only queue with your registered teammate. Not doing so will result in a punishment</div><button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>`;
   box.innerHTML = html;
   const on = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
   on('rkqLogin', () => accEl('accBtn').click());
   on('rkqJoin', () => rkQCall('ranked_queue_join'));
   on('rkqLeave', () => rkQCall('ranked_queue_leave'));
-  on('rkqSend', () => rkQCall('ranked_report', { p_pairing: rkQ.pairing_id, p_my: +document.getElementById('rkqMy').value, p_opp: +document.getElementById('rkqOpp').value }));
+}
+
+// ---------- Match found popup (cannot be closed by hand; it ends with the duel) ----------
+const rkScore = { my: 0, opp: 0, key: '' };
+let rkMatchSig = '';
+const rkScoreValid = () => (rkScore.my === 4 && rkScore.opp < 4) || (rkScore.opp === 4 && rkScore.my < 4);
+function renderMatchPopup() {
+  const ov = document.getElementById('matchOverlay'), box = document.getElementById('matchBox');
+  if (rkQ.state !== 'matched') { ov.classList.remove('active'); rkMatchSig = ''; return; }
+  ov.classList.add('active');
+  const key = rkQ.pairing_id + ':' + rkQ.mismatches;
+  if (rkScore.key !== key) { rkScore.my = 0; rkScore.opp = 0; rkScore.key = key; }
+  const sig = JSON.stringify([rkQ.pairing_id, rkQ.accepted, rkQ.opp_accepted, rkQ.reported, rkQ.mismatches, rkQBusy, rkQ.opponent]);
+  if (sig === rkMatchSig) return;   // nothing changed: keep the dropdowns and buttons as they are
+  rkMatchSig = sig;
+  const o = rkQ.opponent || {}, busy = rkQBusy ? ' disabled' : '';
+  const left = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
+  const sel = (id, v) => `<select class="rkq-sel" id="${id}">${[0, 1, 2, 3, 4].map(n => `<option value="${n}"${n === v ? ' selected' : ''}>${n}</option>`).join('')}</select>`;
+  let body;
+  if (!rkQ.accepted) body = `<div>Accept the duel within <b><span id="rkAccTime">${left}</span>s</b>.</div><div><button class="rkq-btn" id="mpAccept" type="button"${busy}>Accept</button></div>`;
+  else if (!rkQ.opp_accepted) body = `<div><b>Accepted.</b> Waiting for the other team to accept (<span id="rkAccTime">${left}</span>s).</div>`;
+  else body = `<div><b>Duel accepted!</b> Join the server and play first to 4. Then enter the final score.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The scores did not match - enter it again.</span>' : ''}</div>` +
+    (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>' : `<div class="rkq-score">You ${sel('mpScoreMy', rkScore.my)} - ${sel('mpScoreOpp', rkScore.opp)} Them<button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div><div class="rk-hint">One team needs 4 points to submit.</div>`);
+  box.innerHTML = `<h2 class="mp-title">Opponent found!</h2>
+    <div class="mp-opp" id="mpOpp"><span class="hm-skin">${skinImg(o.name1, 120)}</span><span class="hm-skin">${skinImg(o.name2, 120)}</span>
+      <span class="hm-names"><span>${rkEsc(o.name1)}</span><span>${rkEsc(o.name2)}</span></span>
+      <span class="mp-stats">${o.elo != null ? `<span class="rk-elo">[${Math.round(Number(o.elo))}]</span>` : ''}${(Number(o.winstreak) || 0) >= 2 ? `<span class="rk-streak" title="Winstreak: ${Number(o.winstreak)}"><img src="${FLAME_URL}" alt=""><b>${Number(o.winstreak)}</b></span>` : ''}</span></div>
+    <div class="mp-server"><span>Server</span><b>mcpvp.club</b><button class="rkq-btn ghost" id="mpCopy" type="button">Copy</button></div>
+    <div class="mp-body">${body}</div>`;
+  const $ = id => document.getElementById(id);
+  $('mpOpp').onclick = () => { const t = o.teamname ? o : rankedTeams.find(x => x.name1 === o.name1 && x.name2 === o.name2); if (t) openTeamProfile(t); };
+  $('mpCopy').onclick = () => {
+    const done = () => { $('mpCopy').textContent = 'Copied!'; setTimeout(() => { const c = $('mpCopy'); if (c) c.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('mcpvp.club').then(done, () => {});
+    else { const ta = document.createElement('textarea'); ta.value = 'mcpvp.club'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) {} ta.remove(); }
+  };
+  if ($('mpAccept')) $('mpAccept').onclick = () => rkQCall('ranked_accept', { p_pairing: rkQ.pairing_id });
+  if ($('mpScoreMy')) {
+    const upd = () => { rkScore.my = +$('mpScoreMy').value; rkScore.opp = +$('mpScoreOpp').value; $('mpSend').disabled = rkQBusy || !rkScoreValid(); };
+    $('mpScoreMy').onchange = upd; $('mpScoreOpp').onchange = upd;
+    $('mpSend').onclick = () => { if (rkScoreValid()) rkQCall('ranked_report', { p_pairing: rkQ.pairing_id, p_my: rkScore.my, p_opp: rkScore.opp }); };
+  }
 }
 
 // ---------- Ranked rules window (content to be added in #rankedRulesBody) ----------
