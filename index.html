@@ -302,7 +302,7 @@ img[src*="Respawn_Anchor"] { image-rendering: auto !important; }
 .home-section .player { margin-left: 0; margin-right: 0; }
 .home-empty { text-align: center; padding: 30px; color: #8b8b96; }
 .gm-title { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 26px; margin: 38px 20px 16px; }
-.gm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 230px)); gap: 14px; margin: 0 20px; }
+.gm-grid { display: grid; grid-template-columns: repeat(var(--gm-cols, 4), minmax(0, 1fr)); gap: 14px; margin: 0 20px; }
 .gm-card { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 26px 12px 22px; background: #191920; border: 1px solid #25252d; border-radius: 12px; text-decoration: none; color: #fff; transition: transform 0.15s, box-shadow 0.15s, background 0.15s; }
 .gm-card:hover { transform: scale(1.035); background: #272731; box-shadow: 0 6px 16px rgba(0,0,0,0.45); }
 .gm-icon { width: 70px; height: 70px; border-radius: 14px; background: #131318; border: 1px solid #2c2c34; display: flex; align-items: center; justify-content: center; }
@@ -980,6 +980,14 @@ body.is-ranked .search-result-item:hover { background: #131a38; }
 .mp-body { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; color: #c9c9d1; }
 .mp-body .rkq-score { justify-content: flex-start; flex-wrap: wrap; }
 .rk-hint { color: #8b8b96; font-size: 13px; }
+
+/* history: the streak bonus sits between the names and the elo gain; leaderboard flame number in the Minecraft font */
+.hm-delta { flex-direction: row; align-items: center; gap: 6px; min-width: 120px; }
+.hm-delta.l { justify-content: flex-end; }
+.hm-delta.r { justify-content: flex-start; }
+.rk-streak b { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 22px; }
+.mp-opp .rk-streak b { font-size: 17px; }
+@media (max-width: 700px) { .hm-delta { flex-direction: row; min-width: 64px; gap: 3px; } .rk-streak b { font-size: 17px; } .mp-opp .rk-streak b { font-size: 14px; } }
 </style>
 </head>
 <body>
@@ -1159,7 +1167,7 @@ const LIVE_BOARDS = SUB_BOARDS.filter(k => !COMING_SOON[k]);
 const NUM_MODES = LIVE_BOARDS.length;
 
 // Internal keys: "1+" = HT1, "1" = LT1, ... "5" = LT5
-const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 150, "3": 100, "4+": 50, "4": 25, "5+": 15, "5": 10 };
+const TIER_POINTS = { "1+": 1000, "1": 750, "2+": 500, "2": 350, "3+": 175, "3": 100, "4+": 50, "4": 25, "5+": 15, "5": 10 };
 const TIER_COLORS = { "1+": "#E8BA3A", "1": "#D5B355", "2+": "#C4D3E7", "2": "#A0A7B2", "3+": "#F89F5A", "3": "#C67B42", "4+": "#81749a", "4": "#81749a", "5+": "#655B79", "5": "#655B79" };
 const TIER_LIGHT_COLORS = { 1: "#ffd54f", 2: "#e0e0e0", 3: "#e0a86c", 4: "#d0d8ff", 5: "#9fb0f0" };
 const TIER_ORDER = { "1+": 0, "1": 1, "2+": 2, "2": 3, "3+": 4, "3": 5, "4+": 6, "4": 7, "5+": 8, "5": 9, "none": 10 };
@@ -1796,6 +1804,8 @@ function renderHome() {
 }
 
 function renderGamemodes() {
+  const gmCols = [4, 5, 3, 6, 2].find(d => SUB_BOARDS.length % d === 0) || 4;   // whole rows that fill the container
+  document.getElementById("gmGrid").style.setProperty('--gm-cols', gmCols);
   document.getElementById("gmGrid").innerHTML = SUB_BOARDS.map(key => {
     const b = LEADERBOARDS[key];
     return `<a class="gm-card" href="#/${key.toLowerCase()}"><div class="gm-icon"><img src="${b.icon}" alt="${b.label}"></div><span class="gm-name">${b.label}</span></a>`;
@@ -2016,10 +2026,11 @@ async function openTeamProfile(team) {
   if (tmTeam === team) renderTeam();
 }
 function tmSkins(t) { return `<span class="hm-skin">${skinImg(t.name1, 120)}</span><span class="hm-skin">${skinImg(t.name2, 120)}</span>`; }
-function tmDelta(won, tied, m) {
-  if (tied || m.elo_change == null) return '<span class="hm-delta">-</span>';
+function tmDelta(won, tied, m, side) {
+  if (tied || m.elo_change == null) return `<span class="hm-delta ${side}">-</span>`;
   const ch = Math.round(Number(m.elo_change)), b = Number(m.streak_bonus) || 0;
-  return won ? `<span class="hm-delta"><span class="hm-gain">+${ch}</span>${b ? `<span class="hm-flame"><img src="${FLAME_URL}" alt=""><b>+${b}</b></span>` : ''}</span>` : `<span class="hm-delta"><span class="hm-loss">&minus;${ch}</span></span>`;
+  const gain = `<span class="hm-gain">+${ch}</span>`, fl = b ? `<span class="hm-flame"><img src="${FLAME_URL}" alt=""><b>+${b}</b></span>` : '';
+  return won ? `<span class="hm-delta ${side}">${side === 'l' ? fl + gain : gain + fl}</span>` : `<span class="hm-delta ${side}"><span class="hm-loss">&minus;${ch}</span></span>`;
 }
 function tmHistoryRow(m) {
   const mine1 = m.team1 === tmTeam.teamname;
@@ -2027,7 +2038,7 @@ function tmHistoryRow(m) {
   const my = mine1 ? m.team1_score : m.team2_score, op = mine1 ? m.team2_score : m.team1_score;
   const names = t => `<span class="hm-names"><span>${rkEsc(t.name1)}</span><span>${rkEsc(t.name2)}</span></span>`;
   return `<div class="hm-row"><div class="hm-team" data-team="${rkEsc(tmTeam.teamname)}">${tmSkins(tmTeam)}${names(tmTeam)}</div>
-    <div class="hm-mid">${tmDelta(my > op, my === op, m)}<span class="hm-score">${my} - ${op}</span>${tmDelta(op > my, my === op, m)}</div>
+    <div class="hm-mid">${tmDelta(my > op, my === op, m, 'l')}<span class="hm-score">${my} - ${op}</span>${tmDelta(op > my, my === op, m, 'r')}</div>
     <div class="hm-team right"${opp.teamname ? ` data-team="${rkEsc(opp.teamname)}"` : ''}>${names(opp)}${tmSkins(opp)}</div></div>`;
 }
 // Win % color: dark purple (0-25) -> red (25-40) -> light green (40-60) -> strong green (60-90) -> gold (90+), blended smoothly in HSL
@@ -2159,7 +2170,7 @@ function renderRankedPanel() {
   else if (rkQ.state === 'error') html = '<div class="rkq-text">Queue unavailable right now.</div>';
   else if (rkQ.state === 'queued') html = `<div class="rkq-text"><b>Searching for a team...</b> <span id="rkQTime">${rkElapsed()}</span> &middot; ${rkQ.queued} in queue</div><button class="rkq-btn ghost" id="rkqLeave" type="button"${busy}>Leave queue</button>`;
   else if (rkQ.state === 'matched') html = `<div class="rkq-text"><b>Match found!</b> Your duel against <span class="rkq-opp">${names(rkQ.opponent)}</span> is in the popup window.</div>`;
-  else html = `<div class="rkq-text">You may only queue with your registered teammate. Not doing so will result in a punishment</div><button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>`;
+  else html = `<div class="rkq-text">${rkQ.team ? `Queue as <b>${names(rkQ.team)}</b>. ` : ''}You may only queue with your registered teammate. Not doing so will result in a punishment</div><button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>`;
   box.innerHTML = html;
   const on = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
   on('rkqLogin', () => accEl('accBtn').click());
