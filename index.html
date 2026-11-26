@@ -1001,10 +1001,10 @@ body.is-ranked .search-result-item:hover { background: #131a38; }
 
 /* ---------- Log in / account button ---------- */
 #accBtn { gap: 10px; padding: 10px 22px; min-width: 120px; justify-content: center; cursor: pointer; border: none; position: relative; z-index: 501; }
-#accBtn.logged { justify-content: flex-start; padding: 7px 14px 7px 8px; min-width: 170px; }
+#accBtn.logged { justify-content: flex-start; padding: 7px 14px 7px 8px; min-width: 130px; width: max-content; }
 #accBtn .acc-head { width: 30px; height: 30px; border-radius: 6px; image-rendering: pixelated; flex-shrink: 0; background: #000; }
-#accBtn .acc-name { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 15px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#accBtn .acc-caret { margin-left: auto; width: 8px; height: 8px; border-right: 2px solid #131318; border-bottom: 2px solid #131318; transform: rotate(45deg) translateY(-2px); transition: transform .2s; flex-shrink: 0; }
+#accBtn .acc-name { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 15px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#accBtn .acc-caret { margin-left: 6px; width: 8px; height: 8px; border-right: 2px solid #131318; border-bottom: 2px solid #131318; transform: rotate(45deg) translateY(-2px); transition: transform .2s; flex-shrink: 0; }
 #accBtn.open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; background: #ffffff; transform: none; }
 #accBtn.open .acc-caret { transform: rotate(-135deg) translateY(-2px); }
 #accUserWrap .acc-drop { top: 100%; left: 0; right: 0; min-width: 0; margin-top: -1px; padding: 4px 6px 6px; background: #ececf1; border: none; border-top: 1px solid #d3d3dc; border-radius: 0 0 10px 10px; box-shadow: 0 12px 24px rgba(0,0,0,0.45); }
@@ -1064,8 +1064,8 @@ body.side-open { overflow: hidden; }
   <div class="side-head"><span>Menu</span><button class="side-close" id="sideClose" type="button" aria-label="Close menu">&times;</button></div>
   <nav class="side-nav">
     <a class="side-item" href="#/home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></a>
-    <a class="side-item" href="#/ranked"><img class="side-ico-img" id="sideMaceIco" alt=""><span>Ranked 2v2 Mace</span></a>
     <a class="side-item" href="#/overall"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/></svg><span>Tierlist</span></a>
+    <a class="side-item" href="#/ranked"><img class="side-ico-img" id="sideMaceIco" alt=""><span>Ranked 2v2 Mace</span></a>
     <a class="side-item" href="https://discord.gg/BjBjqmRHAD" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg><span>Discord</span></a>
   </nav>
 </aside>
@@ -3155,6 +3155,7 @@ async function accViewSchedule(kit) {
 
 // ----- roles (from the players table) -----
 let accRoleSig = null;
+const accDisplayName = () => { if (!accProfile) return ''; const n = accProfile.mc_username, l = n.toLowerCase(); const p = (typeof allPlayers !== 'undefined' && allPlayers.find(p => p.name.toLowerCase() === l)); return p ? p.name : n; };
 const accMe = () => accProfile ? (allPlayers.find(p => p.name.toLowerCase() === accProfile.mc_username.toLowerCase()) || null) : null;
 const accTesterKits = () => { const me = accMe(); return me ? SUB_BOARDS.filter(k => me.tester && me.tester[k]) : []; };
 const accIsRegulator = () => !!accMe()?.regulator;
@@ -3165,7 +3166,7 @@ function accOnPlayersLoaded() { if (accProfile) accUpdateUI(); }
 function accUpdateUI() {
   { const b = accEl('accBtn');
     if (accProfile) {
-      const n = accProfile.mc_username;
+      const n = accDisplayName();
       b.classList.add('logged');
       b.innerHTML = `<img class="acc-head" src="${avatarUrl(n, 60)}" alt="" onerror="this.style.visibility='hidden'"><span class="acc-name">${accEsc(n)}</span><i class="acc-caret"></i>`;
     } else {
@@ -3661,7 +3662,7 @@ async function initAuth() {
     menu.innerHTML = '<button class="item" id="mProf" type="button" role="menuitem">View profile</button><button class="item danger" id="mOut" type="button" role="menuitem">Log out</button>';
     const open = menu.classList.toggle('open');
     btn.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open));
-    accEl('mProf').onclick = () => { closeDrops(); if (accProfile) window.location.hash = '#/player/' + encodeURIComponent(accProfile.mc_username); };
+    accEl('mProf').onclick = () => { closeDrops(); if (accProfile) window.location.hash = '#/player/' + encodeURIComponent(accDisplayName()); };
     accEl('mOut').onclick = async () => { closeDrops(); await sb.auth.signOut(); };
   };
   hero.addEventListener('click', e => { e.preventDefault(); accSession ? accViewTests() : accViewLogin(); });
