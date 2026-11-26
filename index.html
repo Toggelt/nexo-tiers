@@ -988,6 +988,16 @@ body.is-ranked .search-result-item:hover { background: #131a38; }
 .rk-streak b { font-family: 'Minecraft', monospace; font-weight: normal; font-size: 22px; }
 .mp-opp .rk-streak b { font-size: 17px; }
 @media (max-width: 700px) { .hm-delta { flex-direction: row; min-width: 64px; gap: 3px; } .rk-streak b { font-size: 17px; } .mp-opp .rk-streak b { font-size: 14px; } }
+
+/* ranked rules text */
+#rankedRulesBody { color: #c9c9d1; font-size: 15px; line-height: 1.6; text-align: left; }
+#rankedRulesBody p { margin: 0 0 14px; }
+#rankedRulesBody ul { margin: 0 0 14px; padding-left: 22px; }
+#rankedRulesBody li { margin-bottom: 6px; }
+#rankedRulesBody b { color: #fff; }
+.rr-head { color: #8b8b96; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
+.rk-link { color: #7aa2ff; text-decoration: underline; }
+.rk-link:hover { color: #a9c1ff; }
 </style>
 </head>
 <body>
@@ -1083,7 +1093,15 @@ body.is-ranked .search-result-item:hover { background: #131a38; }
   <div class="modal-box team-box no-glow rules-box">
     <button class="modal-close" id="rulesClose">✕</button>
     <h2 class="rules-title">Ranked 2v2 Mace Rules</h2>
-    <div id="rankedRulesBody"><!-- add the ranked rules here --></div>
+    <div id="rankedRulesBody">
+      <p><span class="rr-head">Info:</span> This is an <b>Open Beta</b> so changes will be made along the way.<br>You cannot queue into the same team more than 2 times within a 7 day period, the system prevents it.</p>
+      <p class="rr-head">Rules:</p>
+      <ul>
+        <li>Accountsharing, Alting, Boosting, Cheating, faking results, and dodging are <b>forbidden</b> and will be punished</li>
+        <li>No substitute Teammates. You may only queue with your registered teammate</li>
+      </ul>
+      <p>To register join our <a class="rk-link" href="https://discord.gg/BjBjqmRHAD" target="_blank" rel="noopener">discord</a>.</p>
+    </div>
   </div>
 </div>
 <div class="modal-overlay" id="teamOverlay">
@@ -2115,7 +2133,7 @@ async function rkQCall(fn, args) {
   rkQBusy = false;
   if (error) {
     const t = (error.message || '') + (error.code || '');
-    accToast(t.includes('bad_score') ? 'A game is first to 4: one team needs 4, the other 0-3.' : t.includes('expired') ? 'The accept time ran out.' : t.includes('in_match') ? 'You are already in a match.' : t.includes('no_team') ? 'Your account is not on a ranked team.' : 'Queue unavailable. Has supabase_ranked_queue.sql been run?');
+    accToast(t.includes('bad_score') ? 'A game is first to 4: one team needs 4, the other 0-3.' : t.includes('expired') ? 'The accept time ran out.' : t.includes('in_match') ? 'You are already in a match.' : t.includes('no_team') ? 'You are not registered yet.' : 'Queue unavailable. Has supabase_ranked_queue.sql been run?');
     rkQ.state = rkQ.state === 'none' ? 'error' : rkQ.state;
   } else rkQApply(data);
   rkJoining = false;
@@ -2166,7 +2184,7 @@ function renderRankedPanel() {
   let html;
   if (!loggedIn) html = '<div class="rkq-text">Log in to queue for ranked games.</div><button class="rkq-btn" id="rkqLogin" type="button">Log in</button>';
   else if (rkJoining) html = '<div class="rkq-text"><b>Joining queue.</b> This will take a moment</div>';
-  else if (rkQ.state === 'noteam') html = '<div class="rkq-text">Your account is not on a ranked team.</div>';
+  else if (rkQ.state === 'noteam') html = '<div class="rkq-text">You are not registered yet. To register join our <a class="rk-link" href="https://discord.gg/BjBjqmRHAD" target="_blank" rel="noopener">discord</a>. If you believe this is an error, please contact a staff member.</div>';
   else if (rkQ.state === 'error') html = '<div class="rkq-text">Queue unavailable right now.</div>';
   else if (rkQ.state === 'queued') html = `<div class="rkq-text"><b>Searching for a team...</b> <span id="rkQTime">${rkElapsed()}</span> &middot; ${rkQ.queued} in queue</div><button class="rkq-btn ghost" id="rkqLeave" type="button"${busy}>Leave queue</button>`;
   else if (rkQ.state === 'matched') html = `<div class="rkq-text"><b>Match found!</b> Your duel against <span class="rkq-opp">${names(rkQ.opponent)}</span> is in the popup window.</div>`;
