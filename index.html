@@ -1089,13 +1089,14 @@ body.side-open { overflow: hidden; }
 .mp-solo .mp-tbox { flex: 0 1 280px; }
 .mp-vs2 { display: flex; align-items: stretch; gap: 10px; }
 .mp-vsword { align-self: center; font-family: 'Minecraft', monospace; font-size: 24px; color: #8b8b96; }
-.mp-tbox { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 10px 12px; background: #22222a; border: 2px solid #2c2c34; border-radius: 14px; color: #fff; transition: border-color .15s, background .15s; }
+.mp-tbox { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 10px 12px; background: rgba(8,10,28,0.72); border: 2px solid #1d263b; border-radius: 14px; color: #fff; transition: border-color .15s, background .15s; }
 .mp-tbox.link { cursor: pointer; }
-.mp-tbox.link:hover, .mp-tbox.pick:hover { border-color: #535966; background: #2a2a33; }
+.mp-tbox.link:hover, .mp-tbox.pick:hover { border-color: #535966; background: #131a38; }
 .mp-tbox.sel, .mp-tbox.sel:hover { border-color: #21d676; }
 .mp-dot { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #6d7080; box-sizing: border-box; transition: background .15s, border-color .15s, box-shadow .15s; }
-.mp-tbox.sel .mp-dot { border-color: #21d676; background: #21d676; box-shadow: inset 0 0 0 3px #22222a; }
+.mp-tbox.sel .mp-dot { border-color: #21d676; background: #21d676; box-shadow: inset 0 0 0 3px #0a0d20; }
 .mp-tbox.pick { cursor: pointer; }
+.mp-select { margin: -6px 0 12px; font-family: 'Minecraft', monospace; font-size: 20px; color: #21d676; }
 .mp-label { font: 700 12px Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: #8b8b96; }
 .mp-skins { display: flex; gap: 6px; }
 .mp-tbox .hm-skin { width: 56px; height: 86px; }
@@ -2422,11 +2423,11 @@ try { // a worker timer is not throttled in background tabs, so a found match is
 setInterval(() => {
   const tq = document.getElementById('rkQTime'); if (tq && rkQ.state === 'queued') tq.textContent = rkElapsed();
   const ta = document.getElementById('rkAccTime'); if (ta && rkQ.state === 'matched') ta.textContent = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
-  const tu = document.getElementById('rkUnlock'); if (tu && rkQ.state === 'matched') { const l = rkUnlockLeft(); tu.textContent = l; if (l === 0) renderMatchPopup(); }
+  if (rkQ.state === 'matched' && rkQ.accepted && rkQ.opp_accepted && rkUnlockLeft() === 0) renderMatchPopup();
 }, 1000);
 const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new Date(rkQ.since).getTime()) / 1000)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
 // Set to true when ranked releases: the Join queue button becomes active again.
-const RANKED_QUEUE_ENABLED = true;
+const RANKED_QUEUE_ENABLED = false;
 let rkPanelSig = '';
 function renderRankedPanel() {
   renderMatchPopup();
@@ -2492,10 +2493,9 @@ function renderMatchPopup() {
     if (!rkQ.opp_accepted) body = `<div><b>Accepted.</b> Waiting for the other team to accept (<span id="rkAccTime">${left}</span>s).</div>`;
     else body = `<div><b>Duel accepted!</b> Join the server and play one round. Then select which team won.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The results did not match - select again.</span>' : ''}</div>` +
       (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>'
-        : unlocked ? `<div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div>`
-        : `<div class="rk-hint">You can select the winning team in <b><span id="rkUnlock">${rkUnlockLeft()}</span>s</b>.</div>`);
+        : unlocked ? `<div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div>`);
   }
-  box.innerHTML = `<h2 class="mp-title">Match found!</h2>${boxes}${kitBtn}<div class="mp-body">${body}</div>`;
+  box.innerHTML = `<h2 class="mp-title">Match found!</h2>${canPick ? '<div class="mp-select">Select winner</div>' : ''}${boxes}${kitBtn}<div class="mp-body">${body}</div>`;
   const $ = id => document.getElementById(id);
   try { hydrateSkins(box); } catch (e) {}
   $('mpKit').onclick = openRankedKitPop;
