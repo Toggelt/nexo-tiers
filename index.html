@@ -1039,7 +1039,7 @@ body.side-open { overflow: hidden; }
 .rkq-dot.on i { border-color: #21d676; background: #21d676; box-shadow: inset 0 0 0 3px #0a0a1a; }
 
 /* ---------- Round: ranked tweaks ---------- */
-.rr-head { font-family: 'Minecraft', monospace; font-weight: normal; }
+.rr-head { font-family: 'Minecraft', monospace; font-weight: normal; color: #fff; }
 .ranked-mid { display: none !important; }
 .rkq-btn:hover { transform: none; }
 .rkq-btn:disabled, .rkq-btn.locked { background: #2a2a33; color: #7c7c88; border-color: #3a3a45; filter: none; cursor: not-allowed; box-shadow: none; }
@@ -1055,7 +1055,6 @@ body.side-open { overflow: hidden; }
 .kit-server .kit-copy { font-size: 14px; }
 /* home page: Ranked button under View rankings */
 .is-home .top-bar-lefts { flex-direction: column; align-items: flex-start; gap: 10px; }
-.is-home .top-bar-lefts .rb-gold { display: inline-flex; }
 .rk-mob { display: none; }
 @media (max-width: 700px) {
   .menu-btn { width: 38px; height: 38px; gap: 4px; }
@@ -1064,19 +1063,48 @@ body.side-open { overflow: hidden; }
   body.acc-in .top-bar-right { flex-direction: column; align-items: flex-end; gap: 6px; }
   .is-home .top-fixed-bar { height: auto; min-height: 80px; padding-top: 8px; padding-bottom: 8px; }
   /* ranked leaderboard rows */
-  .ranked-row { min-height: 0; margin: 10px 6px; }
-  .ranked-row .rank-flag.has-skin { display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto; align-items: stretch; column-gap: 4px; row-gap: 0; padding: 0 26px 0 8px; min-width: 0; }
-  .ranked-row .rank-flag.has-skin .rank-num { grid-row: 1; align-self: center; font-size: 22px; width: 24px; }
-  .ranked-row .skin-wrap { grid-row: 1; width: 48px; min-height: 72px; }
-  .ranked-row .rk-mob { grid-row: 2; grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 6px 0 8px 2px; position: relative; z-index: 1; }
-  .ranked-row .rk-mob .rk-elo { order: 1; font-size: 15px; }
-  .ranked-row .rk-mob .rk-streak { order: 2; width: 34px; height: 42px; }
-  .ranked-row .rk-mob .rk-streak b { font-size: 13px; }
+  .ranked-row { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: stretch; min-height: 0; margin: 10px 6px; }
+  .ranked-row > .rank-flag.has-skin { grid-column: 1; grid-row: 1; min-width: 0; padding: 0 26px 0 8px; gap: 4px; }
+  .ranked-row > .rank-flag.has-skin .rank-num { font-size: 22px; width: 24px; }
+  .ranked-row .skin-wrap { width: 48px; min-height: 72px; }
+  .ranked-row > .rk-mob { grid-column: 1; grid-row: 2; display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 8px 10px; }
+  .ranked-row > .rk-mob .rk-elo { order: 1; font-size: 15px; }
+  .ranked-row > .rk-mob .rk-streak { order: 2; width: 34px; height: 42px; }
+  .ranked-row > .rk-mob .rk-streak b { font-size: 13px; }
   .ranked-row > .rk-right { display: none; }
-  .ranked-row .info { padding: 0 8px 0 4px; }
-  .ranked-row .player-name { display: flex; flex-direction: column; gap: 3px; font-size: 14px; line-height: 1.15; }
-  .ranked-row .rk-amp { display: none; }
+  .ranked-row > .info { grid-column: 2; grid-row: 1 / span 2; align-self: center; padding: 0 8px 0 4px; }
+  .ranked-row .player-name { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; font-size: 14px; line-height: 1.15; }
+  .ranked-row .rk-amp { display: block; margin: 0; line-height: 1; }
   .ranked-row .rk-name { overflow-wrap: anywhere; }
+}
+
+/* ---------- Opponent found cinematic ---------- */
+.found-ov { position: fixed; inset: 0; z-index: 3000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.93); pointer-events: auto; }
+.found-ov.show { display: flex; }
+.found-text { font-family: 'Minecraft', monospace; font-size: clamp(34px, 9vw, 96px); color: #fff; text-align: center; padding: 0 16px; text-shadow: 0 4px 0 rgba(0,0,0,0.6), 0 0 28px rgba(255,255,255,0.25); animation: foundPop .2s cubic-bezier(.2,1.5,.4,1) both, foundGrow var(--dur, 3s) linear .2s forwards; }
+@keyframes foundPop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes foundGrow { from { transform: scale(1); } to { transform: scale(1.12); } }
+/* match found window: your team (green) / opponents (red) */
+.mp-vs { display: flex; margin: 4px 0 0; }
+.mp-side { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px 14px; color: #fff; }
+.mp-side.mine { background: linear-gradient(160deg, #22a85c 0%, #0e6a37 100%); clip-path: polygon(0 0, 100% 0, calc(100% - 26px) 100%, 0 100%); padding-right: 36px; border-radius: 14px 0 0 14px; }
+.mp-side.opp { background: linear-gradient(200deg, #d83c3c 0%, #861e1e 100%); clip-path: polygon(26px 0, 100% 0, 100% 100%, 0 100%); margin-left: -20px; padding-left: 36px; border-radius: 0 14px 14px 0; cursor: pointer; transition: filter .15s; }
+.mp-side.opp:hover { filter: brightness(1.1); }
+.mp-label { font: 700 12px Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+.mp-skins { display: flex; gap: 6px; }
+.mp-side .hm-skin { width: 56px; height: 86px; }
+.mp-names { display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: 'Minecraft', monospace; font-size: 17px; line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
+.mp-side .mp-stats { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; }
+.mp-side .rk-elo { font-size: 22px; }
+.mp-side .rk-streak { width: 40px; height: 50px; }
+.mp-side .rk-streak b { font-size: 14px; }
+@media (max-width: 700px) {
+  .mp-side { padding: 12px 6px 10px; gap: 6px; }
+  .mp-side.mine { padding-right: 30px; } .mp-side.opp { padding-left: 30px; }
+  .mp-side .hm-skin { width: 38px; height: 60px; }
+  .mp-names { font-size: 13px; }
+  .mp-side .rk-elo { font-size: 17px; }
+  .mp-side .rk-streak { width: 32px; height: 40px; }
 }
 </style>
 </head>
@@ -1087,7 +1115,7 @@ body.side-open { overflow: hidden; }
       <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
     </a>
     <a class="hero-btn hero-btn-secondary rank-btn" id="rankBtn" href="#/overall"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>View rankings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-    <a class="ranked-btn rb-gold" id="rankedHomeBtn" href="#/ranked"><span class="rb-big">Ranked</span><span class="rb-small"><img id="rankedHomeIco" alt="">2v2 Mace</span></a>
+    <a class="hero-btn hero-btn-secondary rank-btn" id="rankedHomeBtn" href="#/ranked"><img id="rankedHomeIco" alt=""><span>Ranked 2v2 Mace</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
   </div>
   <div class="top-bar-right">
     <div class="acc-wrap" id="accBellWrap">
@@ -1178,6 +1206,7 @@ body.side-open { overflow: hidden; }
   <button id="toggleBtn" class="toggle-btn" style="display:none;">Show more</button>
 </div>
 
+<div class="found-ov" id="foundOverlay"><div class="found-text" id="foundText">Opponent found</div></div>
 <div class="modal-overlay" id="matchOverlay"><div class="modal-box team-box no-glow match-box" id="matchBox"></div></div>
 <div class="modal-overlay" id="rulesOverlay">
   <div class="modal-box team-box no-glow rules-box">
@@ -2161,9 +2190,9 @@ async function renderRanked(force = true) {
     const div = document.createElement('div');
     div.className = `player ranked-row ${rankClass(rank)}`;
     div.innerHTML = `
-      <div class="rank-flag has-skin"><span class="rank-num">${rank}.</span><div class="skin-wrap">${skinImg(t.name1, 160)}</div><div class="skin-wrap">${skinImg(t.name2, 160)}</div><div class="rk-mob"><span class="rk-elo">[${Math.round(Number(t.elo))}]</span>${streak >= 2 ? `<span class="rk-streak" data-streak="${streak}"><img src="${FLAME_URL}" alt=""><b>${streak}</b></span>` : ''}</div></div>
+      <div class="rank-flag has-skin"><span class="rank-num">${rank}.</span><div class="skin-wrap">${skinImg(t.name1, 160)}</div><div class="skin-wrap">${skinImg(t.name2, 160)}</div></div><div class="rk-mob"><span class="rk-elo">[${Math.round(Number(t.elo))}]</span>${streak >= 1 ? `<span class="rk-streak" data-streak="${streak}"><img src="${FLAME_URL}" alt=""><b>${streak}</b></span>` : ''}</div>
       <div class="info"><div class="player-name"><span class="rk-name">${rkEsc(t.name1)}</span><span class="rk-amp">&amp;</span><span class="rk-name">${rkEsc(t.name2)}</span></div></div>
-      <div class="rk-right">${streak >= 2 ? `<span class="rk-streak" data-streak="${streak}"><img src="${FLAME_URL}" alt=""><b>${streak}</b></span>` : ''}<span class="rk-elo">[${Math.round(Number(t.elo))}]</span></div>`;
+      <div class="rk-right">${streak >= 1 ? `<span class="rk-streak" data-streak="${streak}"><img src="${FLAME_URL}" alt=""><b>${streak}</b></span>` : ''}<span class="rk-elo">[${Math.round(Number(t.elo))}]</span></div>`;
     if (first) { div.classList.add('pop'); div.style.animationDelay = (i * 70) + 'ms'; }
     div.addEventListener('click', () => openTeamProfile(t));
     list.appendChild(div);
@@ -2208,7 +2237,7 @@ function tmHistoryRow(m) {
   const my = mine1 ? m.team1_score : m.team2_score, op = mine1 ? m.team2_score : m.team1_score;
   const names = t => `<span class="hm-names"><span>${rkEsc(t.name1)}</span><span>${rkEsc(t.name2)}</span></span>`;
   return `<div class="hm-row"><div class="hm-team" data-team="${rkEsc(tmTeam.teamname)}">${tmSkins(tmTeam)}${names(tmTeam)}</div>
-    <div class="hm-mid">${tmDelta(my > op, my === op, m, 'l')}<span class="hm-score">${my} - ${op}</span>${tmDelta(op > my, my === op, m, 'r')}</div>
+    <div class="hm-mid">${tmDelta(my > op, my === op, m, 'l')}<span class="hm-score">${my > op ? '1 - 0' : my < op ? '0 - 1' : '-'}</span>${tmDelta(op > my, my === op, m, 'r')}</div>
     <div class="hm-team right"${opp.teamname ? ` data-team="${rkEsc(opp.teamname)}"` : ''}>${names(opp)}${tmSkins(opp)}</div></div>`;
 }
 // Win % color: dark purple (0-25) -> red (25-40) -> light green (40-60) -> strong green (60-90) -> gold (90+), blended smoothly in HSL
@@ -2292,10 +2321,23 @@ async function rkQCall(fn, args) {
   rkJoining = false;
   renderRankedPanel();
 }
+let rkFound = false;
+function rkShowFound() {
+  const ov = document.getElementById('foundOverlay');
+  const dur = (isFinite(rkAudio.duration) && rkAudio.duration > 0) ? rkAudio.duration : 3;
+  rkFound = true;
+  ov.classList.remove('show'); void ov.offsetWidth;
+  ov.style.setProperty('--dur', dur + 's');
+  ov.classList.add('show');
+  let done = false;
+  const end = () => { if (done) return; done = true; rkAudio.removeEventListener('ended', end); ov.classList.remove('show'); rkFound = false; renderMatchPopup(); };
+  rkAudio.addEventListener('ended', end);
+  setTimeout(end, dur * 1000 + 500);
+}
 function rkQApply(d) {
   if (!d) return;
   if (d.state === 'matched') d.deadline = Date.now() + (d.seconds_left || 0) * 1000;
-  if ((rkQ.state === 'queued' || rkJoining) && d.state === 'matched') { rkSound(); accToast('Ranked match found! Accept the duel.'); }
+  if ((rkQ.state === 'queued' || rkJoining) && d.state === 'matched') { rkSound(); rkShowFound(); }
   if (d.me && accProfile && accProfile.__fb) { accProfile.mc_username = d.me; accUpdateUI(); }
   rkQ = d;
 }
@@ -2326,7 +2368,7 @@ setInterval(() => {
 }, 1000);
 const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new Date(rkQ.since).getTime()) / 1000)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
 // Set to true when ranked releases: the Join queue button becomes active again.
-const RANKED_QUEUE_ENABLED = true;
+const RANKED_QUEUE_ENABLED = false;
 let rkPanelSig = '';
 function renderRankedPanel() {
   renderMatchPopup();
@@ -2362,7 +2404,7 @@ let rkMatchSig = '';
 const rkScoreValid = () => rkScore.win === 'my' || rkScore.win === 'opp';
 function renderMatchPopup() {
   const ov = document.getElementById('matchOverlay'), box = document.getElementById('matchBox');
-  if (rkQ.state !== 'matched') { ov.classList.remove('active'); rkMatchSig = ''; return; }
+  if (rkQ.state !== 'matched' || rkFound) { ov.classList.remove('active'); rkMatchSig = ''; return; }
   ov.classList.add('active');
   const key = rkQ.pairing_id + ':' + rkQ.mismatches;
   if (rkScore.key !== key) { rkScore.win = null; rkScore.key = key; }
@@ -2377,10 +2419,16 @@ function renderMatchPopup() {
   else if (!rkQ.opp_accepted) body = `<div><b>Accepted.</b> Waiting for the other team to accept (<span id="rkAccTime">${left}</span>s).</div>`;
   else body = `<div><b>Duel accepted!</b> Join the server and play one round. Then select which team won.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The results did not match - select again.</span>' : ''}</div>` +
     (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>' : `<div class="rkq-win" role="radiogroup" aria-label="Which team won?">${dot('my', 'We won')}${dot('opp', 'Opponents won')}</div><div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div><div class="rk-hint">Select the winning team to submit.</div>`);
-  box.innerHTML = `<h2 class="mp-title">Opponent found!</h2>
-    <div class="mp-opp" id="mpOpp"><span class="hm-skin">${skinImg(o.name1, 120)}</span><span class="hm-skin">${skinImg(o.name2, 120)}</span>
-      <span class="hm-names"><span>${rkEsc(o.name1)}</span><span>${rkEsc(o.name2)}</span></span>
-      <span class="mp-stats">${o.elo != null ? `<span class="rk-elo">[${Math.round(Number(o.elo))}]</span>` : ''}${(Number(o.winstreak) || 0) >= 2 ? `<span class="rk-streak" title="Winstreak: ${Number(o.winstreak)}"><img src="${FLAME_URL}" alt=""><b>${Number(o.winstreak)}</b></span>` : ''}</span></div>
+  const mt0 = rkQ.team || {};
+  const mt = rankedTeams.find(t => (mt0.teamname && t.teamname === mt0.teamname) || (t.name1 === mt0.name1 && t.name2 === mt0.name2)) || mt0;
+  const ot = o.elo != null ? o : (rankedTeams.find(t => t.name1 === o.name1 && t.name2 === o.name2) || o);
+  const side = (t, cls, label) => { const st = Number(t.winstreak) || 0;
+    return `<div class="mp-side ${cls}"${cls === 'opp' ? ' id="mpOpp"' : ''}><span class="mp-label">${label}</span>
+      <div class="mp-skins"><span class="hm-skin">${skinImg(t.name1, 120)}</span><span class="hm-skin">${skinImg(t.name2, 120)}</span></div>
+      <div class="mp-names"><span>${rkEsc(t.name1 || '?')}</span><span>${rkEsc(t.name2 || '?')}</span></div>
+      <div class="mp-stats">${t.elo != null ? `<span class="rk-elo">[${Math.round(Number(t.elo))}]</span>` : ''}${st >= 1 ? `<span class="rk-streak" title="Winstreak: ${st}"><img src="${FLAME_URL}" alt=""><b>${st}</b></span>` : ''}</div></div>`; };
+  box.innerHTML = `<h2 class="mp-title">Match found!</h2>
+    <div class="mp-vs">${side(mt, 'mine', 'Your team')}${side(ot, 'opp', 'Opponents')}</div>
     <div class="mp-server"><span>Server</span><b>mcpvp.club</b><button class="rkq-btn ghost" id="mpCopy" type="button">Copy</button></div>
     <div class="mp-body">${body}</div>`;
   const $ = id => document.getElementById(id);
