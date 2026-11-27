@@ -1084,27 +1084,38 @@ body.side-open { overflow: hidden; }
 .found-text { font-family: 'Minecraft', monospace; font-size: clamp(34px, 9vw, 96px); color: #fff; text-align: center; padding: 0 16px; text-shadow: 0 4px 0 rgba(0,0,0,0.6), 0 0 28px rgba(255,255,255,0.25); animation: foundPop .2s cubic-bezier(.2,1.5,.4,1) both, foundGrow var(--dur, 3s) linear .2s forwards; }
 @keyframes foundPop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes foundGrow { from { transform: scale(1); } to { transform: scale(1.12); } }
-/* match found window: your team (green) / opponents (red) */
-.mp-vs { display: flex; margin: 4px 0 0; }
-.mp-side { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px 14px; color: #fff; }
-.mp-side.mine { background: linear-gradient(160deg, #22a85c 0%, #0e6a37 100%); clip-path: polygon(0 0, 100% 0, calc(100% - 26px) 100%, 0 100%); padding-right: 36px; border-radius: 14px 0 0 14px; }
-.mp-side.opp { background: linear-gradient(200deg, #d83c3c 0%, #861e1e 100%); clip-path: polygon(26px 0, 100% 0, 100% 100%, 0 100%); margin-left: -20px; padding-left: 36px; border-radius: 0 14px 14px 0; cursor: pointer; transition: filter .15s; }
-.mp-side.opp:hover { filter: brightness(1.1); }
-.mp-label { font: 700 12px Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+/* match found window: neutral team boxes, "vs" in between */
+.mp-solo { display: flex; justify-content: center; }
+.mp-solo .mp-tbox { flex: 0 1 280px; }
+.mp-vs2 { display: flex; align-items: stretch; gap: 10px; }
+.mp-vsword { align-self: center; font-family: 'Minecraft', monospace; font-size: 24px; color: #8b8b96; }
+.mp-tbox { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 10px 12px; background: #22222a; border: 2px solid #2c2c34; border-radius: 14px; color: #fff; transition: border-color .15s, background .15s; }
+.mp-tbox.link { cursor: pointer; }
+.mp-tbox.link:hover, .mp-tbox.pick:hover { border-color: #535966; background: #2a2a33; }
+.mp-tbox.sel, .mp-tbox.sel:hover { border-color: #21d676; }
+.mp-dot { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #6d7080; box-sizing: border-box; transition: background .15s, border-color .15s, box-shadow .15s; }
+.mp-tbox.sel .mp-dot { border-color: #21d676; background: #21d676; box-shadow: inset 0 0 0 3px #22222a; }
+.mp-tbox.pick { cursor: pointer; }
+.mp-label { font: 700 12px Arial, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: #8b8b96; }
 .mp-skins { display: flex; gap: 6px; }
-.mp-side .hm-skin { width: 56px; height: 86px; }
+.mp-tbox .hm-skin { width: 56px; height: 86px; }
 .mp-names { display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: 'Minecraft', monospace; font-size: 17px; line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
-.mp-side .mp-stats { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; }
-.mp-side .rk-elo { font-size: 22px; }
-.mp-side .rk-streak { width: 40px; height: 50px; }
-.mp-side .rk-streak b { font-size: 14px; }
+.mp-tbox .mp-stats { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; }
+.mp-tbox .rk-elo { font-size: 22px; }
+.mp-tbox .rk-streak { width: 40px; height: 50px; }
+.mp-tbox .rk-streak b { font-size: 14px; }
+.mp-actions { display: flex; justify-content: center; margin-top: 14px; }
+.mp-actions .rkq-btn { display: inline-flex; align-items: center; gap: 8px; }
+.mp-actions .rkq-btn img { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; }
 @media (max-width: 700px) {
-  .mp-side { padding: 12px 6px 10px; gap: 6px; }
-  .mp-side.mine { padding-right: 30px; } .mp-side.opp { padding-left: 30px; }
-  .mp-side .hm-skin { width: 38px; height: 60px; }
-  .mp-names { font-size: 13px; }
-  .mp-side .rk-elo { font-size: 17px; }
-  .mp-side .rk-streak { width: 32px; height: 40px; }
+  .mp-vs2 { flex-direction: column; gap: 4px; }
+  .mp-vsword { font-size: 20px; }
+  .mp-tbox { padding: 12px 8px 10px; gap: 6px; }
+  .mp-tbox .hm-skin { width: 40px; height: 62px; }
+  .mp-names { font-size: 14px; }
+  .mp-tbox .rk-elo { font-size: 18px; }
+  .mp-tbox .rk-streak { width: 32px; height: 40px; }
+  .mp-tbox .mp-stats { min-height: 40px; }
 }
 </style>
 </head>
@@ -2321,7 +2332,51 @@ async function rkQCall(fn, args) {
   rkJoining = false;
   renderRankedPanel();
 }
-let rkFound = false;
+let rkFound = false, rkMyTeam = null;
+async function rkRefreshTeams() {
+  try { rankedTeams = await rkFetch('ranked_teams?select=id,name1,name2,teamname,elo,winstreak&order=elo.desc,id.asc'); rkMatchSig = ''; renderMatchPopup(); } catch (e) {}
+}
+let rkTeamFetchAt = 0;
+function rkMeNames() {
+  const out = [];
+  const add = v => { v = String(v || '').trim().toLowerCase(); if (v && !out.includes(v)) out.push(v); };
+  add(rkQ.me); try { add(accProfile && accProfile.mc_username); } catch (e) {}
+  try { const u = accSession && accSession.user; if (u) { add(u.user_metadata && u.user_metadata.mc_username); add(String(u.email || '').split('@')[0]); } } catch (e) {}
+  return out;
+}
+function rkOwnTeam() {
+  const names = rkMeNames();
+  const hasMe = t => t && names.some(n => String(t.name1 || '').toLowerCase() === n || String(t.name2 || '').toLowerCase() === n);
+  const byMe = rankedTeams.find(hasMe);
+  if (byMe) { try { localStorage.setItem('rkMyTeam', JSON.stringify({ name1: byMe.name1, name2: byMe.name2, teamname: byMe.teamname })); } catch (e) {} return byMe; }
+  let c = rkMyTeam || rkQ.team || rkQ.my_team || rkQ.mine || null;
+  if (!c) { try { c = JSON.parse(localStorage.getItem('rkMyTeam') || 'null'); } catch (e) {} }
+  if (c) return rankedTeams.find(t => (c.teamname && t.teamname === c.teamname) || (t.name1 === c.name1 && t.name2 === c.name2)) || c;
+  // team list missing or not containing us yet: reload it (at most every 5s)
+  if (Date.now() - rkTeamFetchAt > 5000) { rkTeamFetchAt = Date.now(); rkRefreshTeams(); }
+  return {};
+}
+const rkBoth = {};
+function rkUnlockLeft() {
+  if (!(rkQ.accepted && rkQ.opp_accepted)) return 60;
+  const k = 'rkBoth:' + rkQ.pairing_id;
+  let t = rkBoth[k];
+  if (!t) { try { t = Number(localStorage.getItem(k)) || 0; } catch (e) {} if (!t) { t = Date.now(); try { localStorage.setItem(k, String(t)); } catch (e) {} } rkBoth[k] = t; }
+  return Math.max(0, 60 - Math.floor((Date.now() - t) / 1000));
+}
+function openRankedKitPop() {
+  document.getElementById('rkKitPop')?.remove();
+  const pop = document.createElement('div');
+  pop.id = 'rkKitPop'; pop.className = 'info-tooltip overall-tooltip kit-open kit-pop active';
+  pop.innerHTML = '<button class="kit-close" type="button" aria-label="Close">&times;</button>' + rankedKitHtml(true, 'rkKitPopInv');
+  document.body.appendChild(pop);
+  const close = () => { pop.remove(); document.removeEventListener('click', outside, true); };
+  const outside = e => { if (!pop.contains(e.target)) { e.stopPropagation(); close(); } };
+  pop.querySelector('.kit-close').onclick = close;
+  setTimeout(() => document.addEventListener('click', outside, true), 0);
+  const inv = document.getElementById('rkKitPopInv');
+  if (inv) { try { renderInventory(inv, RANKED_KIT_ITEMS); } catch (err) { inv.textContent = 'Kit failed to load'; } }
+}
 function rkShowFound() {
   const ov = document.getElementById('foundOverlay');
   const dur = (isFinite(rkAudio.duration) && rkAudio.duration > 0) ? rkAudio.duration : 3;
@@ -2337,6 +2392,8 @@ function rkShowFound() {
 function rkQApply(d) {
   if (!d) return;
   if (d.state === 'matched') d.deadline = Date.now() + (d.seconds_left || 0) * 1000;
+  if (d.team) { rkMyTeam = d.team; try { localStorage.setItem('rkMyTeam', JSON.stringify(d.team)); } catch (e) {} }
+  if (d.state === 'matched' && rkQ.state !== 'matched') rkRefreshTeams();
   if ((rkQ.state === 'queued' || rkJoining) && d.state === 'matched') { rkSound(); rkShowFound(); }
   if (d.me && accProfile && accProfile.__fb) { accProfile.mc_username = d.me; accUpdateUI(); }
   rkQ = d;
@@ -2365,10 +2422,11 @@ try { // a worker timer is not throttled in background tabs, so a found match is
 setInterval(() => {
   const tq = document.getElementById('rkQTime'); if (tq && rkQ.state === 'queued') tq.textContent = rkElapsed();
   const ta = document.getElementById('rkAccTime'); if (ta && rkQ.state === 'matched') ta.textContent = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
+  const tu = document.getElementById('rkUnlock'); if (tu && rkQ.state === 'matched') { const l = rkUnlockLeft(); tu.textContent = l; if (l === 0) renderMatchPopup(); }
 }, 1000);
 const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new Date(rkQ.since).getTime()) / 1000)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
 // Set to true when ranked releases: the Join queue button becomes active again.
-const RANKED_QUEUE_ENABLED = true;
+const RANKED_QUEUE_ENABLED = false;
 let rkPanelSig = '';
 function renderRankedPanel() {
   renderMatchPopup();
@@ -2408,41 +2466,48 @@ function renderMatchPopup() {
   ov.classList.add('active');
   const key = rkQ.pairing_id + ':' + rkQ.mismatches;
   if (rkScore.key !== key) { rkScore.win = null; rkScore.key = key; }
-  const sig = JSON.stringify([rkQ.pairing_id, rkQ.accepted, rkQ.opp_accepted, rkQ.reported, rkQ.mismatches, rkQBusy, rkQ.opponent]);
-  if (sig === rkMatchSig) return;   // nothing changed: keep the dropdowns and buttons as they are
-  rkMatchSig = sig;
-  const o = rkQ.opponent || {}, busy = rkQBusy ? ' disabled' : '';
-  const left = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
-  const dot = (w, label) => `<button type="button" class="rkq-dot${rkScore.win === w ? ' on' : ''}" data-w="${w}" role="radio" aria-checked="${rkScore.win === w}"><i></i>${label}</button>`;
-  let body;
-  if (!rkQ.accepted) body = `<div>Accept the duel within <b><span id="rkAccTime">${left}</span>s</b>.</div><div><button class="rkq-btn" id="mpAccept" type="button"${busy}>Accept</button></div>`;
-  else if (!rkQ.opp_accepted) body = `<div><b>Accepted.</b> Waiting for the other team to accept (<span id="rkAccTime">${left}</span>s).</div>`;
-  else body = `<div><b>Duel accepted!</b> Join the server and play one round. Then select which team won.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The results did not match - select again.</span>' : ''}</div>` +
-    (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>' : `<div class="rkq-win" role="radiogroup" aria-label="Which team won?">${dot('my', 'We won')}${dot('opp', 'Opponents won')}</div><div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div><div class="rk-hint">Select the winning team to submit.</div>`);
-  const mt0 = rkQ.team || {};
-  const mt = rankedTeams.find(t => (mt0.teamname && t.teamname === mt0.teamname) || (t.name1 === mt0.name1 && t.name2 === mt0.name2)) || mt0;
+  const mine = rkOwnTeam();
+  const o = rkQ.opponent || {};
   const ot = o.elo != null ? o : (rankedTeams.find(t => t.name1 === o.name1 && t.name2 === o.name2) || o);
-  const side = (t, cls, label) => { const st = Number(t.winstreak) || 0;
-    return `<div class="mp-side ${cls}"${cls === 'opp' ? ' id="mpOpp"' : ''}><span class="mp-label">${label}</span>
+  const both = !!(rkQ.accepted && rkQ.opp_accepted);
+  const unlocked = both && rkUnlockLeft() === 0;
+  const sig = JSON.stringify([rkQ.pairing_id, rkQ.accepted, rkQ.opp_accepted, rkQ.reported, rkQ.mismatches, rkQBusy, rkQ.opponent, mine, unlocked]);
+  if (sig === rkMatchSig) return;   // nothing changed: keep the buttons as they are
+  rkMatchSig = sig;
+  const busy = rkQBusy ? ' disabled' : '';
+  const left = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
+  const canPick = unlocked && !rkQ.reported;
+  const tbox = (t, w, label, extra = '') => { const st = Number(t.winstreak) || 0; const sel = canPick && rkScore.win === w;
+    return `<div class="mp-tbox ${extra}${canPick ? ' pick' : ''}${sel ? ' sel' : ''}" data-w="${w}"${w === 'opp' ? ' id="mpOpp"' : ''}>${canPick ? '<i class="mp-dot"></i>' : ''}<span class="mp-label">${label}</span>
       <div class="mp-skins"><span class="hm-skin">${skinImg(t.name1, 120)}</span><span class="hm-skin">${skinImg(t.name2, 120)}</span></div>
       <div class="mp-names"><span>${rkEsc(t.name1 || '?')}</span><span>${rkEsc(t.name2 || '?')}</span></div>
       <div class="mp-stats">${t.elo != null ? `<span class="rk-elo">[${Math.round(Number(t.elo))}]</span>` : ''}${st >= 1 ? `<span class="rk-streak" title="Winstreak: ${st}"><img src="${FLAME_URL}" alt=""><b>${st}</b></span>` : ''}</div></div>`; };
-  box.innerHTML = `<h2 class="mp-title">Match found!</h2>
-    <div class="mp-vs">${side(mt, 'mine', 'Your team')}${side(ot, 'opp', 'Opponents')}</div>
-    <div class="mp-server"><span>Server</span><b>mcpvp.club</b><button class="rkq-btn ghost" id="mpCopy" type="button">Copy</button></div>
-    <div class="mp-body">${body}</div>`;
+  const kitBtn = `<div class="mp-actions"><button class="rkq-btn ghost" id="mpKit" type="button"><img src="${MACE_ICON_URL}" alt="">Kit</button></div>`;
+  let boxes, body;
+  if (!rkQ.accepted) {
+    boxes = `<div class="mp-solo">${tbox(ot, 'opp', 'Opponents', 'link')}</div>`;
+    body = `<div>Accept the duel within <b><span id="rkAccTime">${left}</span>s</b>.</div><div><button class="rkq-btn" id="mpAccept" type="button"${busy}>Accept</button></div>`;
+  } else {
+    boxes = `<div class="mp-vs2">${tbox(mine, 'my', 'Your team', canPick ? '' : 'link')}<div class="mp-vsword">vs</div>${tbox(ot, 'opp', 'Opponents', canPick ? '' : 'link')}</div>`;
+    if (!rkQ.opp_accepted) body = `<div><b>Accepted.</b> Waiting for the other team to accept (<span id="rkAccTime">${left}</span>s).</div>`;
+    else body = `<div><b>Duel accepted!</b> Join the server and play one round. Then select which team won.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The results did not match - select again.</span>' : ''}</div>` +
+      (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>'
+        : unlocked ? `<div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div>`
+        : `<div class="rk-hint">You can select the winning team in <b><span id="rkUnlock">${rkUnlockLeft()}</span>s</b>.</div>`);
+  }
+  box.innerHTML = `<h2 class="mp-title">Match found!</h2>${boxes}${kitBtn}<div class="mp-body">${body}</div>`;
   const $ = id => document.getElementById(id);
-  $('mpOpp').onclick = () => { const t = o.teamname ? o : rankedTeams.find(x => x.name1 === o.name1 && x.name2 === o.name2); if (t) openTeamProfile(t); };
-  $('mpCopy').onclick = () => {
-    const done = () => { $('mpCopy').textContent = 'Copied!'; setTimeout(() => { const c = $('mpCopy'); if (c) c.textContent = 'Copy'; }, 1500); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('mcpvp.club').then(done, () => {});
-    else { const ta = document.createElement('textarea'); ta.value = 'mcpvp.club'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) {} ta.remove(); }
-  };
+  try { hydrateSkins(box); } catch (e) {}
+  $('mpKit').onclick = openRankedKitPop;
+  box.querySelectorAll('.mp-tbox.link').forEach(el => el.onclick = () => {
+    const t = el.dataset.w === 'opp' ? (ot.teamname ? ot : rankedTeams.find(x => x.name1 === ot.name1 && x.name2 === ot.name2)) : (mine.teamname ? mine : null);
+    if (t) openTeamProfile(t);
+  });
   if ($('mpAccept')) $('mpAccept').onclick = () => rkQCall('ranked_accept', { p_pairing: rkQ.pairing_id });
   if ($('mpSend')) {
-    box.querySelectorAll('.rkq-dot').forEach(b => b.onclick = () => {
-      rkScore.win = b.dataset.w;
-      box.querySelectorAll('.rkq-dot').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', String(on)); });
+    box.querySelectorAll('.mp-tbox.pick').forEach(el => el.onclick = () => {
+      rkScore.win = el.dataset.w;
+      box.querySelectorAll('.mp-tbox.pick').forEach(x => x.classList.toggle('sel', x === el));
       $('mpSend').disabled = rkQBusy || !rkScoreValid();
     });
     // only one round is played: the winner is stored as a 4-0 result
