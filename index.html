@@ -2401,6 +2401,7 @@ function rkQApply(d) {
 }
 async function rkQPoll() {
   if (!sb || !accSession || rkQBusy) return;
+  if (Date.now() - rkQLast < 1000) return; rkQLast = Date.now();
   const { data, error } = await sb.rpc('ranked_queue_status');
   if (error) { if (rkQ.state === 'none') rkQ = { state: 'error' }; } else rkQApply(data);
   renderRankedPanel();
@@ -2409,7 +2410,7 @@ function rkQSync() {
   if (!accSession) { rkQ = { state: 'none' }; renderRankedPanel(); return; }
   rkQPoll();
 }
-let rkTick = 0;
+let rkTick = 0, rkSyncKey = null, rkQLast = 0;
 function rkOnTick() {
   rkTick++;
   if (!accSession) return;
@@ -2494,7 +2495,7 @@ function renderMatchPopup() {
     if (!rkQ.opp_accepted) body = `<div><b>Accepted.</b> Waiting for the other team to accept (<span id="rkAccTime">${left}</span>s).</div>`;
     else body = `<div><b>Duel accepted!</b> Join the server and play one round. Then select which team won.${rkQ.mismatches && !rkQ.reported ? ' <span class="rkq-warn">The results did not match - select again.</span>' : ''}</div>` +
       (rkQ.reported ? '<div class="rkq-wait">Result sent. Waiting for the other team to confirm.</div>'
-        : unlocked ? `<div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div>`);
+        : unlocked ? `<div class="rkq-score"><button class="rkq-btn" id="mpSend" type="button"${busy}${rkScoreValid() ? '' : ' disabled'}>Submit result</button></div>` : '');
   }
   box.innerHTML = `<h2 class="mp-title">Match found!</h2>${canPick ? '<div class="mp-select">Select winner</div>' : ''}${boxes}${kitBtn}<div class="mp-body">${body}</div>`;
   const $ = id => document.getElementById(id);
@@ -3420,7 +3421,7 @@ function accUpdateUI() {
   if (accProfile && !accNotifTimer) { accPollAll(); accNotifTimer = setInterval(accPollAll, 20000); }
   if (!accProfile && accNotifTimer) { clearInterval(accNotifTimer); accNotifTimer = null; accNotifs = []; accNotifSeen = null; accMatches = []; accRenderBell(); }
   if (accProfile) accQStart(); else accQStop();
-  rkQSync();
+  { const k = accSession ? accSession.user.id : ''; if (k !== rkSyncKey) { rkSyncKey = k; rkQSync(); } }
   const sig = `${accProfile ? accProfile.mc_username : ''}|${accTesterKits().join()}|${accIsRegulator()}`;
   if (sig === accRoleSig) return;
   accRoleSig = sig;
