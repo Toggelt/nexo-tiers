@@ -2354,7 +2354,7 @@ function rkOwnTeam() {
   if (!c) { try { c = JSON.parse(localStorage.getItem('rkMyTeam') || 'null'); } catch (e) {} }
   if (c) return rankedTeams.find(t => (c.teamname && t.teamname === c.teamname) || (t.name1 === c.name1 && t.name2 === c.name2)) || c;
   // team list missing or not containing us yet: reload it (at most every 5s)
-  if (Date.now() - rkTeamFetchAt > 5000) { rkTeamFetchAt = Date.now(); rkRefreshTeams(); }
+  if (Date.now() - rkTeamFetchAt > 30000) { rkTeamFetchAt = Date.now(); rkRefreshTeams(); }
   return {};
 }
 const rkBoth = {};
@@ -2413,8 +2413,9 @@ let rkTick = 0;
 function rkOnTick() {
   rkTick++;
   if (!accSession) return;
-  const active = currentBoard === 'Ranked' || rkQ.state === 'queued' || rkQ.state === 'matched';
-  if (active && (rkQ.state === 'matched' || rkTick % 2 === 0)) rkQPoll();
+  const inQ = rkQ.state === 'queued' || rkQ.state === 'matched';
+  if (inQ) { if (rkQ.state === 'matched' || rkTick % 2 === 0) rkQPoll(); }
+  else if (currentBoard === 'Ranked' && !document.hidden && rkTick % 5 === 0) rkQPoll();
 }
 try { // a worker timer is not throttled in background tabs, so a found match is noticed (and the sound plays) even when tabbed out
   const w = new Worker(URL.createObjectURL(new Blob(['setInterval(function(){postMessage(0)},2000)'], { type: 'text/javascript' })));
@@ -2856,8 +2857,10 @@ toggleBtn.addEventListener("click", () => { visibleCount += PAGE_SIZE; render();
 renderGamemodes();
 renderInfoSections();
 handleRoute();
-setInterval(() => loadPlayersAndRender(false), 5000);
-setInterval(() => { if (currentBoard === 'Ranked') renderRanked(false); }, 5000);
+setInterval(() => { if (!document.hidden) loadPlayersAndRender(false); }, 30000);
+setInterval(() => { if (!document.hidden && currentBoard === 'Ranked') renderRanked(false); }, 20000);
+
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { loadPlayersAndRender(false); if (currentBoard === 'Ranked') renderRanked(false); } });
 
 // ================= Accounts (Minecraft verification + tier tests) =================
 const MC_SERVER_IP = "play.yourserver.net";   // <-- put your Minecraft server address here
@@ -3414,7 +3417,7 @@ function accUpdateUI() {
   }
   const active = accTesterKits().length > 0 || accIsRegulator();
   accEl('accBell').style.display = accProfile ? 'inline-flex' : 'none';
-  if (accProfile && !accNotifTimer) { accPollAll(); accNotifTimer = setInterval(accPollAll, 8000); }
+  if (accProfile && !accNotifTimer) { accPollAll(); accNotifTimer = setInterval(accPollAll, 20000); }
   if (!accProfile && accNotifTimer) { clearInterval(accNotifTimer); accNotifTimer = null; accNotifs = []; accNotifSeen = null; accMatches = []; accRenderBell(); }
   if (accProfile) accQStart(); else accQStop();
   rkQSync();
@@ -3422,7 +3425,7 @@ function accUpdateUI() {
   if (sig === accRoleSig) return;
   accRoleSig = sig;
   clearInterval(accPollTimer); accPollTimer = null; accSeen = null;
-  if (active) { accPollRequests(); accPollTimer = setInterval(accPollRequests, 15000); }
+  if (active) { accPollRequests(); accPollTimer = setInterval(() => { if (!document.hidden) accPollRequests(); }, 30000); }
   else { accPending = []; }
 }
 
@@ -3463,7 +3466,7 @@ async function accPollNotifs() {
   accNotifSeen = new Set(data.map(x => x.id));
   accNotifs = data; accRenderBell();
 }
-async function accPollAll() { await accPollNotifs(); await accPollMatches(); }
+async function accPollAll() { if (document.hidden) return; await accPollNotifs(); await accPollMatches(); }
 
 // ----- duels (matches between a testee and an assigned opponent) -----
 async function accPollMatches() {
@@ -3758,7 +3761,6 @@ async function accQueuePoll() {
   if (error || !data) { accQErr = true; if (!accQ) accQ = { kits: {}, favs: [], tester_open: {}, mine: [], testing: [] }; if (accEl('qBoxes') && accQBoxKits) accRenderQueueBoxes(accQBoxKits); return; }
   accQErr = false; accQ = data; accQAt = Date.now();
   if (accEl('qBoxes') && accQBoxKits) accRenderQueueBoxes(accQBoxKits);
-  if (++accQN % 2 === 0) accPollNotifs();
 }
 const accQMine = k => (accQ?.mine || []).find(x => x.kit === k);
 function accQBoxHtml(k) {
@@ -3878,7 +3880,7 @@ function accQConfirmCard(k) {
   d.querySelector('[data-c=yes]').onclick = async () => { d.remove(); await sb.rpc('queue_confirm', { p_kit: k }); accQConfirmShown[k] = false; accQueuePoll(); };
   d.querySelector('[data-c=no]').onclick = async () => { d.remove(); await sb.rpc('queue_close', { p_kit: k }); accQueuePoll(); };
 }
-function accQStart() { if (accQTimer) return; accQueuePoll(); accQTimer = setInterval(accQueuePoll, 4000); accQTick = setInterval(accQTickFn, 1000); }
+function accQStart() { if (accQTimer) return; accQueuePoll(); accQTimer = setInterval(() => { if (!document.hidden) accQueuePoll(); }, 8000); accQTick = setInterval(accQTickFn, 1000); }
 function accQStop() {
   clearInterval(accQTimer); clearInterval(accQTick); accQTimer = accQTick = null; accQ = null; accQKey = null; accQPhase = null;
   document.querySelectorAll('.q-confirm').forEach(e => e.remove());
