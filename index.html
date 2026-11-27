@@ -1037,6 +1037,47 @@ body.side-open { overflow: hidden; }
 .rkq-dot i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #6d7080; box-sizing: border-box; flex-shrink: 0; transition: background .15s, border-color .15s, box-shadow .15s; }
 .rkq-dot.on { border-color: #21d676; color: #fff; }
 .rkq-dot.on i { border-color: #21d676; background: #21d676; box-shadow: inset 0 0 0 3px #0a0a1a; }
+
+/* ---------- Round: ranked tweaks ---------- */
+.rr-head { font-family: 'Minecraft', monospace; font-weight: normal; }
+.ranked-mid { display: none !important; }
+.rkq-btn:hover { transform: none; }
+.rkq-btn:disabled, .rkq-btn.locked { background: #2a2a33; color: #7c7c88; border-color: #3a3a45; filter: none; cursor: not-allowed; box-shadow: none; }
+.rkq-tip { position: relative; display: inline-flex; }
+.rkq-tip .rkq-btn { pointer-events: none; }
+.rkq-tip::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #0a0a1a; color: #fff; border: 1px solid #1d263b; border-radius: 8px; padding: 6px 10px; font: 700 13px Arial, sans-serif; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 5; }
+.rkq-tip:hover::after { opacity: 1; }
+/* ranked kit info: copyable command + server */
+.kit-note { margin: 14px 8px 6px; text-align: center; color: #c9c9d1; font: 600 14px/1.5 Arial, sans-serif; }
+.kit-copy { display: inline-block; padding: 1px 8px; background: #0a0a1a; border: 1px solid #1d263b; border-radius: 6px; color: #fff; font-family: 'Minecraft', monospace; font-weight: normal; cursor: copy; transition: border-color .15s, background .15s; }
+.kit-copy:hover { border-color: #535966; background: #131322; }
+.kit-server { margin: 4px 8px 2px; text-align: center; color: #8b8b96; font: 600 13px Arial, sans-serif; }
+.kit-server .kit-copy { font-size: 14px; }
+/* home page: Ranked button under View rankings */
+.is-home .top-bar-lefts { flex-direction: column; align-items: flex-start; gap: 10px; }
+.is-home .top-bar-lefts .rb-gold { display: inline-flex; }
+.rk-mob { display: none; }
+@media (max-width: 700px) {
+  .menu-btn { width: 38px; height: 38px; gap: 4px; }
+  .menu-btn span { width: 18px; }
+  body.acc-in .top-fixed-bar { height: auto; min-height: 80px; padding-top: 8px; padding-bottom: 8px; }
+  body.acc-in .top-bar-right { flex-direction: column; align-items: flex-end; gap: 6px; }
+  .is-home .top-fixed-bar { height: auto; min-height: 80px; padding-top: 8px; padding-bottom: 8px; }
+  /* ranked leaderboard rows */
+  .ranked-row { min-height: 0; margin: 10px 6px; }
+  .ranked-row .rank-flag.has-skin { display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto; align-items: stretch; column-gap: 4px; row-gap: 0; padding: 0 26px 0 8px; min-width: 0; }
+  .ranked-row .rank-flag.has-skin .rank-num { grid-row: 1; align-self: center; font-size: 22px; width: 24px; }
+  .ranked-row .skin-wrap { grid-row: 1; width: 48px; min-height: 72px; }
+  .ranked-row .rk-mob { grid-row: 2; grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 6px 0 8px 2px; position: relative; z-index: 1; }
+  .ranked-row .rk-mob .rk-elo { order: 1; font-size: 15px; }
+  .ranked-row .rk-mob .rk-streak { order: 2; width: 34px; height: 42px; }
+  .ranked-row .rk-mob .rk-streak b { font-size: 13px; }
+  .ranked-row > .rk-right { display: none; }
+  .ranked-row .info { padding: 0 8px 0 4px; }
+  .ranked-row .player-name { display: flex; flex-direction: column; gap: 3px; font-size: 14px; line-height: 1.15; }
+  .ranked-row .rk-amp { display: none; }
+  .ranked-row .rk-name { overflow-wrap: anywhere; }
+}
 </style>
 </head>
 <body>
@@ -1046,6 +1087,7 @@ body.side-open { overflow: hidden; }
       <img class="top-bar-logo" src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/nexo_tiers_title.png?raw=true" alt="Nexo Tiers">
     </a>
     <a class="hero-btn hero-btn-secondary rank-btn" id="rankBtn" href="#/overall"><img src="https://github.com/Toggelt/nexo-tiers/blob/main/assets/trophy.png?raw=true" alt=""><span>View rankings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a class="ranked-btn rb-gold" id="rankedHomeBtn" href="#/ranked"><span class="rb-big">Ranked</span><span class="rb-small"><img id="rankedHomeIco" alt="">2v2 Mace</span></a>
   </div>
   <div class="top-bar-right">
     <div class="acc-wrap" id="accBellWrap">
@@ -1808,8 +1850,18 @@ function rankedKitHtml(withHeader = true, invId = 'kitInventory') {
   return `<div class="kit-pane">
     ${withHeader ? `<div class="kit-header"><img src="${MACE_ICON_URL}" alt="Ranked"><span>Ranked 2v2 Mace Kit</span></div>` : ''}
     <div id="${invId}"></div>
+    <div class="kit-note">To get the kit do <span class="kit-copy" data-copy="/profile TestingCheats" title="Click to copy">/profile TestingCheats</span> and copy the 5th kit labeled "Ranked 2v2 Mace"</div>
+    <div class="kit-server">Server: <span class="kit-copy" data-copy="mcpvp.club" title="Click to copy">mcpvp.club</span></div>
   </div>`;
 }
+document.addEventListener('click', e => {
+  const c = e.target.closest('.kit-copy'); if (!c) return;
+  e.stopPropagation();
+  const txt = c.dataset.copy, orig = c.textContent;
+  const done = () => { c.textContent = 'Copied!'; setTimeout(() => { c.textContent = orig; }, 1200); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, () => {});
+  else { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (x) {} ta.remove(); }
+}, true);
 
 function spearKitHtml(withHeader = true, invId = 'kitInventory') {
   return `<div class="kit-pane">
@@ -2074,7 +2126,8 @@ function render() {
 // Button: top bar of the home page (next to "View rankings") and top middle of the overall / tierlist pages.
 const rankedBtnHtml = `<a class="ranked-btn rb-gold" href="#/ranked"><span class="rb-big">Ranked</span><span class="rb-small"><img src="${MACE_ICON_URL}" alt="">2v2 Mace</span></a>`;
 const rankedBtnsHtml = rankedBtnHtml + '<a class="ranked-btn rb-green" href="#/overall"><span class="rb-big">Tierlist</span><span class="rb-small">Regular Tiers</span></a>';
-document.getElementById('rankedMid').innerHTML = rankedBtnsHtml;
+document.getElementById('rankedMid').innerHTML = '';
+document.getElementById('rankedHomeIco').src = MACE_ICON_URL;
 document.getElementById('rankedTop').innerHTML = rankedBtnsHtml;
 
 const FLAME_URL = 'https://raw.githubusercontent.com/Toggelt/nexo-tiers/main/assets/2ac6391d8ca0f7adbe7efbb94529f5f5-1.png.png';
@@ -2108,7 +2161,7 @@ async function renderRanked(force = true) {
     const div = document.createElement('div');
     div.className = `player ranked-row ${rankClass(rank)}`;
     div.innerHTML = `
-      <div class="rank-flag has-skin"><span class="rank-num">${rank}.</span><div class="skin-wrap">${skinImg(t.name1, 160)}</div><div class="skin-wrap">${skinImg(t.name2, 160)}</div></div>
+      <div class="rank-flag has-skin"><span class="rank-num">${rank}.</span><div class="skin-wrap">${skinImg(t.name1, 160)}</div><div class="skin-wrap">${skinImg(t.name2, 160)}</div><div class="rk-mob"><span class="rk-elo">[${Math.round(Number(t.elo))}]</span>${streak >= 2 ? `<span class="rk-streak" data-streak="${streak}"><img src="${FLAME_URL}" alt=""><b>${streak}</b></span>` : ''}</div></div>
       <div class="info"><div class="player-name"><span class="rk-name">${rkEsc(t.name1)}</span><span class="rk-amp">&amp;</span><span class="rk-name">${rkEsc(t.name2)}</span></div></div>
       <div class="rk-right">${streak >= 2 ? `<span class="rk-streak" data-streak="${streak}"><img src="${FLAME_URL}" alt=""><b>${streak}</b></span>` : ''}<span class="rk-elo">[${Math.round(Number(t.elo))}]</span></div>`;
     if (first) { div.classList.add('pop'); div.style.animationDelay = (i * 70) + 'ms'; }
@@ -2227,6 +2280,7 @@ const rkSound = () => { try { rkAudio.currentTime = 0; rkAudio.play().catch(() =
 const rkAudioPrime = () => { try { rkAudio.muted = true; rkAudio.play().then(() => { rkAudio.pause(); rkAudio.currentTime = 0; rkAudio.muted = false; }).catch(() => { rkAudio.muted = false; }); } catch (e) {} };
 async function rkQCall(fn, args) {
   if (!sb || !accSession) return;
+  if (fn === 'ranked_queue_join' && !RANKED_QUEUE_ENABLED) return;
   rkQBusy = true; rkJoining = fn === 'ranked_queue_join'; if (rkJoining) rkAudioPrime(); renderRankedPanel();
   const { data, error } = await sb.rpc(fn, args);
   rkQBusy = false;
@@ -2271,27 +2325,34 @@ setInterval(() => {
   const ta = document.getElementById('rkAccTime'); if (ta && rkQ.state === 'matched') ta.textContent = Math.max(0, Math.ceil((rkQ.deadline - Date.now()) / 1000));
 }, 1000);
 const rkElapsed = () => { const sec = Math.max(0, Math.floor((Date.now() - new Date(rkQ.since).getTime()) / 1000)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
+// Set to true when ranked releases: the Join queue button becomes active again.
+const RANKED_QUEUE_ENABLED = false;
+let rkPanelSig = '';
 function renderRankedPanel() {
   renderMatchPopup();
   const box = document.getElementById('rkQueue');
-  if (currentBoard !== 'Ranked') { box.style.display = 'none'; return; }
+  if (currentBoard !== 'Ranked') { box.style.display = 'none'; rkPanelSig = ''; return; }
   let loggedIn;
   try { loggedIn = !!accSession; } catch (e) { return; }   // account code is not initialised yet during the very first paint
   box.style.display = 'flex';
+  // rebuild only when something visible changed, otherwise the button is replaced under the mouse (flicker, lost clicks)
+  const psig = JSON.stringify([loggedIn, rkJoining, rkQ.state, rkQ.team, rkQ.queued, rkQ.opponent, rkQBusy, RANKED_QUEUE_ENABLED]);
+  if (psig === rkPanelSig && box.children.length) return;
+  rkPanelSig = psig;
   const busy = rkQBusy ? ' disabled' : '';
   const names = t => `${rkEsc(t.name1)} <span class="rk-amp">&amp;</span> ${rkEsc(t.name2)}`;
   let html;
   if (!loggedIn) html = '<div class="rkq-text">Log in to queue for ranked games.</div><button class="rkq-btn" id="rkqLogin" type="button">Log in</button>';
   else if (rkJoining) html = '<div class="rkq-text"><b>Joining queue.</b> This will take a moment</div>';
-  else if (rkQ.state === 'noteam') html = '<div class="rkq-text">You are not registered yet. To register join our <a class="rk-link" href="https://discord.gg/BjBjqmRHAD" target="_blank" rel="noopener">discord</a>. If you believe this is an error, please contact a staff member.</div>';
+  else if (rkQ.state === 'noteam') html = '<div class="rkq-text">You are <b>not registered</b> yet. To register join our <a class="rk-link" href="https://discord.gg/BjBjqmRHAD" target="_blank" rel="noopener">discord</a>. If you believe this is an error, please contact a staff member.</div>';
   else if (rkQ.state === 'error') html = '<div class="rkq-text">Queue unavailable right now.</div>';
   else if (rkQ.state === 'queued') html = `<div class="rkq-text"><b>Searching for a team...</b> <span id="rkQTime">${rkElapsed()}</span> &middot; ${rkQ.queued} in queue</div><button class="rkq-btn ghost" id="rkqLeave" type="button"${busy}>Leave queue</button>`;
   else if (rkQ.state === 'matched') html = `<div class="rkq-text"><b>Match found!</b> Your duel against <span class="rkq-opp">${names(rkQ.opponent)}</span> is in the popup window.</div>`;
-  else html = `<div class="rkq-text">${rkQ.team ? `Queue as <b>${names(rkQ.team)}</b>. ` : ''}You may only queue with your registered teammate. Not doing so will result in a punishment</div><button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>`;
+  else html = `<div class="rkq-text">${rkQ.team ? `Queue as <b>${names(rkQ.team)}</b>. ` : ''}You may only queue with your registered teammate. Not doing so will result in a punishment</div>${RANKED_QUEUE_ENABLED ? `<button class="rkq-btn" id="rkqJoin" type="button"${busy}>Join queue</button>` : '<span class="rkq-tip" data-tip="Releases soon"><button class="rkq-btn locked" id="rkqJoin" type="button" disabled>Join queue</button></span>'}`;
   box.innerHTML = html;
   const on = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
   on('rkqLogin', () => accEl('accBtn').click());
-  on('rkqJoin', () => rkQCall('ranked_queue_join'));
+  on('rkqJoin', () => { if (RANKED_QUEUE_ENABLED) rkQCall('ranked_queue_join'); });
   on('rkqLeave', () => rkQCall('ranked_queue_leave'));
 }
 
@@ -3231,10 +3292,10 @@ function accUpdateUI() {
   { const b = accEl('accBtn');
     if (accProfile) {
       const n = accDisplayName();
-      b.classList.add('logged');
+      b.classList.add('logged'); document.body.classList.add('acc-in');
       b.innerHTML = `<img class="acc-head" src="${avatarUrl(n, 60)}" alt="" onerror="this.style.visibility='hidden'"><span class="acc-name">${accEsc(n)}</span><i class="acc-caret"></i>`;
     } else {
-      b.classList.remove('logged', 'open'); b.setAttribute('aria-expanded', 'false');
+      b.classList.remove('logged', 'open'); b.setAttribute('aria-expanded', 'false'); document.body.classList.remove('acc-in');
       b.innerHTML = '<span>Log in</span>';
     }
   }
@@ -3758,7 +3819,9 @@ initAuth();
   let st = null;
   document.addEventListener('mousedown', e => {
     if (e.button !== 0 || e.target.closest(SKIP)) return;
+    if (['Home', 'Overall', 'Ranked'].includes(currentBoard)) return;
     const cols = document.querySelector('.tier-columns');
+    if (!cols) return;
     st = { x: e.clientX, y: e.clientY, left: cols ? cols.scrollLeft : 0, top: window.scrollY, cols, moved: false };
   });
   document.addEventListener('mousemove', e => {
